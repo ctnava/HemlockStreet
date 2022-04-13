@@ -1,6 +1,7 @@
 const constructorArgs = {
 	"template": [/*constructorArgs, { value: optionalValue}*/],
-	"DStor": []
+	"DStor": [],
+	"PolygonLinkSim": []
 };
 
 

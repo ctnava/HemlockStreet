@@ -1,7 +1,7 @@
 import React from 'react';
 import Fields from './Fields';
 import Query from './Query';
-import { Table, Form, Row, Col, Button } from 'react-bootstrap'
+import { Table, Row } from 'react-bootstrap'
 
 
 function DocumentTable(props) {

@@ -111,37 +111,25 @@ describe("DStor", () => {
 			assert.deepEqual(await retrieveAccessibleFileIds(client3, false), [1,2]);
 		});
 
-// 		it("Should return proper file arrays", async () => {
-// 			const files = await setUp();
-// 			const file1 = await DStor.connect(deployer).get(1);
-// 			const file2 = await DStor.connect(client1).get(2);
-// 			const file3 = await DStor.connect(deployer).get(3);
-// 			var fileBatch1; var fileBatch2;
-// 			console.log("deployer");
-// 			console.log("testing batch 1...");
-// 			fileBatch1 = await DStor.connect(deployer).getAccessibleFiles(true);
-// 			assert.deepEqual(fileBatch1,  [file1, file3]);
-// 			console.log("testing batch 2...");
-// 			fileBatch2 = await DStor.connect(deployer).getAccessibleFiles(false);
-// 			assert.deepEqual(fileBatch2, []);
-//
-// 			console.log("client1");
-// 			console.log("testing batch 1...");
-// 			fileBatch1 = await DStor.connect(client1).getAccessibleFiles(true);
-// 			console.log(fileBatch1);
-// 			assert.deepEqual(fileBatch1, [file2]);
-// 			console.log("testing batch 2...");
-// 			fileBatch2 = await DStor.connect(client1).getAccessibleFiles(false);
-// 			assert.deepEqual(fileBatch2, [file3]);
-//
-// 			console.log("client3");
-// 			console.log("testing batch 1...");
-// 			fileBatch1 = await DStor.connect(client3).getAccessibleFiles(true);
-// 			assert.deepEqual(fileBatch1, []);
-// 			console.log("testing batch 2...");
-// 			fileBatch2 = await DStor.connect(client3).getAccessibleFiles(false);
-// 			assert.deepEqual(fileBatch2, [file1,  file2]);
-// 		});
+		it("Should return proper file arrays", async () => {
+			const files = await setUp();
+			const file1 = await DStor.connect(deployer).get(1);
+			const file2 = await DStor.connect(client1).get(2);
+			const file3 = await DStor.connect(deployer).get(3);
+			var fileBatch1; var fileBatch2;
+			fileBatch1 = await DStor.connect(deployer).getAccessibleFiles(true);
+			assert.deepEqual(fileBatch1,  [file1, file3]);
+			fileBatch2 = await DStor.connect(deployer).getAccessibleFiles(false);
+			assert.deepEqual(fileBatch2, []);
+			fileBatch1 = await DStor.connect(client1).getAccessibleFiles(true);
+			assert.deepEqual(fileBatch1, [file2]);
+			fileBatch2 = await DStor.connect(client1).getAccessibleFiles(false);
+			assert.deepEqual(fileBatch2, [file3]);
+			fileBatch1 = await DStor.connect(client3).getAccessibleFiles(true);
+			assert.deepEqual(fileBatch1, []);
+			fileBatch2 = await DStor.connect(client3).getAccessibleFiles(false);
+			assert.deepEqual(fileBatch2, [file1,  file2]);
+		});
 
 		it("Should prevent unauthorized access", async () => {
 			const files = await setUp();
