@@ -91,10 +91,8 @@ contract DStor is Ownable {
 		uint[] memory fileIds = (getAccessibleFileIds(isSender));
 		uint numElements = fileIds.length;
 		File[] memory result = new File[](numElements);
-		if (numElements != 0) {
-			for (uint i = 0; i<= numElements; i++) {
-				result[i] = get(fileIds[i]);
-				}
+		for (uint i = 0; i < numElements; i++) {
+			result[i] = get(fileIds[i]);
 		}
 		return result;
 	}

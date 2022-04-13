@@ -1,0 +1,15 @@
+body {
+  font-family: 'Zen Kurenaido', sans-serif;
+  font-weight: normal;
+  color: #082032;
+  background-color: #334756;
+  background-image: url("https://www.transparenttextures.com/patterns/nami.png");
+  padding: 0 16px;
+}
+
+
+
+.panel {
+  background-color: #334756;
+  background-image: none;
+}

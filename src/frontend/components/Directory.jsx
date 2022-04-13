@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { 
-  Navbar, 
-  Nav, 
-  Button, 
-  Container 
+import {
+  Navbar,
+  Nav,
+  Button,
+  Container
 } from "react-bootstrap";
 
 function Directory(props) {
@@ -14,11 +14,11 @@ function Directory(props) {
 		<Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
               <Navbar.Brand href="http://ctnava.github.io">
-                <img 
+                <img
                 src={process.env.PUBLIC_URL + "/images/logo192.png"}
-                width="40" height="40" 
-                className="" 
-                alt="logo192" 
+                width="40" height="40"
+                className=""
+                alt="logo192"
                 />
                 &nbsp; Hemlock Street
               </Navbar.Brand>
@@ -40,7 +40,7 @@ function Directory(props) {
                   <Nav.Link as={Link} to="/">About</Nav.Link>
                 </Nav>
                 <Nav>
-                  { 
+                  {
                     account ? (
                       <Nav.Link
                         href={`https://etherscan.io/address/${account}`}
@@ -56,7 +56,7 @@ function Directory(props) {
                       <Button variant="warning" href="https://metamask.io/">Download Metamask</Button>
                       ) : (
                       <Button onClick={web3Handler} variant="outline-light">Connect Wallet</Button>
-                      ) 
+                      )
                   }
                 </Nav>
               </Navbar.Collapse>

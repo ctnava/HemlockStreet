@@ -8,15 +8,16 @@ import Downloads from "./Downloads";
 function DStor(props) {
 	const [contract, setContract] = useState();
 	const [loading, setLoading] = useState(true);
-	const [docs, setDocs] = useState([]);
+	const [outbox, setOutbox] = useState([]);
+	const [inbox, setInbox] = useState([]);
 
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
 		console.log("Querying DStor...");
-		const sent = await (contract.getAccessibleFileIds(true));
-		const documents = []
-		await sent.forEach((doc) => { contract.get(doc).then((result) => {documents.push(result)})});
-		setDocs(documents);
+		const sent = await (contract.sent());
+		setOutbox(sent);
+		const received = await (contract.received());
+		setInbox(received);
 		setLoading(false);
 	};
 
@@ -26,7 +27,6 @@ function DStor(props) {
 		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient)
 			.then((result) => {
 				console.log("transaction", result);
-				
 			});
 	};
 
@@ -66,7 +66,7 @@ function DStor(props) {
 				message="Show Available Downloads"
 				/>
 
-				{showDownload && (<Downloads ipfs={props.ipfs} docs={docs} />)}
+				{showDownload && (<Downloads ipfs={props.ipfs} docs={outbox} inbox={inbox} outbox={outbox} />)}
 			</div>
 			)}
 			</div>

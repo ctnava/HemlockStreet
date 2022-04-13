@@ -19,11 +19,11 @@ function App(props) {
     var account; var chainId;
 
     await window.ethereum.request({ method: 'eth_requestAccounts' })
-      .then((accounts) => { 
+      .then((accounts) => {
         account = accounts[0] });
 
     await window.ethereum.request({ method: 'eth_chainId' })
-      .then((res) => { 
+      .then((res) => {
         chainId = res });
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -37,22 +37,22 @@ function App(props) {
     setInitialized(false);
   };
 
-  if (window.ethereum) { 
-    window.ethereum.on('chainChanged', () => {window.location.reload()}); 
+  if (window.ethereum) {
+    window.ethereum.on('chainChanged', () => {window.location.reload()});
     if(!hasWeb3) { setHasWeb3(true); }
   }
 
   return (
     <BrowserRouter>
-      <div className="app">
-        <Directory 
+      <div className="App">
+        <Directory
           account={client.account}
           web3Handler={web3Handler}
           hasWeb3={hasWeb3}
         />
 
-        { 
-          !hasWeb3 ? (<Routing client={client} ipfs={props.ipfs} />) : 
+        {
+          !hasWeb3 ? (<Routing client={client} ipfs={props.ipfs} />) :
             initialized ? (<WalletPrompt />) : (<Routing client={client} ipfs={props.ipfs} />) }
       </div>
     </BrowserRouter>
