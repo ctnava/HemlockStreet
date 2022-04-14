@@ -7,9 +7,9 @@ import Downloads from "./Downloads";
 
 function humanBytes(x) {
 	const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-   let l = 0, n = parseInt(x, 10) || 0;
-   while(n >= 1024 && ++l){n = n/1024;}
-   return(n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+    let l = 0, n = parseInt(x, 10) || 0;
+    while(n >= 1024 && ++l){n = n/1024;}
+    return(n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
 }
 
 
@@ -26,10 +26,12 @@ function DStor(props) {
 		setOutbox(sent);
 		const received = await (contract.received());
 		setInbox(received);
-		const gasQuote = await contract.gasQuote(1073741824); //bytes/GB
-		console.log("perGBperDiem", gasQuote[0].toString());
-		console.log("perGBperMonth", gasQuote[1].toString());
+		const ruleSet = await getRules();
+		// const gasQuote = await contract.gasQuote(1073741824); //bytes/GB
+		// console.log("perGBperDiem", gasQuote[0].toString());
+		// console.log("perGBperMonth", gasQuote[1].toString());
 		setLoading(false);
+		// console.log("contract terms", ruleSet);
 	};
 
 	const uploadFile = async (file) => {
@@ -40,6 +42,41 @@ function DStor(props) {
 				console.log("transaction", result);
 			});
 	};
+
+	const getQuotes = async (size) => {
+		const [perDiem, bench] = await contract.quote(size);
+		const [gasPerDiem, gasBench] = await contract.gasQuote(size);
+		return [perDiem, bench, gasPerDiem, gasBench];
+	}
+
+	const defaultRules = {
+		name: "",
+		pinningRate: "",
+		minimumPin: 0,
+		minimumFileSize: 0,
+	}
+	const [rules, setRules] = useState(defaultRules);
+
+	const getRules = async () => {
+		const name = await contract.name();
+		const pinningRate = (await contract.pinningRate()).toString();
+		const monthly = `${pinningRate.slice(0, pinningRate.length - 2)}.${pinningRate.slice(-2)}`;
+		const daily = (parseInt(monthly) / 30).toString();
+		const pinQuote = ("Storage at $"+monthly+" per GB per Month and then $"+daily.slice(0, daily.indexOf(".")+9)+" per day after!");
+		const minimumPin = await contract.minimumPin();
+		const pin = minimumPin.toString();
+		const minimumFileSize = await contract.minimumFileSize();
+		const fsMin = minimumFileSize.toString();
+		const ruleSet = {
+			name: name,
+			pinningRate: pinQuote,
+			minimumPin: parseInt(pin),
+			minimumFileSize: parseInt(fsMin)
+		}
+		setRules(ruleSet);
+		return ruleSet;
+	}
+	
 
 	const [showUpload, setShowUpload] = useState(false);
 	const [showDownload, setShowDownload] = useState(false);
@@ -59,6 +96,8 @@ function DStor(props) {
 				<Upload 
 				className="panel" 
 				ipfs={props.ipfs} 
+				rules={rules}
+				getQuotes={getQuotes}
 				bytes={humanBytes} 
 				uploadFile={uploadFile} 
 				/> 

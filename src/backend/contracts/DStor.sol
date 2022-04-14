@@ -12,6 +12,7 @@ contract DStor is Ownable {
 	address public fissionEngine;
 	uint public pinningRate = 150; // pennies
 	uint public minimumPin = 30; // days
+	uint public minimumFileSize = 1024; // bytes
 
 	constructor() { }
 
@@ -25,12 +26,12 @@ contract DStor is Ownable {
 		uint uploadTime;
 		address uploader;
 	}
-	mapping(uint => uint) public expiresAt;
+	mapping(string => uint) public expiresAt;
 	mapping(uint => File) private files;
 	uint public fileCount = 0;
 
 	function quote(uint numBytes) public view returns(uint perDiem, uint benchFee){
-		require(numBytes >= 1024);
+		require(numBytes >= minimumFileSize);
 		uint numKb = numBytes / 1024;
 		if (numBytes % 1024 > 0) { numKb++; }
 		uint usdPerDayPerKb = (pinningRate * (10 ** 6)) / 1048576; // (1.50/1048576) * 10e8 == 1430.5
@@ -47,7 +48,7 @@ contract DStor is Ownable {
 	}
 
 	function upload(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription, address recipient) public {
-		require(bytes(_fileHash).length > 0 && _fileSize >= 1024 && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient != msg.sender && recipient!=address(0));
+		require(bytes(_fileHash).length > 0 && _fileSize >= minimumFileSize && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient != msg.sender && recipient!=address(0));
 		fileCount ++;
 		files[fileCount] = File(
 			_fileHash,
@@ -114,7 +115,11 @@ contract DStor is Ownable {
 
 	function setRules(bool isMinimumPin, uint value) public onlyOwner {
 		if (isMinimumPin == true) { minimumPin = value; }
-		else { pinningRate = value; }
+		else { minimumFileSize = value; }
+	}
+
+	function setPinningRate(uint value) public onlyOwner {
+		pinningRate = value;
 	}
 
 	function setFission(address fission) public onlyOwner { fissionEngine = fission; }

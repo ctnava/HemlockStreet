@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Row, Form, Button } from 'react-bootstrap'
+import { Row, Form, Button, Table, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 
 
@@ -9,18 +9,42 @@ function Upload(props) {
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
 
+	const defaultQuote = {
+		perDiem: 0,
+		bench: 0,
+		gasPerDiem: 0,
+		gasBench: 0
+	};
+	const [quote, setQuote] = useState(defaultQuote);
+	function getQuote(numBytes) {
+		props.getQuotes(numBytes).then((quotes) => {
+			const [perDiem, bench, gasPerDiem, gasBench] = quotes;
+			setQuote({ 
+				perDiem: parseInt(perDiem.toString()),
+				bench: parseInt(bench.toString()),
+				gasPerDiem: parseInt(gasPerDiem.toString()),
+				gasBench: parseInt(gasBench.toString())
+			});
+			console.log(quote);
+		});
+
+	}
+
+	const [additionalTime, setAdditionalTime] = useState(0);
+
 	function retrieveFile(event) {
 		event.preventDefault();
 		const file = event.target.files[0];
 		const reader = new window.FileReader();
 		const name = file.name;
 		const type = name.slice(name.indexOf("."), name.length);
-		
+
 		reader.readAsArrayBuffer(file);
 		reader.onloadend = () => { 
 			let data = Buffer(reader.result);
 			setFileData(data);
-			setContractInput(prev => {return({...prev, hash: "", size: data.length, type: type})});
+			setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
+			getQuote(data.length);
 		}
 	}
 
@@ -34,6 +58,17 @@ function Upload(props) {
 			setContractInput(prev => {return({...prev, hash: result.path})});
 			console.log("File Uploaded to IPFS!");
 		});
+	}
+
+	function handleTimeChange(event) {
+		setAdditionalTime(event.target.value);
+	}
+
+	function getProjectedCost(type) {
+		const bf = (type === "usd") ? (quote.bench / (10 ** 8)) : (quote.gasBench / (10 ** 18));
+		const pd = (type === "usd") ? (quote.perDiem / (10 ** 8)) : (quote.gasPerDiem / (10 ** 18));
+		const cost = (bf + (pd * additionalTime)).toString();
+		return (cost.slice(0, cost.indexOf(".") + 9));
 	}
 
 	function handleChange(event) {
@@ -51,109 +86,117 @@ function Upload(props) {
 		props.uploadFile(data);
 	}
 
-	return(
-		<div>
-			<Row className="g-4 py-5">
-				<Row>
-					<Form>
-						<Form.Group>
-							<Form.Label>File (Size Min. 1KB)</Form.Label>
-							<Form.Control 
-							onChange={retrieveFile}
-							name="rawFile"
-							type="file" 
-							/>
-							{fileData !== null && contractInput.hash.length === 0 && (
-							<Form.Text className="text-muted">
-								Extension: {contractInput.type} || Size: {props.bytes(contractInput.size)} || Pinning Quote: ~${(Math.round(contractInput.size * (150 / (1073741824))) / 100)} USD/month<br/>
-								Price (in Network Native Token): 
-							</Form.Text>)}
-							{fileData !== null && contractInput.hash.length !== 0 && (
-							<Form.Text className="text-muted">
-								CID: {contractInput.hash}<br/>
-								Extension: {contractInput.type} || Size: {props.bytes(contractInput.size)} || Pinning Quote: ~${(Math.round(contractInput.size * (150 / (1073741824))) / 100)} USD/month<br/>
-								Price (in Network Native Token): 
-							</Form.Text>)}
-						</Form.Group>
-
-						{fileData !== null && contractInput.hash.length === 0 &&(
-						<Form.Group>
-							<Row>
-								<Button 
-								onClick={handleSubmit} 
-								variant="warning" 
-								>
-								This is the correct file
-								</Button>
-							</Row>
-						</Form.Group>)}
-					</Form>	
-				</Row>
-
-				{contractInput.hash.length !== 0 && (
-				<Form>
-					<Form.Group>
-						<Form.Label>Label</Form.Label>
+	return(<div>
+	<Row className="g-4 py-5">
+		<Form>
+		{fileData !== null && (<div>
+			<Row>
+				<Form.Group>
+					<InputGroup>
+						<InputGroup.Text>File Name</InputGroup.Text>
 						<Form.Control 
 						type="text" 
 						name="name" 
 						onChange={handleChange} 
-						placeholder="myFullMedicalHistory"
+						placeholder="myFullMedicalHistory (Do NOT include extensions like '.pdf', '.exe', '.png', etc.)"
 						value={contractInput.name}
 						autoComplete="off"
 						/>
-						<Form.Text className="text-muted">Do NOT include the extension (e.g. '.pdf', '.exe', '.png', etc.)</Form.Text>
-					</Form.Group>
+					</InputGroup>
+				</Form.Group>
+			</Row>
 
-					<Form.Group>
-						<Form.Label>Recipient</Form.Label>
+			<Row>
+				<Form.Group>
+					<InputGroup>
+						<InputGroup.Text>Receiver</InputGroup.Text>
 						<Form.Control
 						type="text"
 						name="recipient"
 						onChange={handleChange}
-						placeholder="0x......."
+						placeholder="0x....... (Must be an on-chain address)"
 						value={contractInput.recipient}
 						autoComplete="off"
 						/>
-					</Form.Group>
-
-					<Form.Group>
-						<Form.Label>Memo</Form.Label>
+					</InputGroup>
+				</Form.Group>
+			</Row>
+			
+			<Row>
+				<Form.Group>
+					<InputGroup>
+						<InputGroup.Text>Secret<br/>Message</InputGroup.Text>
 						<Form.Control 
 						as="textarea" 
 						rows={5}
 						name="description" 
 						onChange={handleChange} 
-						placeholder="The password is 'saltyH4ckerTears[2_1337_4U]' (single quotes not included)"
+						placeholder="The password is 'saltyH4ckerTears[2_1337_4U]' (single quotes not included)
+						(This memo will only visible to you and the recipient through this DApp. )"
 						value={contractInput.description}
 						/>
-						<Form.Text className="text-muted">This memo will only visible to you and the recipient through this DApp.</Form.Text>
-					</Form.Group>
+					</InputGroup>
+				</Form.Group>
+			</Row>
+			</div>)}
+			<Row>
+			<Form.Group>
+				{fileData !== null && (<div>
+				<InputGroup>
+					<InputGroup.Text>Additional Storage Time</InputGroup.Text>
+					<Form.Control 
+					onChange={handleTimeChange}
+					type="number" 
+					min="0"
+					placeholder="in days"
+					/>
+					<InputGroup.Text>Days</InputGroup.Text>
+					
+				</InputGroup>
+				<InputGroup>
+					<InputGroup.Text>First Month (to start) || ${(quote.bench / (10 ** 8))} USD as ~{(quote.gasBench) / (10 ** 18)} Tokens</InputGroup.Text>
+					<InputGroup.Text>Every Day After || ${(quote.perDiem / (10 ** 8))} USD as ~{(quote.gasPerDiem / (10 ** 18))} Tokens</InputGroup.Text>
+					<InputGroup.Text>Projected Cost || ${getProjectedCost("usd")} USD as ~{getProjectedCost("gas")} Tokens</InputGroup.Text>
+				</InputGroup>
+				</div>)}
+				<InputGroup>
+					<InputGroup.Text>File (Min. {props.bytes(props.rules.minimumFileSize)})</InputGroup.Text>
+					<Form.Control 
+					onChange={retrieveFile}
+					name="rawFile"
+					type="file" 
+					/>
+					{fileData !== null ? (<InputGroup.Text>
+						Extension: {contractInput.type} || Size: {props.bytes(contractInput.size)}
+					</InputGroup.Text>) : (<InputGroup.Text>
+						{props.rules.pinningRate}
+					</InputGroup.Text>)}
+				</InputGroup>
+			</Form.Group>
+			</Row>
+		</Form>	
+	</Row>
 
-					{contractInput.name.length !== 0 && contractInput.description.length !== 0 && (
-					<Form.Group>
-						<Row>
-							<Button 
-							onClick={submitForm} 
-							variant="warning" 
-							>These are the correct details. Store the file to the blockchain!</Button>
-						</Row>
-					</Form.Group>)}
-				</Form>)}
-			</Row>
-		
-			<Row className="g-4">
-				<Form.Text className="text-muted">
-					DISCLAIMER: This DApp will upload the specified file to IPFS; a free, secure, and decentralized file storage protocol. 
-					It is your responsibility to encrypt the file itself for enhanced privacy protection. When a file is uploaded to IPFS,
-					it is retrievable via a Content Identifier (CID) that is generated with respect to the file's contents and metadata. 
-					Consequently, all content on IPFS is inherently anonymous (unlabeled and without file type extensions). Please label 
-					and describe your file appropriately to ensure that your content makes it to the intended recipient in a recognizable 
-					manner.
-				</Form.Text>
-			</Row>
-		</div>
-	);
+	{ contractInput.name.length !== 0 && contractInput.description.length !== 0 && contractInput.recipient.length !== 0 && (<div>	
+	<Row>
+		<Button 
+		onClick={submitForm} 
+		variant="warning" 
+		>These are the correct details. Store the file to the blockchain!</Button>
+	</Row>
+	</div>) }
+
+
+	<p className="text-muted">
+		DISCLAIMER: This DApp will upload the specified file to IPFS; a free, secure, and decentralized file storage protocol. 
+		It is your responsibility to encrypt the file itself for enhanced privacy protection. When a file is uploaded to IPFS,
+		it is retrievable via a Content Identifier (CID) that is generated with respect to the file's contents and metadata. 
+		Consequently, all content on IPFS is inherently anonymous (unlabeled and without file type extensions). Please label 
+		and describe your file appropriately to ensure that your content makes it to the intended recipient in a recognizable 
+		manner.
+	</p>
+
+</div>);
 }
 
 export default Upload;

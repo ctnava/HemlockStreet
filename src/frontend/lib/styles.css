@@ -3,10 +3,10 @@ body {
   font-weight: normal;
   color: #082032;
   background-color: #334756;
-  background-image: url("https://www.transparenttextures.com/patterns/nami.png");
+  
   padding: 0 16px;
 }
-
+/*background-image: url("https://www.transparenttextures.com/patterns/nami.png");*/
 
 
 .panel {

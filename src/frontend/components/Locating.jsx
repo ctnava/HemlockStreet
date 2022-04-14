@@ -24,12 +24,10 @@ function Locating(props) {
         } 
     }
 
-    return(
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-            <Spinner animation="border" style={{ display: 'flex' }} />
-            <p className='mx-3 my-0'>Locating the {props.name} contract...<br/>Please be patient.</p>
-        </div>
-        );
+    return(<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+        <Spinner animation="border" style={{ display: 'flex' }} />
+        <p className='mx-3 my-0'>Locating the {props.name} contract...<br/>Please be patient.</p>
+    </div>);
 }
 
 export default Locating;

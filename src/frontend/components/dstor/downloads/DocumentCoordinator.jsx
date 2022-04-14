@@ -55,6 +55,8 @@ function DocumentCoordinator(props) {
 				}
 			});
 			console.log(matchedFields);
+			// const numFields = ["timestamp", "size"];
+
 			if (!matchedFields.includes(false)) { return document; }
 		});
 		return results;
