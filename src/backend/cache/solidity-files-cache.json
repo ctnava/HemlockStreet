@@ -37,8 +37,8 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStor.sol": {
-      "lastModificationDate": 1649825692543,
-      "contentHash": "447500a8007946867c141d692cd067ae",
+      "lastModificationDate": 1649897838095,
+      "contentHash": "499c0bf544ca95d2fc5439a65aa3beb8",
       "sourceName": "src/backend/contracts/DStor.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -70,7 +70,8 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "DStor"
+        "DStor",
+        "IFissionEngine"
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
@@ -146,8 +147,8 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\FissionEngine.sol": {
-      "lastModificationDate": 1649892180271,
-      "contentHash": "65631358d3d3a41a037f509e3d352a09",
+      "lastModificationDate": 1649893766599,
+      "contentHash": "bd78ce014d08b98f01b5dbdbb8919ec0",
       "sourceName": "src/backend/contracts/FissionEngine.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -176,7 +177,7 @@
         "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"
       ],
       "versionPragmas": [
-        ">=0.7.0 <0.9.0"
+        ">=0.8.0 <0.9.0"
       ],
       "artifacts": [
         "FissionEngine"
@@ -218,8 +219,8 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\PolygonLinkSim.sol": {
-      "lastModificationDate": 1649892107837,
-      "contentHash": "12e1410628af104c5927130e1dc95d38",
+      "lastModificationDate": 1649892689588,
+      "contentHash": "973cdcbfe2d846c96bf320060c58d85e",
       "sourceName": "src/backend/contracts/PolygonLinkSim.sol",
       "solcConfig": {
         "version": "0.8.4",

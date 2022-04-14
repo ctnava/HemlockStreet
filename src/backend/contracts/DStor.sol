@@ -3,10 +3,13 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+interface IFissionEngine { function flipRate() external view returns(uint tokensPerUnit); }
+
 contract DStor is Ownable {
 	event FileUploaded(address sender, address recipient);
 	event FileUpdated(address recipient);
 	string public constant name = 'DStor@HemlockStreet';
+	address public fissionEngine;
 	uint public pinningRate = 150; // pennies
 	uint public minimumPin = 30; // days
 
@@ -33,6 +36,14 @@ contract DStor is Ownable {
 		uint usdPerDayPerKb = (pinningRate * (10 ** 6)) / 1048576; // (1.50/1048576) * 10e8 == 1430.5
 		perDiem =  (numKb * usdPerDayPerKb);
 		benchFee = perDiem * minimumPin;
+	}
+
+	function gasQuote(uint numBytes) public view returns(uint weiPerDiem, uint weiBenchFee) {
+		(uint perDiem, uint benchFee) = quote(numBytes);
+		IFissionEngine FissionEngine = IFissionEngine(fissionEngine);
+		uint flipped = FissionEngine.flipRate();
+		weiPerDiem = (perDiem * flipped) / (10**8);
+		weiBenchFee = (benchFee * flipped) / (10**8);
 	}
 
 	function upload(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription, address recipient) public {
@@ -105,6 +116,8 @@ contract DStor is Ownable {
 		if (isMinimumPin == true) { minimumPin = value; }
 		else { pinningRate = value; }
 	}
+
+	function setFission(address fission) public onlyOwner { fissionEngine = fission; }
 
 	function takeProfit() public {
 		payable(owner()).transfer(address(this).balance);

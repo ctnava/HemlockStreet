@@ -6,7 +6,7 @@ const { txHist } = require("../utils/utils"); // eslint-disable-line no-unused-v
 
 describe("DStor", () => {
 	let DStor;
-	let deployer, client1, client2, client3, otherClients;
+	let deployer, client1, client2, client3, otherClients; // eslint-disable-line no-unused-vars
 	const def_uint = 42069; const def_str = "test"; const null_addr = "0x0000000000000000000000000000000000000000";
 	const def_inputs = ["hash", 42069, ".type", "name", "description"];
 	// await Promise.all(array.map(async (element, index) => {}));
@@ -102,7 +102,7 @@ describe("DStor", () => {
 		});
 
 		it("Should return proper file id arrays", async () => {
-			const files = await setUp();
+			await setUp();
 			assert.deepEqual(await retrieveAccessibleFileIds(deployer, true), [1,3]);
 			assert.deepEqual(await retrieveAccessibleFileIds(deployer, false), []);
 			assert.deepEqual(await retrieveAccessibleFileIds(client1, true), [2]);
@@ -112,7 +112,7 @@ describe("DStor", () => {
 		});
 
 		it("Should return proper file arrays", async () => {
-			const files = await setUp();
+			await setUp();
 			const file1 = await DStor.connect(deployer).get(1);
 			const file2 = await DStor.connect(client1).get(2);
 			const file3 = await DStor.connect(deployer).get(3);
@@ -132,7 +132,7 @@ describe("DStor", () => {
 		});
 
 		it("Should prevent unauthorized access", async () => {
-			const files = await setUp();
+			await setUp();
 			await expect(DStor.connect(client1).get(1)).to.be.revertedWith('ACCESS DENIED');
 			await expect(DStor.connect(deployer).get(2)).to.be.revertedWith('ACCESS DENIED');
 			await expect(DStor.connect(client3).get(3)).to.be.revertedWith('ACCESS DENIED');
@@ -160,14 +160,12 @@ describe("DStor", () => {
 		it("Allow file description changes", async () => {
 			const files = await setUp();
 			await (await DStor.connect(deployer).modify(1, "", "newDescription", null_addr)).wait(1);
-			const newFile = await getfile(deployer, 1);
 			files[0][4] = "newDescription";
 			assert.deepEqual(await getfile(deployer, 1), files[0]);
 		});
 		it("Allow file recipient changes", async () => {
 			const files = await setUp();
 			await (await DStor.connect(deployer).modify(1, "", "", client2.address)).wait(1);
-			const newFile = await getfile(deployer, 1);
 			files[0][5] = client2.address;
 			assert.deepEqual(await getfile(deployer, 1), files[0]);
 			assert.deepEqual(await retrieveAccessibleFileIds(client2, false), [1]);

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.8.0 <0.9.0;
 // Contract by CAT6#2699
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract FissionEngine {
-    address priceFeedAddress;
-    address sister;
+    address public priceFeedAddress;
+    address public sister;
 
-    // contstructor (address pfa, address partner) { 
-    //     priceFeedAddress = pfa;
-    //     sister = partner; 
-    // }
+    constructor(address _priceFeedAddress, address _sister) { 
+        priceFeedAddress = _priceFeedAddress;
+        sister = _sister;
+    }
 
     function flipRate() public view returns(uint tokensPerUnit) {
         require(msg.sender == sister);

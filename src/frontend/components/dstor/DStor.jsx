@@ -26,6 +26,9 @@ function DStor(props) {
 		setOutbox(sent);
 		const received = await (contract.received());
 		setInbox(received);
+		const gasQuote = await contract.gasQuote(1073741824);
+		console.log("perGBperDiem", gasQuote[0].toString());
+		console.log("perGBperMonth", gasQuote[1].toString());
 		setLoading(false);
 	};
 

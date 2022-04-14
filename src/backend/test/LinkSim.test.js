@@ -1,12 +1,11 @@
 /* eslint-disable jest/valid-expect */
 const { ethers } = require("hardhat");
-const { assert, expect } = require("chai");
+const { expect } = require("chai");
 const { constructorArgs } = require("../utils/constructorArgs");
-const { txHist } = require("../utils/utils"); // eslint-disable-line no-unused-vars
 
 describe("PolygonLinkSim", () => {
     let PolygonLinkSim;
-    let deployer, otherClients;
+    let deployer, otherClients; // eslint-disable-line no-unused-vars
     
     beforeEach(async () => {
         // Get ContractFactory and Signers
