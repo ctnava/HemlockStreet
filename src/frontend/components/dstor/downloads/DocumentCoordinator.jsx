@@ -43,12 +43,19 @@ function DocumentCoordinator(props) {
 	const [query, setQuery] = useState(defaultQuery);
 
 	function filterDocs() {
-		var result = [];
-		const strFields = ["name", "type", "memo", "hash", "from", "to"];
-		var strQueries = [];
-		strFields.forEach((field) => {if(query[field]!=="") {strQueries.push(field)}});
-		console.log("strQueries", strQueries);
-		return result;
+		// const results = props.docs.filter((document) => { 
+			const strFields = ["name", "type", "memo", "hash", "from", "to"];
+			var matchedFields = [];
+			strFields.forEach((field) => {matchedFields.push(query[field] !=="" ? true : false)});
+			console.log(matchedFields);
+			// strFields.forEach((field) => {
+
+			// });
+
+
+			// if (!matchedFields.includes(false)) { return document; }
+		// });
+		// return results;
 	}
 
 	function handleQuery(event) {
@@ -58,6 +65,11 @@ function DocumentCoordinator(props) {
         });
         event.preventDefault();
 		filterDocs();
+	}
+
+	function resetQuery() {
+		setQuery(defaultQuery);
+		setShowQueryField(defaultQueryFieldVisibility);
 	}
 
 	const [visibleDocs, setVisibleDocs] = useState(props.docs);
@@ -82,6 +94,7 @@ function DocumentCoordinator(props) {
 		setShowQueryField={setShowQueryField}
 
 		query={query}
+		resetQuery={resetQuery}
 		handleQuery={handleQuery}
 
 		docs={showHidden ? hiddenDocs : visibleDocs}

@@ -19,6 +19,7 @@ function DocumentTable(props) {
             showQueryField={props.showQueryField}
 		    setShowQueryField={props.setShowQueryField}
 		    query={props.query}
+            resetQuery={props.resetQuery}
 		    handleQuery={props.handleQuery}
             />
         </Row>
