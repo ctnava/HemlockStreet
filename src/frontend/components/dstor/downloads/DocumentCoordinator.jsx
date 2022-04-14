@@ -43,19 +43,21 @@ function DocumentCoordinator(props) {
 	const [query, setQuery] = useState(defaultQuery);
 
 	function filterDocs() {
-		// const results = props.docs.filter((document) => { 
+		const results = props.docs.filter((document) => { 
 			const strFields = ["name", "type", "memo", "hash", "from", "to"];
 			var matchedFields = [];
-			strFields.forEach((field) => {matchedFields.push(query[field] !=="" ? true : false)});
+			strFields.forEach((field) => {matchedFields.push(query[field] !=="" ? true : false)});			
+			strFields.forEach((field, index) => {
+				if (!matchedFields[index]) { 
+					if (document[field].includes(query[field])) { 
+						matchedFields[index] = true; 
+					} 
+				}
+			});
 			console.log(matchedFields);
-			// strFields.forEach((field) => {
-
-			// });
-
-
-			// if (!matchedFields.includes(false)) { return document; }
-		// });
-		// return results;
+			if (!matchedFields.includes(false)) { return document; }
+		});
+		return results;
 	}
 
 	function handleQuery(event) {
