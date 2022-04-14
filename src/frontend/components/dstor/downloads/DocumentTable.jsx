@@ -19,7 +19,7 @@ function DocumentTable(props) {
             showQueryField={props.showQueryField}
 		    setShowQueryField={props.setShowQueryField}
 		    query={props.query}
-		    setQuery={props.setQuery}
+		    handleQuery={props.handleQuery}
             />
         </Row>
     <Table className="px-5 container" striped bordered hover variant="dark">

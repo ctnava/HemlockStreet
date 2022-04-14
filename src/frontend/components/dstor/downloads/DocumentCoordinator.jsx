@@ -42,6 +42,24 @@ function DocumentCoordinator(props) {
 	}
 	const [query, setQuery] = useState(defaultQuery);
 
+	function filterDocs() {
+		var result = [];
+		const strFields = ["name", "type", "memo", "hash", "from", "to"];
+		var strQueries = [];
+		strFields.forEach((field) => {if(query[field]!=="") {strQueries.push(field)}});
+		console.log("strQueries", strQueries);
+		return result;
+	}
+
+	function handleQuery(event) {
+		const { name, value } = event.target;
+        setQuery(prev => {
+            return {...query, [name]:value};
+        });
+        event.preventDefault();
+		filterDocs();
+	}
+
 	const [visibleDocs, setVisibleDocs] = useState(props.docs);
 	const [hiddenDocs, setHiddenDocs] = useState([]);
 	
@@ -64,7 +82,7 @@ function DocumentCoordinator(props) {
 		setShowQueryField={setShowQueryField}
 
 		query={query}
-		setQuery={setQuery}
+		handleQuery={handleQuery}
 
 		docs={showHidden ? hiddenDocs : visibleDocs}
 		/>

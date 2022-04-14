@@ -1,25 +1,14 @@
 import React from 'react';
-import { InputGroup, Form, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap'
+import { InputGroup, Form, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap' // eslint-disable-line no-unused-vars
 
 function Query(props) {
     const query = props.query;
-    const setQuery = props.setQuery;
     const showQueryField = props.showQueryField;
-    const setShowQueryField = props.setShowQueryField;
 
     function handleClick(event) {
         const name = event.target.name;
         const value = showQueryField[name];
-        setShowQueryField({...showQueryField, [name]:!value});
-    }
-
-    function handleChange(event) {
-        const { name, value } = event.target;
-        setQuery(prev => {
-            return {...query, [name]:value};
-        });
-        console.log(query);
-        event.preventDefault();
+        props.setShowQueryField({...showQueryField, [name]:!value});
     }
 
     const allFieldsShown = (showQueryField.name && showQueryField.type && showQueryField.memo && showQueryField.hash && showQueryField.timestamp && showQueryField.size && showQueryField.from && showQueryField.to);
@@ -44,7 +33,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="name"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.name}
                 autoComplete="off"
@@ -61,7 +50,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="type"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.type}
                 autoComplete="off"
@@ -78,7 +67,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="memo"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.memo}
                 autoComplete="off"
@@ -95,7 +84,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="hash"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.hash}
                 autoComplete="off"
@@ -112,7 +101,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="timestamp"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.timestamp}
                 autoComplete="off"
@@ -129,7 +118,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="size"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.size}
                 autoComplete="off"
@@ -146,7 +135,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="from"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.from}
                 autoComplete="off"
@@ -163,7 +152,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="to"
-                onChange={handleChange} 
+                onChange={props.handleQuery} 
                 placeholder="..."
                 value={query.to}
                 autoComplete="off"
