@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputGroup, Form, FormControl, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap'
+import { InputGroup, Form, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap'
 
 function Query(props) {
     const query = props.query;
@@ -14,26 +14,12 @@ function Query(props) {
     }
 
     function handleChange(event) {
+        const { name, value } = event.target;
+        setQuery(prev => {
+            return {...query, [name]:value};
+        });
+        console.log(query);
         event.preventDefault();
-        const name = event.target.name;
-        const value = event.target.value;
-        setQuery((prev) => {return {...prev, [name]:value}});
-    }
-
-    function QueryField(props) {
-        return(<Row>
-            <InputGroup className="mb-3 my-3">
-                <InputGroup.Text>{props.text}</InputGroup.Text>
-                <FormControl 
-                type="text" 
-                name={props.field}
-                onChange={(event) => {handleChange(event)}} 
-                placeholder="..."
-                value={props.value}
-                />
-                <Button name={props.field} variant="secondary" onClick={handleClick}>Close</Button>
-            </InputGroup>
-        </Row>);
     }
 
     const allFieldsShown = (showQueryField.name && showQueryField.type && showQueryField.memo && showQueryField.hash && showQueryField.timestamp && showQueryField.size && showQueryField.from && showQueryField.to);
@@ -51,16 +37,142 @@ function Query(props) {
         </DropdownButton>)}
         
         <Form>
-        { showQueryField.name && (<QueryField text="File Name" field="name" value={query.name} />) }
-        { showQueryField.type && (<QueryField text="File Type" field="type" value={query.type} />) }
-        { showQueryField.memo && (<QueryField text="File Memo" field="memo" value={query.memo} />) }
-        { showQueryField.hash && (<QueryField text="IPFS CID (Hash)" field="hash" value={query.hash} />) }
-        { showQueryField.timestamp && (<QueryField text="Timestamp" field="timestamp" value={query.timestamp} />) }
-        { showQueryField.size && (<QueryField text="File Name" field="size" value={query.size} />) }
-        { showQueryField.from && (<QueryField text="Sender Address" field="from" value={query.from} />) }
-        { showQueryField.to && (<QueryField text="Recipient Address" field="to" value={query.to} />) }
+        { showQueryField.name && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>File Name</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="name"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.name}
+                autoComplete="off"
+                />
+                <Button name="name" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group> 
+        </div>) }
+
+        { showQueryField.type && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>File Type</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="type"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.type}
+                autoComplete="off"
+                />
+                <Button name="type" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group> 
+        </div>) }
+
+        { showQueryField.memo && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>File Memo</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="memo"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.memo}
+                autoComplete="off"
+                />
+                <Button name="memo" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>   
+        </div>) }
+
+        { showQueryField.hash && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>IPFS CID (Hash)</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="hash"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.hash}
+                autoComplete="off"
+                />
+                <Button name="hash" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) }
+
+        { showQueryField.timestamp && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>Timestamp</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="timestamp"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.timestamp}
+                autoComplete="off"
+                />
+                <Button name="timestamp" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) }
+
+        { showQueryField.size && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>File Size</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="size"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.size}
+                autoComplete="off"
+                />
+                <Button name="size" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) }
+
+        { showQueryField.from && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>Sender Address</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="from"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.from}
+                autoComplete="off"
+                />
+                <Button name="from" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) }
+
+        { showQueryField.to && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>Recipient Address</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="to"
+                onChange={handleChange} 
+                placeholder="..."
+                value={query.to}
+                autoComplete="off"
+                />
+                <Button name="to" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) } 
         </Form>
-        
     </div>);
 }
 

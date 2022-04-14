@@ -100,6 +100,7 @@ function Upload(props) {
 						onChange={handleChange} 
 						placeholder="myFullMedicalHistory"
 						value={contractInput.name}
+						autoComplete="off"
 						/>
 						<Form.Text className="text-muted">Do NOT include the extension (e.g. '.pdf', '.exe', '.png', etc.)</Form.Text>
 					</Form.Group>
@@ -112,6 +113,7 @@ function Upload(props) {
 						onChange={handleChange}
 						placeholder="0x......."
 						value={contractInput.recipient}
+						autoComplete="off"
 						/>
 					</Form.Group>
 
