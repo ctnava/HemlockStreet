@@ -26,7 +26,7 @@ contract DStor is Ownable {
 		uint uploadTime;
 		address uploader;
 	}
-	mapping(string => uint) public expiresAt;
+	mapping(string => uint) public expirationDates;
 	mapping(uint => File) private files;
 	uint public fileCount = 0;
 
@@ -47,8 +47,30 @@ contract DStor is Ownable {
 		weiBenchFee = (benchFee * flipped) / (10**8);
 	}
 
-	function upload(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription, address recipient) public {
+	function timeAdded(uint benchFee, uint perDiem, uint value) internal view returns(uint expirationDate) {
+		uint remainder = value - benchFee;
+		uint timeToAdd = (remainder % perDiem) * 1 days;
+		expirationDate = timeToAdd + block.timestamp;
+	}
+
+	function addTime(uint fileId) public payable {
+		File memory file = get(fileId);
+		(uint perDiem, ) = gasQuote(file.fileSize);
+		require(msg.value >= perDiem);
+		string memory hash = file.fileHash;
+		require(expirationDates[hash] >= block.timestamp);
+		uint timeToAdd = (msg.value % perDiem) * 1 days;
+		expirationDates[hash] += timeToAdd;
+	}
+
+	function upload(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription, address recipient) public payable {
 		require(bytes(_fileHash).length > 0 && _fileSize >= minimumFileSize && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient != msg.sender && recipient!=address(0));
+		(uint perDiem, uint benchFee) = gasQuote(_fileSize);
+		require(msg.value >= benchFee);
+
+		uint expirationDate = timeAdded(benchFee, perDiem, msg.value);
+		expirationDates[_fileHash] = expirationDate;
+
 		fileCount ++;
 		files[fileCount] = File(
 			_fileHash,
