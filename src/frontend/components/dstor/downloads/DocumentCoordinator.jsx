@@ -76,8 +76,10 @@ function DocumentCoordinator(props) {
 		setShowQueryField(defaultQueryFieldVisibility);
 	}
 
-	const [visibleDocs, setVisibleDocs] = useState(props.docs);
+	const [visibleDocs, setVisibleDocs] = useState();
 	const [hiddenDocs, setHiddenDocs] = useState([]);
+	const docsToShow = (showHidden) ? hiddenDocs : visibleDocs;
+	console.log(docsToShow);
 	
 	
 	// function hide(event) {
@@ -101,7 +103,7 @@ function DocumentCoordinator(props) {
 		resetQuery={resetQuery}
 		handleQuery={handleQuery}
 
-		docs={showHidden ? hiddenDocs : visibleDocs}
+		docs={props.docs/*showHidden ? hiddenDocs : visibleDocs*/}
 		/>
 	</div>
 	);

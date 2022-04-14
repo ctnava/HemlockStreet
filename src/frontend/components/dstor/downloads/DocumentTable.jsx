@@ -6,6 +6,7 @@ import { Table, Row } from 'react-bootstrap'
 
 function DocumentTable(props) {
     const docs = props.docs;
+    console.log(docs);
     const show = props.show;
 
     return(

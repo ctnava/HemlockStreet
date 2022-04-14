@@ -26,12 +26,8 @@ function DStor(props) {
 		setOutbox(sent);
 		const received = await (contract.received());
 		setInbox(received);
-		const ruleSet = await getRules();
-		// const gasQuote = await contract.gasQuote(1073741824); //bytes/GB
-		// console.log("perGBperDiem", gasQuote[0].toString());
-		// console.log("perGBperMonth", gasQuote[1].toString());
+		await getRules();
 		setLoading(false);
-		// console.log("contract terms", ruleSet);
 	};
 
 	const uploadFile = async (file) => {
