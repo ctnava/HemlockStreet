@@ -25,7 +25,6 @@ function Upload(props) {
 				gasPerDiem: parseInt(gasPerDiem.toString()),
 				gasBench: parseInt(gasBench.toString())
 			});
-			console.log(quote);
 		});
 
 	}
@@ -57,6 +56,7 @@ function Upload(props) {
 				});
 			setContractInput(prev => {return({...prev, hash: result.path})});
 			console.log("File Uploaded to IPFS!");
+			// console.log(contractInput);
 		});
 	}
 
@@ -166,6 +166,7 @@ function Upload(props) {
 					name="rawFile"
 					type="file" 
 					/>
+					{contractInput.hash.length !== 0 && (<InputGroup.Text>IPFS CID: {contractInput.hash}</InputGroup.Text>)}
 					{fileData !== null ? (<InputGroup.Text>
 						Extension: {contractInput.type} || Size: {props.bytes(contractInput.size)}
 					</InputGroup.Text>) : (<InputGroup.Text>
@@ -177,12 +178,12 @@ function Upload(props) {
 		</Form>	
 	</Row>
 
-	{ contractInput.name.length !== 0 && contractInput.description.length !== 0 && contractInput.recipient.length !== 0 && (<div>	
+	{ contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
 	<Row>
 		<Button 
-		onClick={submitForm} 
-		variant="warning" 
-		>These are the correct details. Store the file to the blockchain!</Button>
+		onClick={contractInput.hash.length === 0 ? handleSubmit : submitForm} 
+		variant={contractInput.hash.length === 0 ? "primary" : "warning" }
+		>{contractInput.hash.length === 0 ? "I have made sure that these are the correct details."  : "Store the file to the blockchain!"}</Button>
 	</Row>
 	</div>) }
 
