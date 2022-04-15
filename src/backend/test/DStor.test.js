@@ -233,12 +233,41 @@ describe("DStor", () => {
 			await setUp();
 			await expect(DStor.connect(deployer).addTime(1)).to.be.revertedWith('VALUE LOW'); // reverted
 		});
+		it("Should not allow underpriced extensions", async () => {
+			await setUp();
+			await expect(DStor.connect(deployer).addTime(1, { value: ethers.utils.parseUnits("20030000000000", "wei") })).to.be.revertedWith('VALUE LOW'); // reverted
+		});
 		it("Should allow expiration extension by the involved parties", async () => {
 			await setUp();
 			const expDate = await DStor.expirationDates("hash");
 			await (await DStor.connect(deployer).addTime(1, def_pd)).wait(1);
 			const newExpDate = await DStor.expirationDates("hash");
 			expect (newExpDate.toString()).to.equal((parseInt(expDate.toString()) + day).toString());
+		});
+	});
+
+	describe("Administrative Functions", () => {
+		it("Disallow anybody but the owner to modify the states", async () => {
+			await setUp();
+			await expect(DStor.connect(client1).setRules(false, 1)).to.be.revertedWith("Ownable: caller is not the owner");
+			await expect(DStor.connect(client1).setRules(true, 1)).to.be.revertedWith("Ownable: caller is not the owner");
+			await expect(DStor.connect(client1).setPinningRate(1)).to.be.revertedWith("Ownable: caller is not the owner");
+			await expect(DStor.connect(client1).setFission(client1.address)).to.be.revertedWith("Ownable: caller is not the owner");
+		});
+		it("Allow modifications by the owner", async () => {
+			await setUp();
+			await (await DStor.connect(deployer).setRules(false, 1)).wait(1);
+			await (await DStor.connect(deployer).setRules(true, 1)).wait(1);
+			await (await DStor.connect(deployer).setPinningRate(1)).wait(1);
+			await (await DStor.connect(deployer).setFission(client1.address)).wait(1);
+			var val;
+			val = await DStor.pinningRate();
+			expect (val.toString()).to.equal("1");
+			val = await DStor.minimumFileSize();
+			expect (val.toString()).to.equal("1");
+			val = await DStor.minimumPin();
+			expect (val.toString()).to.equal("1");
+			expect (await DStor.fissionEngine()).to.equal(client1.address);
 		});
 	});
 });
