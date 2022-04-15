@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ethers } from "ethers";
+import Admin from "./Admin";
 import Locating from "../Locating";
 import ShowButton from "./ShowButton";
 import Upload from "./Upload";
@@ -23,13 +24,16 @@ function DStor(props) {
 	};
 	const [outbox, setOutbox] = useState(messageBox);
 	const [inbox, setInbox] = useState(messageBox);
+	const [showAdmin, setShowAdmin] = useState(false);
 
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
 		console.log("Querying DStor...");
 		const [sent, sentExps, received, receivedExps] = await contract.getAllData();
+		const ownerAddress = await contract.owner();
 		setOutbox({ contents: sent, expDates: sentExps });
 		setInbox({ contents: received, expDates: receivedExps });
+		if (ownerAddress.toLowerCase() === props.client.account) { setShowAdmin(true) }
 		await getRules();
 		setLoading(false);
 	};
@@ -94,6 +98,8 @@ function DStor(props) {
 			initialize={initialize}
 			/>
 		) : (<div>
+			{ showAdmin && (<Admin contract={contract} />)}
+
 			{ showUpload ? (
 				<Upload 
 				className="panel" 

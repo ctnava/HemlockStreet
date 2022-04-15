@@ -30,7 +30,7 @@ function Routing(props) {
             <Route path="/" element={<Home />} />
 
             { props.client.account && (
-                <Route path="/dstor" element={ <DStor ipfs={props.ipfs} loadContract={loadContract} /> } />
+                <Route path="/dstor" element={ <DStor ipfs={props.ipfs} loadContract={loadContract} client={props.client} /> } />
             )}
 
             {/* !props.client.account && (
