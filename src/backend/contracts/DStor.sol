@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 interface IFissionEngine { function flipRate() external view returns(uint tokensPerUnit); }
 
 contract DStor is Ownable {
-	event FileUploaded(address sender, address recipient);
 	event FileUpdated(address recipient);
 	string public constant name = 'DeadDrop@HemlockStreet';
 	address public fissionEngine;
@@ -75,7 +74,6 @@ contract DStor is Ownable {
 			recipient,
 			block.timestamp,
 			msg.sender);
-		emit FileUploaded(msg.sender, recipient);
 	}
 
 	function modify(uint fileId, string memory fileName, string memory description, address recipient) public {
@@ -140,6 +138,19 @@ contract DStor is Ownable {
 		sentExps = getAccessibleExps(true);
 		received = getAccessibleFiles(false);
 		receivedExps = getAccessibleExps(false);
+	}
+
+	function batchExpQuery(string[] memory query) public view returns(bool[] memory isExpired, uint[] memory tilExpiry) {
+		uint numElements = query.length;
+		bool[] memory expired = new bool[](numElements);
+		uint[] memory timeTil = new uint[](numElements);
+		for (uint i = 0; i < numElements; i++) {
+			uint expDate = expirationDates[query[i]];
+			expired[i] = (expirationDates[query[i]] > block.timestamp);
+			timeTil[i] = block.timestamp - expDate;
+		}
+		isExpired = expired;
+		tilExpiry = timeTil;
 	}
 
 	function setRules(bool isMinimumPin, uint value) public onlyOwner {
