@@ -125,9 +125,22 @@ contract DStor is Ownable {
 		return result;
 	}
 
-	function sent() public view returns(File[] memory) { return getAccessibleFiles(true); }
+	function getAccessibleExps(bool isSender) public view returns(uint[] memory) {
+		File[] memory accFiles = (getAccessibleFiles(isSender));
+		uint numElements = accFiles.length;
+		uint[] memory result = new uint[](numElements);
+		for (uint i = 0; i < numElements; i++) {
+			result[i] = expirationDates[accFiles[i].fileHash];
+		}
+		return result;
+	}
 
-	function received() public view returns(File[] memory) { return getAccessibleFiles(false); }
+	function getAllData() public view returns(File[] memory sent, uint[] memory sentExps, File[] memory received, uint[] memory receivedExps) {
+		sent = getAccessibleFiles(true);
+		sentExps = getAccessibleExps(true);
+		received = getAccessibleFiles(false);
+		receivedExps = getAccessibleExps(false);
+	}
 
 	function setRules(bool isMinimumPin, uint value) public onlyOwner {
 		if (isMinimumPin == true) { minimumPin = value; }

@@ -64,12 +64,9 @@ function Upload(props) {
 		setAdditionalTime(event.target.value);
 	}
 
-	const [msgValue, setMsgValue] = useState(0);
-
 	function getProjectedCost(type) {
 		const bf = (type === "usd") ? (quote.bench / (10 ** 8)) : (quote.gasBench / (10 ** 18));
 		const pd = (type === "usd") ? (quote.perDiem / (10 ** 8)) : (quote.gasPerDiem / (10 ** 18));
-		if (type !== "usd") { setMsgValue(bf + (pd * additionalTime)) }
 		const cost = (bf + (pd * additionalTime)).toString();
 		return (cost.slice(0, cost.indexOf(".") + 9));
 	}
@@ -86,7 +83,8 @@ function Upload(props) {
 		const data = contractInput;
 		setFileData(null);
 		setContractInput(defaultInput);
-		props.uploadFile(data, msgValue);
+		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
+		props.uploadFile(data, messageValue);
 	}
 
 	return(<div>

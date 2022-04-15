@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ethers } from "ethers";
 import Locating from "../Locating";
 import ShowButton from "./ShowButton";
 import Upload from "./Upload";
@@ -16,16 +17,19 @@ function humanBytes(x) {
 function DStor(props) {
 	const [contract, setContract] = useState();
 	const [loading, setLoading] = useState(true);
-	const [outbox, setOutbox] = useState([]);
-	const [inbox, setInbox] = useState([]);
+	const messageBox = {
+		contents: [],
+		expDates: []
+	};
+	const [outbox, setOutbox] = useState(messageBox);
+	const [inbox, setInbox] = useState(messageBox);
 
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
 		console.log("Querying DStor...");
-		const sent = await (contract.sent());
-		setOutbox(sent);
-		const received = await (contract.received());
-		setInbox(received);
+		const [sent, sentExps, received, receivedExps] = await contract.getAllData();
+		setOutbox({ contents: sent, expDates: sentExps });
+		setInbox({ contents: received, expDates: receivedExps });
 		await getRules();
 		setLoading(false);
 	};
@@ -33,7 +37,9 @@ function DStor(props) {
 	const uploadFile = async (file, msgValue) => {
 		setShowUpload(false);
 		setLoading(true);
-		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: msgValue })
+		const val = ethers.utils.parseUnits(msgValue.toString(), "wei");
+		console.log(val);
+		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: val })
 			.then((result) => {
 				console.log("transaction", result);
 			});

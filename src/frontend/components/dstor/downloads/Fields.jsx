@@ -24,6 +24,7 @@ function Fields(props) {
             <Field name="memo" label="Memo" />
             <Field name="hash" label="CID" />
             <Field name="timestamp" label="Time" />
+            <Field name="expiration" label="Expiration" />
             <Field name="size" label="Size" />
             <Field name="from" label="Sender" />
             <Field name="to" label="Recipient" />

@@ -20,6 +20,7 @@ function Query(props) {
             {!showQueryField.memo && (<Dropdown.Item name="memo" onClick={handleClick}>File Memo</Dropdown.Item>)}
             {!showQueryField.hash && (<Dropdown.Item name="hash" onClick={handleClick}>IPFS CID (Hash)</Dropdown.Item>)}
             {!showQueryField.timestamp && (<Dropdown.Item name="timestamp" onClick={handleClick}>Timestamp</Dropdown.Item>)}
+            {!showQueryField.expiration && (<Dropdown.Item name="expiration" onClick={handleClick}>Expiration</Dropdown.Item>)}
             {!showQueryField.size && (<Dropdown.Item name="size" onClick={handleClick}>File Size</Dropdown.Item>)}
             {!showQueryField.from && (<Dropdown.Item name="from" onClick={handleClick}>Sender Address</Dropdown.Item>)}
             {!showQueryField.to && (<Dropdown.Item name="to" onClick={handleClick}>Recipient Address</Dropdown.Item>)}
@@ -107,6 +108,23 @@ function Query(props) {
                 autoComplete="off"
                 />
                 <Button name="timestamp" variant="secondary" onClick={handleClick}>Close</Button>
+            </InputGroup>
+        </Form.Group>    
+        </div>) }
+
+        { showQueryField.expiration && (<div>
+        <Form.Group className="row">
+            <InputGroup className="mb-3 my-3">
+                <InputGroup.Text>Expiration</InputGroup.Text>
+                <Form.Control 
+                type="text" 
+                name="expiration"
+                onChange={props.handleQuery} 
+                placeholder="..."
+                value={query.expiration}
+                autoComplete="off"
+                />
+                <Button name="expiration" variant="secondary" onClick={handleClick}>Close</Button>
             </InputGroup>
         </Form.Group>    
         </div>) }

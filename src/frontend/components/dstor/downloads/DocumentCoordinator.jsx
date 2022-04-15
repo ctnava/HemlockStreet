@@ -12,6 +12,7 @@ function DocumentCoordinator(props) {
 		memo: true,
 		hash: false,
 		timestamp: true,
+		expiration: true,
 		size: false,
 		from: false,
 		to: false
@@ -24,6 +25,7 @@ function DocumentCoordinator(props) {
 		memo: false,
 		hash: false,
 		timestamp: false,
+		expiration: false,
 		size: false,
 		from: false,
 		to: false
@@ -36,6 +38,7 @@ function DocumentCoordinator(props) {
 		memo: "",
 		hash: "",
 		timestamp: "",
+		expiration: "",
 		size: "",
 		from: "",
 		to: ""
@@ -105,6 +108,7 @@ function DocumentCoordinator(props) {
 		handleQuery={handleQuery}
 
 		docs={props.docs/*showHidden ? hiddenDocs : visibleDocs*/}
+
 		/>
 	</div>
 	);

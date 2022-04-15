@@ -5,8 +5,8 @@ import { Table, Row } from 'react-bootstrap'
 
 
 function DocumentTable(props) {
-    const docs = props.docs;
-    console.log(docs);
+    const messages = props.docs.contents;
+    const expDates = props.docs.expDates;
     const show = props.show;
 
     return(
@@ -33,6 +33,7 @@ function DocumentTable(props) {
             {show.memo && (<th>Memo</th>)}
             {show.size && (<th>Size</th>)}
             {show.timestamp && (<th>Timestamp</th>)}
+            {show.expiration && (<th>Expires At</th>)}
             {show.from && (<th>Sender</th>)}
             {show.to && (<th>Receiver</th>)}
             <th>Actions</th>
@@ -40,24 +41,24 @@ function DocumentTable(props) {
     </thead>
     
     <tbody>
-        { docs.map((doc, index) => {
-            var timestamp = doc.uploadTime.toNumber();
-            const toMs = timestamp * 1000;
-            timestamp = new Date(toMs); 
+        { messages.map((message, index) => {
+            const timestamp = new Date((message.uploadTime.toNumber()) * 1000);
+            const expDate = new Date((expDates[index].toNumber()) * 1000);
             return(
         <tr key={index}>
-            {show.hash && (<td>{doc.fileHash}</td>)}
-            {show.name && (<td>{doc.fileName}{doc.fileType}</td>)}
-            {show.type && (<td>{doc.fileType}</td>)}
-            {show.memo && (<td>{doc.fileDescription}</td>)}
-            {show.size && (<td>{props.bytes(doc.fileSize.toNumber())}</td>)}
+            {show.hash && (<td>{message.fileHash}</td>)}
+            {show.name && (<td>{message.fileName}{message.fileType}</td>)}
+            {show.type && (<td>{message.fileType}</td>)}
+            {show.memo && (<td>{message.fileDescription}</td>)}
+            {show.size && (<td>{props.bytes(message.fileSize.toNumber())}</td>)}
             {show.timestamp && (<td>{timestamp.toLocaleString()}</td>)}
-            {show.from && (<td>{doc.uploader}</td>)}
-            {show.to && (<td>{doc.recipient}</td>)}
+            {show.expiration && (<td>{expDate.toLocaleString()}</td>)}
+            {show.from && (<td>{message.uploader}</td>)}
+            {show.to && (<td>{message.recipient}</td>)}
             <td>
                 <div>hide</div> / 
                 <a 
-                href={`https://ipfs.infura.io/ipfs/${doc.fileHash}?filename=${doc.fileName}${doc.fileType}&download=true`}
+                href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
                 rel="noopener noreferrer"
                 target="_blank"
                 >download</a>
@@ -66,7 +67,7 @@ function DocumentTable(props) {
         }) }
     </tbody>
     </Table>
-    {docs.length === 0 && (<p>No documents found.</p>)}
+    {messages.length === 0 && (<p>No messages found.</p>)}
     </Row>
     );
 }
