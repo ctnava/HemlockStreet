@@ -24,7 +24,15 @@ function DStor(props) {
 	};
 	const [outbox, setOutbox] = useState(messageBox);
 	const [inbox, setInbox] = useState(messageBox);
-	const [showAdmin, setShowAdmin] = useState(false);
+	const adminDefault = {
+		show: false,
+		balance: 0,
+		fsMin: 0,
+		pinMin: 0,
+		pinRate: 0,
+		fission: ""
+	}
+	const [adminDetails, setAdminDetails] = useState(adminDefault);
 
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
@@ -33,7 +41,21 @@ function DStor(props) {
 		const ownerAddress = await contract.owner();
 		setOutbox({ contents: sent, expDates: sentExps });
 		setInbox({ contents: received, expDates: receivedExps });
-		if (ownerAddress.toLowerCase() === props.client.account) { setShowAdmin(true) }
+		if (ownerAddress.toLowerCase() === props.client.account) { 
+			const balance = await (props.client.provider).getBalance(contract.address);
+			const fsMin = await contract.minimumFileSize();
+			const pinMin = await contract.minimumPin();
+			const pinRate = await contract.pinningRate();
+			const fission = await contract.fissionEngine();
+			setAdminDetails({
+				show: true,
+				balance: balance,
+				fsMin: fsMin,
+				pinMin: pinMin,
+				pinRate: pinRate,
+				fission: fission
+			});
+		}
 		await getRules();
 		setLoading(false);
 	};
@@ -98,7 +120,7 @@ function DStor(props) {
 			initialize={initialize}
 			/>
 		) : (<div>
-			{ showAdmin && (<Admin contract={contract} />)}
+			{ adminDetails.show && (<Admin contract={contract} details={adminDetails} />)}
 
 			{ showUpload ? (
 				<Upload 
