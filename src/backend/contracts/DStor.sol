@@ -47,19 +47,13 @@ contract DStor is Ownable {
 		weiBenchFee = (benchFee * flipped) / (10**8);
 	}
 
-	function timeAdded(uint benchFee, uint perDiem, uint value) internal view returns(uint expirationDate) {
-		uint remainder = value - benchFee;
-		uint timeToAdd = (remainder % perDiem) * 1 days;
-		expirationDate = timeToAdd + block.timestamp;
-	}
-
 	function addTime(uint fileId) public payable {
 		File memory file = get(fileId);
 		(uint perDiem, ) = gasQuote(file.fileSize);
 		require(msg.value >= perDiem);
 		string memory hash = file.fileHash;
 		require(expirationDates[hash] >= block.timestamp);
-		uint timeToAdd = (msg.value % perDiem) * 1 days;
+		uint timeToAdd = (msg.value / perDiem) * 1 days;
 		expirationDates[hash] += timeToAdd;
 	}
 
@@ -67,9 +61,9 @@ contract DStor is Ownable {
 		require(bytes(_fileHash).length > 0 && _fileSize >= minimumFileSize && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient != msg.sender && recipient!=address(0));
 		(uint perDiem, uint benchFee) = gasQuote(_fileSize);
 		require(msg.value >= benchFee);
-
-		uint expirationDate = timeAdded(benchFee, perDiem, msg.value);
-		expirationDates[_fileHash] = expirationDate + (30 days);
+		uint additionalTime = ((msg.value - benchFee) / perDiem) * 1 days;
+		uint expDate = block.timestamp + (30 days) + additionalTime;
+		expirationDates[_fileHash] = expDate;
 
 		fileCount ++;
 		files[fileCount] = File(

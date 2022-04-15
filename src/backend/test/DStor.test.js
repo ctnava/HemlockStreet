@@ -10,6 +10,7 @@ describe("DStor", () => {
 	const def_uint = 42069; const def_str = "test"; const null_addr = "0x0000000000000000000000000000000000000000";
 	const def_pd = 30030000000000; 
 	const def_bench = { value: ethers.utils.parseEther(ethers.utils.formatEther(900900000000000)) }; 
+	const def_benchP1 = { value: ethers.utils.parseEther(ethers.utils.formatEther(900900000000000+30030000000000)) }; 
 	const day = 86400; // seconds
 	const def_inputs = ["hash", 42069, ".type", "name", "description"];
 	// await Promise.all(array.map(async (element, index) => {}));
@@ -85,15 +86,21 @@ describe("DStor", () => {
 			await expect(DStor.connect(deployer).upload(...def_inputs, client3.address, {value: ethers.utils.parseEther(ethers.utils.formatEther(def_pd))})).to.be.reverted;
 			expect(await DStor.fileCount()).to.equal(0);
 		});
-		it("Should allow proper uploads", async () => {
+		it("Should allow proper uploads and set expiration dates based on message value", async () => {
 			await DStor.connect(deployer).upload(...def_inputs, client3.address, def_bench);
 			expect(await DStor.fileCount()).to.equal(1);
-			const fileObject = await DStor.connect(deployer).get(1);
-			const uploadTime = parseInt(fileObject.uploadTime.toString())
+			var fileObject = await DStor.connect(deployer).get(1);
+			var uploadTime = parseInt(fileObject.uploadTime.toString());
 			const benchExpiration = (uploadTime + (30 * day)).toString();
 			expect(await DStor.expirationDates(fileObject.fileHash)).to.equal(benchExpiration);
-			await DStor.connect(client1).upload(...def_inputs, client3.address, def_bench);
+			
+			await DStor.connect(client1).upload(...def_inputs, client3.address, def_benchP1);
 			expect(await DStor.fileCount()).to.equal(2);
+			fileObject = await DStor.connect(client1).get(2);
+			uploadTime = parseInt(fileObject.uploadTime.toString());
+			const benchExpirationP1 = (uploadTime + (31 * day)).toString();
+			expect(await DStor.expirationDates(fileObject.fileHash)).to.equal(benchExpirationP1);
+			
 			await DStor.connect(deployer).upload(...def_inputs, client1.address, def_bench);
 			expect(await DStor.fileCount()).to.equal(3);
 		});
