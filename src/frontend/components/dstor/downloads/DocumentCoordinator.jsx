@@ -3,8 +3,6 @@ import DocumentTable from './DocumentTable';
 // import { Table, Form, Row, Col, Button } from 'react-bootstrap'
 
 function DocumentCoordinator(props) {
-	const showHidden = props.showHidden;
-	
 	const defaultView = {
 		fields: false,
 		name: true,
@@ -44,58 +42,56 @@ function DocumentCoordinator(props) {
 		to: ""
 	}
 	const [query, setQuery] = useState(defaultQuery);
+	const [queryResults, setQueryResults] = useState({contents: [], expDates: []});
+	function setDefaultQueryResults() { setQueryResults({contents: props.docs.contents, expDates: props.docs.expDates}) }
+	if (query === defaultQuery && queryResults.contents.length === 0 && props.docs.contents.length !== 0) {setDefaultQueryResults()}
 
-	function filterDocs() {
-		const results = props.docs.filter((document) => { 
+	function handleQuery(event) {
+		const { name, value } = event.target;
+        setQuery((prev) => { return {...query, [name]:value} });
+		const collection = props.docs.contents;
+		const expDates = props.docs.expDates;
+		var qr = {contents: [], expDates: []}
+		collection.forEach((document, index) => { 
+			const normalized = { 
+				name: document.fileName, 
+				type: document.fileType, 
+				memo: document.fileDescription, 
+				hash: document.fileHash, 
+				timestamp: document.timestamp,
+				expiration: expDates[index],
+				size: document.fileSize,
+				from: document.uploader, 
+				to: document.recipient 
+			}
 			const strFields = ["name", "type", "memo", "hash", "from", "to"];
 			var matchedFields = [];
-			strFields.forEach((field) => {matchedFields.push(query[field] !=="" ? true : false)});			
+			strFields.forEach((field) => {matchedFields.push(query[field].length === 0 ? true : false)});
 			strFields.forEach((field, index) => {
-				if (!matchedFields[index]) { 
-					if (document[field].includes(query[field])) { 
+				if (matchedFields[index] === false) { 
+					if (normalized[field].includes(query[field])) { 
 						matchedFields[index] = true; 
 					} 
 				}
 			});
-			console.log(matchedFields);
 			// const numFields = ["timestamp", "size"];
-
-			if (!matchedFields.includes(false)) { return document; }
+			if (!matchedFields.includes(false)) { qr.contents.push(document); qr.expDates.push(expDates[index]); }
 		});
-		return results;
-	}
-
-	function handleQuery(event) {
-		const { name, value } = event.target;
-        setQuery(prev => {
-            return {...query, [name]:value};
-        });
-        event.preventDefault();
-		filterDocs();
+		setQueryResults(qr);
+		event.preventDefault();
 	}
 
 	function resetQuery() {
 		setQuery(defaultQuery);
 		setShowQueryField(defaultQueryFieldVisibility);
+		setDefaultQueryResults();
 	}
 
-	const [visibleDocs, setVisibleDocs] = useState();
-	const [hiddenDocs, setHiddenDocs] = useState([]);
-	const docsToShow = (showHidden) ? hiddenDocs : visibleDocs;
-	console.log(docsToShow);
-	
-	
-	// function hide(event) {
-	// 	setHidden(prev => [...prev, event.target.hash]);
-	// 	setDocuments((prev) => {
-	// 		return documents.filter();
-	// 	});
-	// }
+	console.log(queryResults);
 
 	return(
 	<div className="flex justify-center">
 		<DocumentTable 
-		name={showHidden ? "hidden" : "visible"} 
 		show={show} 
 		setShow={setShow} 
 		bytes={props.bytes}
@@ -107,8 +103,7 @@ function DocumentCoordinator(props) {
 		resetQuery={resetQuery}
 		handleQuery={handleQuery}
 
-		docs={props.docs/*showHidden ? hiddenDocs : visibleDocs*/}
-
+		docs={queryResults}
 		/>
 	</div>
 	);

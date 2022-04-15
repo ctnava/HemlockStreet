@@ -24,7 +24,9 @@ function Query(props) {
             {!showQueryField.size && (<Dropdown.Item name="size" onClick={handleClick}>File Size</Dropdown.Item>)}
             {!showQueryField.from && (<Dropdown.Item name="from" onClick={handleClick}>Sender Address</Dropdown.Item>)}
             {!showQueryField.to && (<Dropdown.Item name="to" onClick={handleClick}>Recipient Address</Dropdown.Item>)}
-        </DropdownButton>) : (<Button onClick={props.resetQuery} variant="secondary">Reset All Fields</Button>)}
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={props.resetQuery}>Reset All Fields</Dropdown.Item>
+        </DropdownButton>) : (<Button onClick={props.resetQuery} variant="warning">Reset All Fields</Button>)}
         
         <Form>
         { showQueryField.name && (<div>

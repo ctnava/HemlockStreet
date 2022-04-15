@@ -56,7 +56,6 @@ function DocumentTable(props) {
             {show.from && (<td>{message.uploader}</td>)}
             {show.to && (<td>{message.recipient}</td>)}
             <td>
-                <div>hide</div> / 
                 <a 
                 href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
                 rel="noopener noreferrer"
