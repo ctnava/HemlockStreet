@@ -8,9 +8,9 @@ describe("DStor", () => {
 	let DStor; let PLS; let FissionEngine;
 	let deployer, client1, client2, client3, otherClients; // eslint-disable-line no-unused-vars
 	const def_uint = 42069; const def_str = "test"; const null_addr = "0x0000000000000000000000000000000000000000";
-	const def_pd = 30030000000000; 
-	const def_bench = { value: ethers.utils.parseEther(ethers.utils.formatEther(900900000000000)) }; 
-	const def_benchP1 = { value: ethers.utils.parseEther(ethers.utils.formatEther(900900000000000+30030000000000)) }; 
+	const def_pd = { value: ethers.utils.parseUnits("30030000000000", "wei") }; 
+	const def_bench = { value: ethers.utils.parseUnits("900900000000000", "wei") }; 
+	const def_benchP1 = { value: ethers.utils.parseUnits((900900000000000+30030000000000).toString(), "wei") }; 
 	const day = 86400; // seconds
 	const def_inputs = ["hash", 42069, ".type", "name", "description"];
 	// await Promise.all(array.map(async (element, index) => {}));
@@ -51,39 +51,39 @@ describe("DStor", () => {
 
 	describe("Uploads", () => {
 		it("Should not allow empty hashes", async () => {
-			await expect(DStor.connect(deployer).upload("", def_uint, def_str, def_str, def_str, client3.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload("", def_uint, def_str, def_str, def_str, client3.address, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow empty file sizes", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, 0, def_str, def_str, def_str, client3.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, 0, def_str, def_str, def_str, client3.address, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow empty file types", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, def_uint, "", def_str, def_str, client3.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, def_uint, "", def_str, def_str, client3.address, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow empty file names", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, "", def_str, client3.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, "", def_str, client3.address, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow empty file descriptions", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, "", client3.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, "", client3.address, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow empty recipient field", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, def_str, null_addr, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, def_str, null_addr, def_bench)).to.be.revertedWith('BAD CALL');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow sends to self", async () => {
-			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, def_str, deployer.address, def_bench)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(def_str, def_uint, def_str, def_str, def_str, deployer.address, def_bench)).to.be.revertedWith('NO SELF SEND');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow free uploads", async () => {
-			await expect(DStor.connect(deployer).upload(...def_inputs, client3.address)).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(...def_inputs, client3.address)).to.be.revertedWith('VALUE LOW');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should not allow underpriced uploads", async () => {
-			await expect(DStor.connect(deployer).upload(...def_inputs, client3.address, {value: ethers.utils.parseEther(ethers.utils.formatEther(def_pd))})).to.be.reverted;
+			await expect(DStor.connect(deployer).upload(...def_inputs, client3.address, def_pd)).to.be.revertedWith('VALUE LOW');
 			expect(await DStor.fileCount()).to.equal(0);
 		});
 		it("Should allow proper uploads and set expiration dates based on message value", async () => {
@@ -182,36 +182,63 @@ describe("DStor", () => {
 	});
 
 	describe("File Interaction", () => {
-		it("Disallow empty modifications", async () => {
+		it("Should Disallow empty modifications", async () => {
 				const files = await setUp();
-				await expect(DStor.connect(deployer).modify(1, "", "", null_addr)).to.be.reverted;
+				await expect(DStor.connect(deployer).modify(1, "", "", null_addr)).to.be.revertedWith('BAD CALL');
 				assert.deepEqual(await getfile(deployer, 1), files[0]);
 			});
-		it("Disallow modifications to send to self", async () => {
+		it("Should Disallow modifications to send to self", async () => {
 			const files = await setUp();
-			await expect(DStor.connect(deployer).modify(1, "", "", deployer.address)).to.be.reverted;
+			await expect(DStor.connect(deployer).modify(1, "", "", deployer.address)).to.be.revertedWith('NO SELF SEND');
 			assert.deepEqual(await getfile(deployer, 1), files[0]);
 		});
-		it("Allow file name changes", async () => {
+		it("Should Disallow modifications by recipient", async () => {
+			await setUp();
+			await expect(DStor.connect(client3).modify(1, "", "", client2.address)).to.be.revertedWith('ACCESS DENIED');
+			await expect(DStor.connect(client3).modify(1, "newName", "", null_addr)).to.be.revertedWith('ACCESS DENIED');
+			await expect(DStor.connect(client3).modify(1, "", "newDescription", null_addr)).to.be.revertedWith('ACCESS DENIED');
+		});
+		it("Should Disallow modifications by randoms", async () => {
+			await setUp();
+			await expect(DStor.connect(otherClients[0]).modify(1, "", "", client2.address)).to.be.revertedWith('ACCESS DENIED');
+			await expect(DStor.connect(otherClients[0]).modify(1, "newName", "", null_addr)).to.be.revertedWith('ACCESS DENIED');
+			await expect(DStor.connect(otherClients[0]).modify(1, "", "newDescription", null_addr)).to.be.revertedWith('ACCESS DENIED');
+		});
+		it("Should Allow file name changes", async () => {
 			const files = await setUp();
 			await (await DStor.connect(deployer).modify(1, "newName", "", null_addr)).wait(1);
 			const newFile = await getfile(deployer, 1);
 			files[0][3] = "newName";
 			assert.deepEqual(newFile, files[0]);
 		});
-		it("Allow file description changes", async () => {
+		it("Should Allow file description changes", async () => {
 			const files = await setUp();
 			await (await DStor.connect(deployer).modify(1, "", "newDescription", null_addr)).wait(1);
 			files[0][4] = "newDescription";
 			assert.deepEqual(await getfile(deployer, 1), files[0]);
 		});
-		it("Allow file recipient changes", async () => {
+		it("Should Allow file recipient changes", async () => {
 			const files = await setUp();
 			await (await DStor.connect(deployer).modify(1, "", "", client2.address)).wait(1);
 			files[0][5] = client2.address;
 			assert.deepEqual(await getfile(deployer, 1), files[0]);
 			assert.deepEqual(await retrieveAccessibleFileIds(client2, false), [1]);
 			assert.deepEqual(await retrieveAccessibleFileIds(client3, false), [2]);
+		});
+		it("Should not allow expiration extension by randoms", async () => {
+			await setUp();
+			await expect(DStor.connect(deployer).addTime(2, def_pd)).to.be.revertedWith('ACCESS DENIED');
+		});
+		it("Should not allow free extensions", async () => {
+			await setUp();
+			await expect(DStor.connect(deployer).addTime(1)).to.be.revertedWith('VALUE LOW'); // reverted
+		});
+		it("Should allow expiration extension by the involved parties", async () => {
+			await setUp();
+			const expDate = await DStor.expirationDates("hash");
+			await (await DStor.connect(deployer).addTime(1, def_pd)).wait(1);
+			const newExpDate = await DStor.expirationDates("hash");
+			expect (newExpDate.toString()).to.equal((parseInt(expDate.toString()) + day).toString());
 		});
 	});
 });

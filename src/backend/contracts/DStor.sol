@@ -30,7 +30,7 @@ contract DStor is Ownable {
 	uint public fileCount = 0;
 
 	function quote(uint numBytes) public view returns(uint perDiem, uint benchFee){
-		require(numBytes >= minimumFileSize);
+		require(numBytes >= minimumFileSize, badCall);
 		uint numKb = numBytes / 1024;
 		if (numBytes % 1024 > 0) { numKb++; }
 		uint usdPerDayPerKb = (pinningRate * (10 ** 6)) / 1048576; // (1.50/1048576) * 10e8 == 1430.5
@@ -46,20 +46,26 @@ contract DStor is Ownable {
 		weiBenchFee = (benchFee * flipped) / (10**8);
 	}
 
+	string private constant badCall = "BAD CALL";
+	string private constant denied = "ACCESS DENIED";
+	string private constant lowVal = "VALUE LOW";
+	string private constant selfSend = "NO SELF SEND";
+
 	function addTime(uint fileId) public payable {
 		File memory file = get(fileId);
 		(uint perDiem, ) = gasQuote(file.fileSize);
-		require(msg.value >= perDiem);
+		require(msg.value >= perDiem, lowVal);
 		string memory hash = file.fileHash;
-		require(expirationDates[hash] >= block.timestamp);
+		require(expirationDates[hash] >= block.timestamp, denied);
 		uint timeToAdd = (msg.value / perDiem) * 1 days;
 		expirationDates[hash] += timeToAdd;
 	}
 
 	function upload(string memory _fileHash, uint _fileSize, string memory _fileType, string memory _fileName, string memory _fileDescription, address recipient) public payable {
-		require(bytes(_fileHash).length > 0 && _fileSize >= minimumFileSize && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient != msg.sender && recipient!=address(0));
+		require(bytes(_fileHash).length > 0 && _fileSize >= minimumFileSize && bytes(_fileType).length > 0 && bytes(_fileName).length > 0  && bytes(_fileDescription).length > 0  && msg.sender!=address(0) && recipient!=address(0), badCall);
+		require(recipient != msg.sender , selfSend);
 		(uint perDiem, uint benchFee) = gasQuote(_fileSize);
-		require(msg.value >= benchFee);
+		require(msg.value >= benchFee, lowVal);
 		uint additionalTime = ((msg.value - benchFee) / perDiem) * 1 days;
 		uint expDate = block.timestamp + (30 days) + additionalTime;
 		expirationDates[_fileHash] = expDate;
@@ -78,20 +84,21 @@ contract DStor is Ownable {
 
 	function modify(uint fileId, string memory fileName, string memory description, address recipient) public {
 		File storage file = files[fileId];
-		require(file.uploader == msg.sender, "ACCESS DENIED");
+		require(file.uploader == msg.sender, denied);
+		require(recipient != msg.sender, selfSend);
 		uint nameLength = bytes(fileName).length;
 		uint descriptionLength = bytes(description).length;
-		if((nameLength != 0 || descriptionLength != 0 || recipient != address(0)) && recipient != msg.sender) {
+		if((nameLength != 0 || descriptionLength != 0 || recipient != address(0))) {
 			if(nameLength != 0) { file.fileName = fileName; }
 			if(descriptionLength != 0) { file.fileDescription = description; }
 			if(recipient != address(0)) { file.recipient = recipient; }
-		} else { revert(); }
+		} else { revert(badCall); }
 		emit FileUpdated(file.recipient);
 	}
 
 	function get(uint fileId) public view returns(File memory) {
 		File memory file = files[fileId];
-		require(file.uploader == msg.sender || file.recipient == msg.sender, "ACCESS DENIED");
+		require(file.uploader == msg.sender || file.recipient == msg.sender, denied);
 		return file;
 	}
 

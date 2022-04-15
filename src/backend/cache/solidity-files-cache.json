@@ -37,8 +37,8 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStor.sol": {
-      "lastModificationDate": 1650047781222,
-      "contentHash": "e07948cb85e98509dc695b4ea248f835",
+      "lastModificationDate": 1650054152810,
+      "contentHash": "0b0df5950a95081154e957447599f9f6",
       "sourceName": "src/backend/contracts/DStor.sol",
       "solcConfig": {
         "version": "0.8.4",
