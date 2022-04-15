@@ -8,7 +8,7 @@ interface IFissionEngine { function flipRate() external view returns(uint tokens
 contract DStor is Ownable {
 	event FileUploaded(address sender, address recipient);
 	event FileUpdated(address recipient);
-	string public constant name = 'DStor@HemlockStreet';
+	string public constant name = 'DeadDrop@HemlockStreet';
 	address public fissionEngine;
 	uint public pinningRate = 150; // pennies
 	uint public minimumPin = 30; // days
@@ -69,7 +69,7 @@ contract DStor is Ownable {
 		require(msg.value >= benchFee);
 
 		uint expirationDate = timeAdded(benchFee, perDiem, msg.value);
-		expirationDates[_fileHash] = expirationDate;
+		expirationDates[_fileHash] = expirationDate + (30 days);
 
 		fileCount ++;
 		files[fileCount] = File(

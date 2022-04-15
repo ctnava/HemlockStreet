@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Row, Form, Button, Table, InputGroup } from 'react-bootstrap'
+import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 
 
@@ -64,9 +64,12 @@ function Upload(props) {
 		setAdditionalTime(event.target.value);
 	}
 
+	const [msgValue, setMsgValue] = useState(0);
+
 	function getProjectedCost(type) {
 		const bf = (type === "usd") ? (quote.bench / (10 ** 8)) : (quote.gasBench / (10 ** 18));
 		const pd = (type === "usd") ? (quote.perDiem / (10 ** 8)) : (quote.gasPerDiem / (10 ** 18));
+		if (type !== "usd") { setMsgValue(bf + (pd * additionalTime)) }
 		const cost = (bf + (pd * additionalTime)).toString();
 		return (cost.slice(0, cost.indexOf(".") + 9));
 	}
@@ -83,7 +86,7 @@ function Upload(props) {
 		const data = contractInput;
 		setFileData(null);
 		setContractInput(defaultInput);
-		props.uploadFile(data);
+		props.uploadFile(data, msgValue);
 	}
 
 	return(<div>

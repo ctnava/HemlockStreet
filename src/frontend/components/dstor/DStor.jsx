@@ -30,10 +30,10 @@ function DStor(props) {
 		setLoading(false);
 	};
 
-	const uploadFile = async (file) => {
+	const uploadFile = async (file, msgValue) => {
 		setShowUpload(false);
 		setLoading(true);
-		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient)
+		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: msgValue })
 			.then((result) => {
 				console.log("transaction", result);
 			});

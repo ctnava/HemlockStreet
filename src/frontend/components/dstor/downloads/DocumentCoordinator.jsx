@@ -95,6 +95,7 @@ function DocumentCoordinator(props) {
 		name={showHidden ? "hidden" : "visible"} 
 		show={show} 
 		setShow={setShow} 
+		bytes={props.bytes}
 		
 		showQueryField={showQueryField}
 		setShowQueryField={setShowQueryField}
