@@ -38,7 +38,8 @@ function App(props) {
   };
 
   if (window.ethereum) {
-    window.ethereum.on('chainChanged', () => {window.location.reload()});
+    window.ethereum.on('chainChanged', () => {web3Handler()});
+    window.ethereum.on('accountsChanged', () => {web3Handler()});
     if(!hasWeb3) { setHasWeb3(true); }
   }
 
