@@ -28,27 +28,42 @@ const defaultQueryFieldVisibility = {
 	to: false
 }
 
-const defaultView = {
+const defaultInboxView = {
 	fields: false,
 	name: true,
 	type: false,
 	memo: true,
 	hash: false,
-	timestamp: true,
-	expiration: true,
-	size: false,
-	from: false,
+	timestamp: false,
+	expiration: false,
+	size: true,
+	from: true,
 	to: false
 }
 
+const defaultOutboxView = {
+	fields: false,
+	name: true,
+	type: false,
+	memo: true,
+	hash: false,
+	timestamp: false,
+	expiration: false,
+	size: true,
+	from: false,
+	to: true
+}
+
 function Downloads(props) {
-	const [show, setShow] = useState(defaultView);
+	const [show, setShow] = useState(defaultInboxView);
 	const [showQueryField, setShowQueryField] = useState(defaultQueryFieldVisibility);
 
 	const [showInbox, setShowInbox] = useState(true);
 	const [query, setQuery] = useState(defaultQuery);
 
 	function switchMessages() {
+		if (showInbox) { setShow(defaultOutboxView) }
+		else { setShow(defaultInboxView) }
 		setShowInbox(!showInbox);
 		resetQuery();
 	}

@@ -19,13 +19,13 @@ function Fields(props) {
         <Field name="fields" label="Fields" />
         { show.fields && (
         <Row>
+            <Field name="hash" label="CID" />
             <Field name="name" label="Name" />
             <Field name="type" label="Extension" />
             <Field name="memo" label="Memo" />
-            <Field name="hash" label="CID" />
+            <Field name="size" label="Size" />
             <Field name="timestamp" label="Time" />
             <Field name="expiration" label="Expiration" />
-            <Field name="size" label="Size" />
             <Field name="from" label="Sender" />
             <Field name="to" label="Recipient" />
         </Row>
