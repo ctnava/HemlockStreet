@@ -8,8 +8,8 @@ const defaultQuery = {
 	type: "",
 	memo: "",
 	hash: "",
-	timestamp: "",
-	expiration: "",
+	timestamp: {start: new Date("2020/03/13"), end: new Date()},
+	expiration: {start: new Date("2020/03/13"), end: new Date()},
 	size: "",
 	from: "",
 	to: ""
@@ -63,6 +63,14 @@ function Downloads(props) {
 		event.preventDefault();
 	}
 
+	function handleDateQuery(event) {
+		const { name, part, selected } = event.target;
+		const dateRange = query[name];
+		const newRange = {...dateRange, [part]: selected};
+		setQuery((prev) => { return {...query, [name]: newRange} });
+		event.preventDefault();
+	}
+
 	return(
 		<div className="flex justify-center">
 			<Row className="g-4 py-5">
@@ -87,6 +95,7 @@ function Downloads(props) {
 			query={query}
 			resetQuery={resetQuery}
 			handleQuery={handleQuery}
+			handleDateQuery={handleDateQuery}
 
 			docs={showInbox ? props.inbox : props.outbox}
 			/>

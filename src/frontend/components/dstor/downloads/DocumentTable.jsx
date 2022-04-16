@@ -81,6 +81,7 @@ function DocumentTable(props) {
 		    query={props.query}
             resetQuery={props.resetQuery}
 		    handleQuery={props.handleQuery}
+            handleDateQuery={props.handleDateQuery}
             />
         </Row>
     <Table className="px-5 container" striped bordered hover variant="dark">

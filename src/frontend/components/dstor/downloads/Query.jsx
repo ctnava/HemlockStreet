@@ -1,4 +1,5 @@
 import React from 'react';
+import Picker from './Picker';
 import { InputGroup, Form, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap' // eslint-disable-line no-unused-vars
 
 function Query(props) {
@@ -101,13 +102,11 @@ function Query(props) {
         <Form.Group className="row">
             <InputGroup className="mb-3 my-3">
                 <InputGroup.Text>Timestamp</InputGroup.Text>
-                <Form.Control 
-                type="text" 
+                <Picker
                 name="timestamp"
-                onChange={props.handleQuery} 
-                placeholder="..."
-                value={query.timestamp}
-                autoComplete="off"
+                startDate={query.timestamp.start}
+                endDate={query.timestamp.end}
+                onChange={props.handleDateQuery}
                 />
                 <Button name="timestamp" variant="secondary" onClick={handleClick}>Close</Button>
             </InputGroup>
@@ -118,13 +117,11 @@ function Query(props) {
         <Form.Group className="row">
             <InputGroup className="mb-3 my-3">
                 <InputGroup.Text>Expiration</InputGroup.Text>
-                <Form.Control 
-                type="text" 
+                <Picker
                 name="expiration"
-                onChange={props.handleQuery} 
-                placeholder="..."
-                value={query.expiration}
-                autoComplete="off"
+                startDate={query.expiration.start}
+                endDate={query.expiration.end}
+                onChange={props.handleDateQuery}
                 />
                 <Button name="expiration" variant="secondary" onClick={handleClick}>Close</Button>
             </InputGroup>
