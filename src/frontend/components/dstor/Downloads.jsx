@@ -10,7 +10,7 @@ const defaultQuery = {
 	hash: "",
 	timestamp: {start: new Date("2020/03/13"), end: new Date()},
 	expiration: {start: new Date("2020/03/13"), end: new Date()},
-	size: "",
+	size: {min: 0, max: 1024, units: 'YB' },
 	from: "",
 	to: ""
 }
@@ -63,6 +63,13 @@ function Downloads(props) {
 		event.preventDefault();
 	}
 
+	function handleSizeQuery(event) {
+		const { name, value } = event.target;
+		console.log(event.target);
+		setQuery((prev) => { return {...query, size: {...query.size, [name]: value } } });
+		if (name !== "units") { event.preventDefault() }
+	}
+
 	function handleDateQuery(event) {
 		const { name, part, selected } = event.target;
 		const dateRange = query[name];
@@ -95,6 +102,7 @@ function Downloads(props) {
 			query={query}
 			resetQuery={resetQuery}
 			handleQuery={handleQuery}
+			handleSizeQuery={handleSizeQuery}
 			handleDateQuery={handleDateQuery}
 
 			docs={showInbox ? props.inbox : props.outbox}

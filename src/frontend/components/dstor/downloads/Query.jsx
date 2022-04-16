@@ -1,5 +1,6 @@
 import React from 'react';
 // import Picker from './Picker';
+import Sizer from './Sizer';
 import { InputGroup, Form, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap' // eslint-disable-line no-unused-vars
 
 function Query(props) {
@@ -132,14 +133,7 @@ function Query(props) {
         <Form.Group className="row">
             <InputGroup className="mb-3 my-3">
                 <InputGroup.Text>File Size</InputGroup.Text>
-                <Form.Control 
-                type="text" 
-                name="size"
-                onChange={props.handleQuery} 
-                placeholder="..."
-                value={query.size}
-                autoComplete="off"
-                />
+                <Sizer query={props.query} handleSizeQuery={props.handleSizeQuery} />
                 <Button name="size" variant="secondary" onClick={handleClick}>Close</Button>
             </InputGroup>
         </Form.Group>    
@@ -152,7 +146,7 @@ function Query(props) {
                 <Form.Control 
                 type="text" 
                 name="from"
-                onChange={props.handleQuery} 
+                onChange={props.handleQuery}
                 placeholder="..."
                 value={query.from}
                 autoComplete="off"

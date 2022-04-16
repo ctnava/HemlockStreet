@@ -11,7 +11,7 @@ function DocumentTable(props) {
     function filteredResults() {
         const collection = props.docs.contents;
 		const expDates = props.docs.expDates;
-		const stringResults = {contents: [], expDates: []}
+		const qr = {contents: [], expDates: []};
 		collection.forEach((document, index) => { 
 			const normalized = { 
 				name: document.fileName, 
@@ -24,44 +24,50 @@ function DocumentTable(props) {
 				from: document.uploader, 
 				to: document.recipient 
 			}
+
 			const strFields = ["name", "type", "memo", "hash", "from", "to"];
-			var matchedFields = [];
-			strFields.forEach((field) => {matchedFields.push(query[field].length === 0 ? true : false)});
-			strFields.forEach((field, index) => {
-				if (matchedFields[index] === false) { 
+			var matchedStrFields = [];
+			strFields.forEach((field) => {matchedStrFields.push(
+                query[field].length === 0 ? true : false
+            )});
+			strFields.forEach((field, fieldIndex) => {
+				if (matchedStrFields[fieldIndex] === false) { 
 					if (normalized[field].includes(query[field])) { 
-						matchedFields[index] = true; 
+						matchedStrFields[fieldIndex] = true; 
 					} 
 				}
 			});
-			if (!matchedFields.includes(false)) { stringResults.contents.push(document); stringResults.expDates.push(expDates[index]); }
+            
+            var matchedNumFields = []; /*size*/
+            matchedNumFields.push(
+                (query.size.min === 0 && query.size.max === 1024 && query.size.units === "YB") ? true : false
+            );
+            const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+            if (matchedNumFields[0] === false) {
+                const multiplier = (units.indexOf(query.size.units)) ** 1024;
+                const size = parseInt(normalized.size.toString());
+                if (size <= (query.size.max * multiplier) && size >= (query.size.min * multiplier)) { matchedNumFields[0] = true }
+            }
+
+            const dateFields = ["timestamp", "expiration"];
+            var matchedDateFields = [];
+            dateFields.forEach((field) => {matchedDateFields.push(
+                (query[field].start === new Date("2020/03/13") && query[field].end === new Date()) ? true : false
+            )});
+            dateFields.forEach((field, fieldIndex) => {
+                if (matchedDateFields[fieldIndex] === false) {
+                    /*if(normalized[field] something something)*/
+                    console.log("tripped");
+                }
+            });
+
+			if (!matchedStrFields.includes(false) && !matchedNumFields.includes(false) && !matchedDateFields.includes(false)) { 
+                qr.contents.push(document); 
+                qr.expDates.push(expDates[index]); 
+            }
 		});
-        const qr = {contents: [], expDates: []}
-        collection.forEach((document, index) => { 
-			const normalized = { 
-				name: document.fileName, 
-				type: document.fileType, 
-				memo: document.fileDescription, 
-				hash: document.fileHash, 
-				timestamp: document.timestamp,
-				expiration: expDates[index],
-				size: document.fileSize,
-				from: document.uploader, 
-				to: document.recipient 
-			}
-			const numFields = ["timestamp", "expiration", "size"];
-			var matchedFields = [];
-			numFields.forEach((field) => {matchedFields.push(query[field].length === 0 ? true : false)});
-			numFields.forEach((field, index) => {
-				if (matchedFields[index] === false) { 
-					if (normalized[field].includes(query[field])) { 
-						matchedFields[index] = true; 
-					} 
-				}
-			});
-			if (!matchedFields.includes(false)) { qr.contents.push(document); qr.expDates.push(expDates[index]); }
-		});
-        return stringResults; // qr
+
+        return qr; // qr
     }
 
     const docs = filteredResults();
@@ -81,6 +87,7 @@ function DocumentTable(props) {
 		    query={props.query}
             resetQuery={props.resetQuery}
 		    handleQuery={props.handleQuery}
+            handleSizeQuery={props.handleSizeQuery}
             handleDateQuery={props.handleDateQuery}
             />
         </Row>
