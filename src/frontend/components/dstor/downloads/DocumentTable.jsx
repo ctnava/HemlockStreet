@@ -7,11 +7,11 @@ import { Table, Row } from 'react-bootstrap'
 function DocumentTable(props) {
     const show = props.show;
     const query = props.query;
-    
+
     function filteredResults() {
         const collection = props.docs.contents;
 		const expDates = props.docs.expDates;
-		var qr = {contents: [], expDates: []}
+		const stringResults = {contents: [], expDates: []}
 		collection.forEach((document, index) => { 
 			const normalized = { 
 				name: document.fileName, 
@@ -34,10 +34,34 @@ function DocumentTable(props) {
 					} 
 				}
 			});
-			// const numFields = ["timestamp", "size"];
+			if (!matchedFields.includes(false)) { stringResults.contents.push(document); stringResults.expDates.push(expDates[index]); }
+		});
+        const qr = {contents: [], expDates: []}
+        collection.forEach((document, index) => { 
+			const normalized = { 
+				name: document.fileName, 
+				type: document.fileType, 
+				memo: document.fileDescription, 
+				hash: document.fileHash, 
+				timestamp: document.timestamp,
+				expiration: expDates[index],
+				size: document.fileSize,
+				from: document.uploader, 
+				to: document.recipient 
+			}
+			const numFields = ["timestamp", "expiration", "size"];
+			var matchedFields = [];
+			numFields.forEach((field) => {matchedFields.push(query[field].length === 0 ? true : false)});
+			numFields.forEach((field, index) => {
+				if (matchedFields[index] === false) { 
+					if (normalized[field].includes(query[field])) { 
+						matchedFields[index] = true; 
+					} 
+				}
+			});
 			if (!matchedFields.includes(false)) { qr.contents.push(document); qr.expDates.push(expDates[index]); }
 		});
-        return qr;
+        return stringResults; // qr
     }
 
     const docs = filteredResults();
