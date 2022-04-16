@@ -45,8 +45,14 @@ function DocumentTable(props) {
             const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
             if (matchedNumFields[0] === false) {
                 const multiplier = (units.indexOf(query.size.units)) ** 1024;
+                console.log(multiplier);
                 const size = parseInt(normalized.size.toString());
-                if (size <= (query.size.max * multiplier) && size >= (query.size.min * multiplier)) { matchedNumFields[0] = true }
+                console.log("max", parseInt(query.size.max) * multiplier);
+                console.log(size);
+                console.log("min", parseInt(query.size.min) * multiplier);
+                if (size <= (parseInt(query.size.max) * multiplier) && size >= (parseInt(query.size.min) * multiplier)) { 
+                    matchedNumFields[0] = true 
+                }
             }
 
             const dateFields = ["timestamp", "expiration"];

@@ -65,7 +65,6 @@ function Downloads(props) {
 
 	function handleSizeQuery(event) {
 		const { name, value } = event.target;
-		console.log(event.target);
 		setQuery((prev) => { return {...query, size: {...query.size, [name]: value } } });
 		if (name !== "units") { event.preventDefault() }
 	}
