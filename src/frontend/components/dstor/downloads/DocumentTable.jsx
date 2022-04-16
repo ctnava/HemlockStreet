@@ -9,6 +9,38 @@ function DocumentTable(props) {
     const expDates = props.docs.expDates;
     const show = props.show;
 
+    function filteredResults() {
+        // const collection = props.docs.contents;
+		// const expDates = props.docs.expDates;
+		// var qr = {contents: [], expDates: []}
+		// collection.forEach((document, index) => { 
+		// 	const normalized = { 
+		// 		name: document.fileName, 
+		// 		type: document.fileType, 
+		// 		memo: document.fileDescription, 
+		// 		hash: document.fileHash, 
+		// 		timestamp: document.timestamp,
+		// 		expiration: expDates[index],
+		// 		size: document.fileSize,
+		// 		from: document.uploader, 
+		// 		to: document.recipient 
+		// 	}
+		// 	const strFields = ["name", "type", "memo", "hash", "from", "to"];
+		// 	var matchedFields = [];
+		// 	strFields.forEach((field) => {matchedFields.push(query[field].length === 0 ? true : false)});
+		// 	strFields.forEach((field, index) => {
+		// 		if (matchedFields[index] === false) { 
+		// 			if (normalized[field].includes(query[field])) { 
+		// 				matchedFields[index] = true; 
+		// 			} 
+		// 		}
+		// 	});
+		// 	// const numFields = ["timestamp", "size"];
+		// 	if (!matchedFields.includes(false)) { qr.contents.push(document); qr.expDates.push(expDates[index]); }
+		// });
+		// setQueryResults(qr);
+    }
+
     return(
     <Row>
         <Row>
