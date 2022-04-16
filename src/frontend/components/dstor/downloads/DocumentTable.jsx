@@ -44,7 +44,7 @@ function DocumentTable(props) {
             );
             const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
             if (matchedNumFields[0] === false) {
-                const multiplier = (units.indexOf(query.size.units)) ** 1024;
+                const multiplier = 1024 ** (units.indexOf(query.size.units));
                 console.log(multiplier);
                 const size = parseInt(normalized.size.toString());
                 console.log("max", parseInt(query.size.max) * multiplier);
@@ -58,12 +58,14 @@ function DocumentTable(props) {
             const dateFields = ["timestamp", "expiration"];
             var matchedDateFields = [];
             dateFields.forEach((field) => {matchedDateFields.push(
-                (query[field].start === new Date("2020/03/13") && query[field].end === new Date()) ? true : false
+                ((query[field].start).toString() === (new Date("2020/03/13")).toString() && (query[field].end).toString() === props.defaultEnd.toString()) ? true : false
             )});
             dateFields.forEach((field, fieldIndex) => {
                 if (matchedDateFields[fieldIndex] === false) {
                     /*if(normalized[field] something something)*/
                     console.log("tripped");
+                    console.log(query[field].end.toString());
+                    console.log(props.defaultEnd.toString()); 
                 }
             });
 

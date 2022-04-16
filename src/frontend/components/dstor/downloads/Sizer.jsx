@@ -20,7 +20,7 @@ function Sizer(props){
         type="number" 
         name="min"
         min="0"
-        max="1023"
+        max={parseInt(props.query.size.max)-1}
         onChange={props.handleSizeQuery} 
         value={props.query.size.min}
         />
@@ -28,7 +28,7 @@ function Sizer(props){
         <Form.Control 
         type="number" 
         name="max"
-        min={props.query.size.min}
+        min={parseInt(props.query.size.min)+1}
         max="1024"
         onChange={props.handleSizeQuery}
         value={props.query.size.max}

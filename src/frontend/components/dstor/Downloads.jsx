@@ -3,13 +3,14 @@ import { Row, Col, Button } from 'react-bootstrap'
 import DocumentTable from './downloads/DocumentTable';
 
 
+const defaultEnd = new Date();
 const defaultQuery = {
 	name: "",
 	type: "",
 	memo: "",
 	hash: "",
-	timestamp: {start: new Date("2020/03/13"), end: new Date()},
-	expiration: {start: new Date("2020/03/13"), end: new Date()},
+	timestamp: {start: new Date("2020/03/13"), end: defaultEnd},
+	expiration: {start: new Date("2020/03/13"), end: defaultEnd},
 	size: {min: 0, max: 1024, units: 'YB' },
 	from: "",
 	to: ""
@@ -103,6 +104,7 @@ function Downloads(props) {
 			handleQuery={handleQuery}
 			handleSizeQuery={handleSizeQuery}
 			handleDateQuery={handleDateQuery}
+			defaultEnd={defaultEnd}
 
 			docs={showInbox ? props.inbox : props.outbox}
 			/>
