@@ -42,7 +42,7 @@ function Upload(props) {
 		reader.readAsArrayBuffer(file);
 		reader.onload = () => {
 			let result = reader.result;
-			// result cannot be null
+			// result cannot be null CHUNK THE FILE BEFORE UPLOAD
 			let data = Buffer(result);
 			if (data.length >= 1024) {
 				setFileData(data);
