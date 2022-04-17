@@ -3,6 +3,7 @@ import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 
 
+var readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
 function Upload(props) {
 	const [fileData, setFileData] = useState(null);
 
@@ -41,19 +42,23 @@ function Upload(props) {
 		reader.readAsArrayBuffer(file);
 		reader.onloadend = () => { 
 			let data = Buffer(reader.result);
-			setFileData(data);
-			setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
-			getQuote(data.length);
+			if (data.length >= 1024) {
+				setFileData(data);
+				setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
+				getQuote(data.length);
+			} else { console.log("File too small!"); }
 		}
 	}
 
 	function handleSubmit(event) {
 		event.preventDefault();
 		props.ipfs.add(fileData).then((result) => {
+			readyMessage = "Uploading... Please Wait";
 			props.ipfs.pin.add(result.path, (err) => {
-					if(err) {console.log(err)}
-					else {console.log("Pinned")}
-				});
+				readyMessage = "Pinning... Please Wait";
+				if(err) {console.log(err)}
+				else {readyMessage = "Pinned!";}
+			});
 			setContractInput(prev => {return({...prev, hash: result.path})});
 			console.log("File Uploaded to IPFS!");
 			// console.log(contractInput);
@@ -184,7 +189,7 @@ function Upload(props) {
 		<Button 
 		onClick={contractInput.hash.length === 0 ? handleSubmit : submitForm} 
 		variant={contractInput.hash.length === 0 ? "primary" : "warning" }
-		>{contractInput.hash.length === 0 ? "I have made sure that these are the correct details."  : "Store the file to the blockchain!"}</Button>
+		>{contractInput.hash.length === 0 ? readyMessage  : "Store the file to the blockchain!"}</Button>
 	</Row>
 	</div>) }
 

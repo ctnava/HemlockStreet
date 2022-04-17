@@ -45,11 +45,11 @@ function DocumentTable(props) {
             const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
             if (matchedNumFields[0] === false) {
                 const multiplier = 1024 ** (units.indexOf(query.size.units));
-                console.log(multiplier);
+                // console.log(multiplier);
                 const size = parseInt(normalized.size.toString());
-                console.log("max", parseInt(query.size.max) * multiplier);
-                console.log(size);
-                console.log("min", parseInt(query.size.min) * multiplier);
+                // console.log("max", parseInt(query.size.max) * multiplier);
+                // console.log(size);
+                // console.log("min", parseInt(query.size.min) * multiplier);
                 if (size <= (parseInt(query.size.max) * multiplier) && size >= (parseInt(query.size.min) * multiplier)) { 
                     matchedNumFields[0] = true 
                 }
@@ -64,8 +64,8 @@ function DocumentTable(props) {
                 if (matchedDateFields[fieldIndex] === false) {
                     /*if(normalized[field] something something)*/
                     console.log("tripped");
-                    console.log(query[field].end.toString());
-                    console.log(props.defaultEnd.toString()); 
+                    // console.log(query[field].end.toString());
+                    // console.log(props.defaultEnd.toString()); 
                 }
             });
 
