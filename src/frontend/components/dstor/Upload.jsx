@@ -40,13 +40,18 @@ function Upload(props) {
 		const type = name.slice(name.indexOf("."), name.length);
 
 		reader.readAsArrayBuffer(file);
-		reader.onloadend = () => { 
-			let data = Buffer(reader.result);
+		reader.onloadend = () => {
+			let result = reader.result;
+			while (result === null) { result = reader.result; console.log("ATTEMPTING TO GET A RESULT"); console.log(result); }
+			let data = Buffer(result);
 			if (data.length >= 1024) {
 				setFileData(data);
 				setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
 				getQuote(data.length);
-			} else { console.log("File too small!"); }
+			} else { 
+				setFileData(null);
+				setContractInput(defaultInput);
+			}
 		}
 	}
 
