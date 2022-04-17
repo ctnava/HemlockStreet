@@ -40,15 +40,16 @@ function Upload(props) {
 		const type = name.slice(name.indexOf("."), name.length);
 
 		reader.readAsArrayBuffer(file);
-		reader.onloadend = () => {
+		reader.onload = () => {
 			console.log("PREPARING");
 			let result = reader.result;
-			while (result === null) { 
-				console.log("FAILED! ATTEMPTING TO GET A RESULT"); 
-				function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
-				sleep(1000).then(()=> {result = reader.result});
-			}
-
+			// while (result === null) { 
+			// 	function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
+			// 	sleep(1000).then(()=> {
+			// 		console.log("FAILED! ATTEMPTING TO GET A RESULT"); 
+			// 		result = reader.result;
+			// 	});
+			// }
 			console.log("SUCCESS! BUFFERING & COMPARING"); // console.log("SUCCESS! BUFFERING");
 			let data = Buffer(result);
 			// console.log("COMPARING");
