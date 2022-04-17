@@ -41,25 +41,14 @@ function Upload(props) {
 
 		reader.readAsArrayBuffer(file);
 		reader.onload = () => {
-			console.log("PREPARING");
 			let result = reader.result;
-			// while (result === null) { 
-			// 	function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
-			// 	sleep(1000).then(()=> {
-			// 		console.log("FAILED! ATTEMPTING TO GET A RESULT"); 
-			// 		result = reader.result;
-			// 	});
-			// }
-			console.log("SUCCESS! BUFFERING & COMPARING"); // console.log("SUCCESS! BUFFERING");
+			// result cannot be null
 			let data = Buffer(result);
-			// console.log("COMPARING");
 			if (data.length >= 1024) {
-				console.log("STORING");
 				setFileData(data);
 				setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
 				getQuote(data.length);
 			} else { 
-				console.log("RESETTING");
 				setFileData(null);
 				setContractInput(defaultInput);
 			}
