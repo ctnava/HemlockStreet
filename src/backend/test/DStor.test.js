@@ -8,9 +8,9 @@ describe("DStor", () => {
 	let DStor; let PLS; let FissionEngine;
 	let deployer, client1, client2, client3, otherClients; // eslint-disable-line no-unused-vars
 	const def_uint = 42069; const def_str = "test"; const null_addr = "0x0000000000000000000000000000000000000000";
-	const def_pd = { value: ethers.utils.parseUnits("30030000000000", "wei") }; 
-	const def_bench = { value: ethers.utils.parseUnits("900900000000000", "wei") }; 
-	const def_benchP1 = { value: ethers.utils.parseUnits((900900000000000+30030000000000).toString(), "wei") }; 
+	const def_pd = { value: ethers.utils.parseUnits("1000000000000", "wei") }; 
+	const def_bench = { value: ethers.utils.parseUnits("30030000000000", "wei") }; 
+	const def_benchP1 = { value: ethers.utils.parseUnits((30030000000000+1000000000000).toString(), "wei") }; 
 	const day = 86400; // seconds
 	const def_inputs = ["hash", 42069, ".type", "name", "description"];
 	// await Promise.all(array.map(async (element, index) => {}));
@@ -32,11 +32,11 @@ describe("DStor", () => {
 			expect(await DStor.fileCount()).to.equal(0);
 			expect(await DStor.owner()).to.equal(deployer.address);
 			const usdQuote = await DStor.quote(42069);
-			expect (usdQuote[0].toString()).to.equal("6006");
-			expect (usdQuote[1].toString()).to.equal("180180");
+			expect (usdQuote[0].toString()).to.equal("200");
+			expect (usdQuote[1].toString()).to.equal("6006");
 			const gasQuote = await DStor.gasQuote(42069);
-			expect (gasQuote[0].toString()).to.equal("30030000000000");
-			expect (gasQuote[1].toString()).to.equal("900900000000000");
+			expect (gasQuote[0].toString()).to.equal("1000000000000");
+			expect (gasQuote[1].toString()).to.equal("30030000000000");
 			var val;
 			val = await DStor.pinningRate();
 			expect (val.toString()).to.equal("150");
@@ -235,7 +235,7 @@ describe("DStor", () => {
 		});
 		it("Should not allow underpriced extensions", async () => {
 			await setUp();
-			await expect(DStor.connect(deployer).addTime(1, { value: ethers.utils.parseUnits("20030000000000", "wei") })).to.be.revertedWith('VALUE LOW'); // reverted
+			await expect(DStor.connect(deployer).addTime(1, { value: ethers.utils.parseUnits("900000000000", "wei") })).to.be.revertedWith('VALUE LOW'); // reverted
 		});
 		it("Should allow expiration extension by the involved parties", async () => {
 			await setUp();

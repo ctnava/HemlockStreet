@@ -47,6 +47,7 @@ function Upload(props) {
 			if (data.length >= 1024) {
 				setFileData(data);
 				setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
+				// getQuote(1048576*1024);
 				getQuote(data.length);
 			} else { 
 				setFileData(null);

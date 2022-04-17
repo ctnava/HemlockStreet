@@ -33,9 +33,8 @@ contract DStor is Ownable {
 		require(numBytes >= minimumFileSize, badCall);
 		uint numKb = numBytes / 1024;
 		if (numBytes % 1024 > 0) { numKb++; }
-		uint usdPerDayPerKb = (pinningRate * (10 ** 6)) / 1048576; // (1.50/1048576) * 10e8 == 1430.5
-		perDiem =  (numKb * usdPerDayPerKb);
-		benchFee = perDiem * minimumPin;
+		benchFee = numKb * ((pinningRate * (10 ** 6)) / 1048576); // (1.50/1048576) * 10e8 == 1430.5
+		perDiem =  (benchFee / 30);
 	}
 
 	function gasQuote(uint numBytes) public view returns(uint weiPerDiem, uint weiBenchFee) {
