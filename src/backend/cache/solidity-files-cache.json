@@ -37,8 +37,8 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStor.sol": {
-      "lastModificationDate": 1650222064629,
-      "contentHash": "144f09339f6f2a072a0e7e807ffd1e10",
+      "lastModificationDate": 1650223232240,
+      "contentHash": "105d722dadb83ebc02daf6f3c869d85b",
       "sourceName": "src/backend/contracts/DStor.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -253,6 +253,41 @@
       ],
       "artifacts": [
         "PolygonLinkSim"
+      ]
+    },
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStorInterface.sol": {
+      "lastModificationDate": 1650223183100,
+      "contentHash": "20be3e558e31d2101685f9495ee7ca5e",
+      "sourceName": "src/backend/contracts/DStorInterface.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "DStorInterface"
       ]
     }
   }
