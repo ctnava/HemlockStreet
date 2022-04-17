@@ -5,7 +5,7 @@ removed "eslintConfig": { "extends": [ "react-app", "react-app/jest" ] }, from p
 you need to set the chainId for the localhost network on metamask to 31337 instead of 1337
 
 #TODO
-- keccak256 encryption of all fields
+- DStor interface contract
 - express server with data chunking (FETCH x CORS)
 
 ##WEBSITE

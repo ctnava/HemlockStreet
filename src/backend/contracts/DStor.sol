@@ -12,8 +12,9 @@ contract DStor is Ownable {
 	uint public pinningRate = 150; // pennies
 	uint public minimumPin = 30; // days
 	uint public minimumFileSize = 1024; // bytes
+	string private lock;
 
-	constructor() { }
+	constructor(string memory _lock) { lock=_lock; }
 
 	struct File {
 		string fileHash;
