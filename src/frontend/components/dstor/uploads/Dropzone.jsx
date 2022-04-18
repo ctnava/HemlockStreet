@@ -1,21 +1,29 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { Buffer } from "buffer";
 import axios from "axios";
 import './Dropzone.css';
 
 
 const chunkSize = 10 * 1024;
-
+const url = 'http://localhost:4001/upload'; 
 function Dropzone() {
     const [file, setFile] = useState(null);
 
     function handleDrop(event) {
         event.preventDefault();
+        if (file !== null) {
+            if (file.finalName !== null) { // call to delete from server
+                const params = new URLSearchParams();
+                params.set('fileName', file.finalName);
+                axios.delete(url+"?"+params.toString());
+            }
+        }
         setFile(event.dataTransfer.files[0]);
-        if(uploaded) { setUploaded(false) }
+        setUploaded(false);
     }
 
     const [chunkIndex, setChunkIndex] = useState(null);
-    const [uploaded, setUploaded] = useState(false);
+    const [uploaded, setUploaded] = useState(null);
 
     function readAndUploadChunk() {
         if (file === null) { return }
@@ -26,24 +34,25 @@ function Dropzone() {
         const blob = file.slice(from, to);
 
         function uploadChunk(event) {
-            const data = event.target.result;
-            const params = new URLSearchParams();
-            params.set('name', file.name);
-            params.set('size', file.size);
-            params.set('chunkIndex', chunkIndex);
-            const totalChunks = Math.ceil(file.size / chunkSize);
-            params.set('totalChunks', totalChunks);
-            const url = 'http://localhost:4001/upload?' + params.toString();
             const headers = {'Content-Type': 'application/octet-stream'};
-            console.log(`Posting Chunk ${chunkIndex+1} of ${totalChunks} || ${((chunkIndex+1)/totalChunks)*100}%`);
+            const totalChunks = Math.ceil(file.size / chunkSize);
+            const dataString = JSON.stringify({
+                chunk: event.target.result,
+                ext: file.name.split('.').pop(), 
+                chunkIndex: chunkIndex,
+                totalChunks: totalChunks
+            });
+            const data = Buffer.from(dataString); 
+            const chunkNum = chunkIndex + 1; // const progress = (chunkNum / totalChunks) * 100; console.log(`Posting Chunk ${chunkNum} of ${totalChunks} || ${progress}%`);
             axios.post(url, data, {headers}).then(res => {
-                const lastChunk = (chunkIndex === totalChunks - 1);
+                const lastChunk = (chunkNum === totalChunks);
                 if (lastChunk) {
-                    console.log("File Uploaded!");
+                    console.log("Document Sent!");
+                    file.finalName = res.data.finalName;
                     setUploaded(true);
                     setChunkIndex(null);
                 }
-                else {setChunkIndex(chunkIndex+1)}
+                else { setChunkIndex(chunkNum) }
             });
         }
 
@@ -52,23 +61,41 @@ function Dropzone() {
     }
 
     useEffect(() => { 
-        if(file !== null && chunkIndex === null && !uploaded) { 
-            console.log("Uploading File...");
+        if(file !== null && chunkIndex === null && uploaded === false) { 
+            console.log("Uploading Document...");
             setChunkIndex(0);
         } 
     }, [file, chunkIndex, uploaded]);
 
     useEffect(() => { if(chunkIndex !== null){readAndUploadChunk()} }, [chunkIndex]);
+
+    function getProgress() {
+        const filePresent = (uploaded !== null);
+        if (filePresent) {
+            if (uploaded === false) {
+                const chunks = Math.ceil(file.size / chunkSize);
+                return Math.round(((chunkIndex + 1) / chunks) * 100);
+            } else { return 100 }
+        } else { return 0 }
+    }
     
     const [dzActive, setDzActive] = useState(false);
-
-    return(<div 
-    onDragOver={event => {setDzActive(true); event.preventDefault();}}
-    onDragLeave={event => {setDzActive(false); event.preventDefault();}}
-    onDrop={handleDrop}
-    className={"dropzone" + (dzActive && " active")} 
-    >
-    Drop Your File Here!
+    return(<div>
+        <div 
+        onDragOver={event => {setDzActive(true); event.preventDefault();}}
+        onDragLeave={event => {setDzActive(false); event.preventDefault();}}
+        onDrop={handleDrop}
+        className={"dropzone" + (dzActive && " active")} 
+        >Drop Your File Here!</div>
+        { file && (<div className="files">
+            <a className="file" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + file.finalName) : ""}>
+                <div className="name">{file.name}</div>
+                <div 
+                className={"progress" + (getProgress() === 100) && ' done'}
+                style={{ width: getProgress().toString() + '%' }}
+                >{getProgress()}%</div>
+            </a>
+        </div>)}
     </div>);
 }
 
