@@ -25,9 +25,10 @@
   position: absolute;
   inset:0;
   width:0;
-  padding-top: 10px;
+  height: 15%;
+  top: 85%;
   text-align: center;
 }
 .file .progress.done{
-  top: 100px;
+  width: 100%;
 }

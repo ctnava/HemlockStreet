@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 
@@ -6,7 +7,7 @@ import { Buffer } from 'buffer';
 var readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
 function Upload(props) {
 	const [fileData, setFileData] = useState(null);
-
+    const [uploaded, setUploaded] = useState(null);
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
 
@@ -31,30 +32,6 @@ function Upload(props) {
 	}
 
 	const [additionalTime, setAdditionalTime] = useState(0);
-
-	function retrieveFile(event) {
-		event.preventDefault();
-		const file = event.target.files[0];
-		const reader = new window.FileReader();
-		const name = file.name;
-		const type = name.slice(name.indexOf("."), name.length);
-
-		reader.readAsArrayBuffer(file);
-		reader.onload = () => {
-			let result = reader.result;
-			// result cannot be null CHUNK THE FILE BEFORE UPLOAD
-			let data = Buffer(result);
-			if (data.length >= 1024) {
-				setFileData(data);
-				setContractInput(prev => {  return({...prev, hash: "", size: data.length, type: type}) });
-				// getQuote(1048576*1024);
-				getQuote(data.length);
-			} else { 
-				setFileData(null);
-				setContractInput(defaultInput);
-			}
-		}
-	}
 
 	function handleSubmit(event) {
 		event.preventDefault();
@@ -99,25 +76,26 @@ function Upload(props) {
 	}
 
 	return(<div>
+	<Dropzone 
+	bytes={props.bytes}
+	min={props.bytes(props.rules.minimumFileSize)}
+	pinningRate={props.rules.pinningRate}
+	hash={contractInput.hash}
+	getProjectedCost={getProjectedCost}
+
+	quote={quote}
+	getQuote={getQuote}
+
+	contractInput={contractInput}
+	setContractInput={setContractInput}
+	fileData={fileData}
+	setFileData={setFileData}
+	uploaded={uploaded}
+	setUploaded={setUploaded}
+	/>
 	<Row className="g-4 py-5">
 		<Form>
 		{fileData !== null && (<div>
-			<Row>
-				<Form.Group>
-					<InputGroup>
-						<InputGroup.Text>File Name</InputGroup.Text>
-						<Form.Control 
-						type="text" 
-						name="name" 
-						onChange={handleChange} 
-						placeholder="myFullMedicalHistory (Do NOT include extensions like '.pdf', '.exe', '.png', etc.)"
-						value={contractInput.name}
-						autoComplete="off"
-						/>
-					</InputGroup>
-				</Form.Group>
-			</Row>
-
 			<Row>
 				<Form.Group>
 					<InputGroup>
@@ -165,32 +143,13 @@ function Upload(props) {
 					<InputGroup.Text>Days</InputGroup.Text>
 					
 				</InputGroup>
-				<InputGroup>
-					<InputGroup.Text>First Month (to start) || ${(quote.bench / (10 ** 8))} USD as ~{(quote.gasBench) / (10 ** 18)} Tokens</InputGroup.Text>
-					<InputGroup.Text>Every Day After || ${(quote.perDiem / (10 ** 8))} USD as ~{(quote.gasPerDiem / (10 ** 18))} Tokens</InputGroup.Text>
-					<InputGroup.Text>Projected Cost || ${getProjectedCost("usd")} USD as ~{getProjectedCost("gas")} Tokens</InputGroup.Text>
-				</InputGroup>
 				</div>)}
-				<InputGroup>
-					<InputGroup.Text>File (Min. {props.bytes(props.rules.minimumFileSize)})</InputGroup.Text>
-					<Form.Control 
-					onChange={retrieveFile}
-					name="rawFile"
-					type="file" 
-					/>
-					{contractInput.hash.length !== 0 && (<InputGroup.Text>IPFS CID: {contractInput.hash}</InputGroup.Text>)}
-					{fileData !== null ? (<InputGroup.Text>
-						Extension: {contractInput.type} || Size: {props.bytes(contractInput.size)}
-					</InputGroup.Text>) : (<InputGroup.Text>
-						{props.rules.pinningRate}
-					</InputGroup.Text>)}
-				</InputGroup>
 			</Form.Group>
 			</Row>
 		</Form>	
 	</Row>
 
-	{ contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
+	{  uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
 	<Row>
 		<Button 
 		onClick={contractInput.hash.length === 0 ? handleSubmit : submitForm} 

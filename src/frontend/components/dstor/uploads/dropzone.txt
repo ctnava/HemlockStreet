@@ -6,37 +6,23 @@ import './Dropzone.css';
 
 const chunkSize = 10 * 1024;
 const url = 'http://localhost:4001/upload'; 
-function Dropzone(props) {
+function Dropzone() {
+    const [file, setFile] = useState(null);
     const [chunkIndex, setChunkIndex] = useState(null);
+    const [uploaded, setUploaded] = useState(null);
     const [dzActive, setDzActive] = useState(false);
     const [abort, setAbort] = useState([false, false]); // called abort, abort requested
-    // console.log("props.uploaded", props.uploaded, "chunkIndex", chunkIndex, "fileNotNull", props.fileData !== null);
+    // console.log("uploaded", uploaded, "chunkIndex", chunkIndex, "fileNotNull", file !== null);
 
     useEffect(() => { 
-        if(props.fileData !== null && chunkIndex === null && props.uploaded === false) { 
+        if(file !== null && chunkIndex === null && uploaded === false) { 
             console.log("Uploading Document...");
             setChunkIndex(0);
         } 
-
-        if(chunkIndex !== null && props.uploaded !== true) readAndUploadChunk();
-
-        if(props.fileData === null) {
+        if(file === null) {
             setChunkIndex(null);
-            props.setUploaded(null);
-        } else  {
-            const inputs = props.contractInput;
-            const size = props.fileData.size;
-            const type = props.fileData.name.split('.')[1];
-            const name = props.fileData.name.split('.')[0];
-            if (inputs.size === 0 || inputs.type.length === 0 || inputs.name.length === 0
-             || inputs.size !== size || inputs.type !== type || inputs.name !== name) {
-                props.setContractInput((prev) => {
-                    return { ...prev, size: size, type: type, name: name }
-                });
-                props.getQuote(size);
-            }
+            setUploaded(null);
         }
-
         if(abort[0] === true) {
             if (abort[1] === true) {
                 setAbort([false, false]);
@@ -45,29 +31,30 @@ function Dropzone(props) {
                 setAbort([true, true]);
                 console.log("Aborting Upload...");
                 const params = new URLSearchParams();
-                params.set('fileName', props.fileData.tmpName);
+                params.set('fileName', file.tmpName);
                 async function sendReq() { await axios.delete(url+"?"+params.toString()).then((res) => {return res}) }
                 console.log("Abort Requested...");
                 sendReq().then((res) => {
                     console.log("Request Fulfilled...");
-                    props.setFileData(null); 
+                    setFile(null); 
                     console.log("Upload Aborted!");
                 });
+                
             }
         }
-        
-    }, [props.fileData, chunkIndex, props.uploaded]);
+        if(chunkIndex !== null && uploaded !== true) readAndUploadChunk();
+    }, [file, chunkIndex, uploaded]);
 
     async function deletionRequest() {
-        if (props.fileData !== null) {
+        if (file !== null) {
             const params = new URLSearchParams();
-            if (props.uploaded === true) { // call to delete from server
+            if (uploaded === true) { // call to delete from server
                 console.log("Requesting Deletion...");
-                params.set('fileName', props.fileData.finalName);
+                params.set('fileName', file.finalName);
                 await axios.delete(url+"?"+params.toString()).then((res) => {return res});
-            } else if (props.uploaded === false) {
+            } else if (uploaded === false) {
                 console.log("Requesting Cancellation...");
-                params.set('fileName', props.fileData.tmpName);
+                params.set('fileName', file.tmpName);
                 await axios.delete(url+"?"+params.toString()).then((res) => {return res});
             } else return "Continuing";
         } else return "Continuing";
@@ -78,37 +65,37 @@ function Dropzone(props) {
         if (chunkIndex === null) {
             deletionRequest().then((res) => {console.log(res)});
             console.log("Triggering Upload...");
-            props.setFileData(event.dataTransfer.files[0]);
-            props.setUploaded(false);
+            setFile(event.dataTransfer.files[0]);
+            setUploaded(false);
             console.log("Upload Triggered!");
         }
         event.preventDefault();
     }
 
     function getProgress() {
-        const filePresent = (props.uploaded !== null);
+        const filePresent = (uploaded !== null);
         if (filePresent) {
-            if (props.uploaded === false) {
-                const chunks = Math.ceil(props.fileData.size / chunkSize);
+            if (uploaded === false) {
+                const chunks = Math.ceil(file.size / chunkSize);
                 return Math.round(((chunkIndex + 1) / chunks) * 100);
             } else { return 100 }
         } else { return 0 }
     }
 
     function readAndUploadChunk() {
-        if (props.fileData === null || props.uploaded === null) { return }
+        if (file === null || uploaded === null) { return }
         const reader = new FileReader();
         const start = chunkIndex * chunkSize;
         const from = start;
         const to = from + chunkSize;
-        const blob = props.fileData.slice(from, to);
+        const blob = file.slice(from, to);
 
         function uploadChunk(event) {
             const headers = {'Content-Type': 'application/octet-stream'};
-            const totalChunks = Math.ceil(props.fileData.size / chunkSize);
+            const totalChunks = Math.ceil(file.size / chunkSize);
             const dataString = JSON.stringify({
                 chunk: event.target.result,
-                ext: props.fileData.name.split('.').pop(), 
+                ext: file.name.split('.').pop(), 
                 chunkIndex: chunkIndex,
                 totalChunks: totalChunks
             });
@@ -118,11 +105,11 @@ function Dropzone(props) {
                 const lastChunk = (chunkNum === totalChunks);
                 if (lastChunk) {
                     console.log("Document Sent!");
-                    props.fileData.finalName = res.data.finalName;
-                    props.setUploaded(true);
+                    file.finalName = res.data.finalName;
+                    setUploaded(true);
                     setChunkIndex(null);
                 } else { 
-                    if (props.fileData.tmpName !== null) { props.fileData.tmpName = res.data.tmpName }
+                    if (file.tmpName !== null) { file.tmpName = res.data.tmpName }
                     setChunkIndex(chunkNum); 
                 }
             });
@@ -133,12 +120,12 @@ function Dropzone(props) {
 
     function deleteFile() {
         deletionRequest().then((res) => {console.log(res)});
-        props.setFileData(null);
-        props.setUploaded(null);
+        setFile(null);
+        setUploaded(null);
     }
 
     function abortFile() {
-        props.setUploaded(true);
+        setUploaded(true);
         setAbort([true, false]);
     }
 
@@ -148,31 +135,19 @@ function Dropzone(props) {
         onDragLeave={event => {setDzActive(false); event.preventDefault();}}
         onDrop={handleDrop}
         className={"dropzone" + (dzActive && " active")} 
-        >
-            Drop Your file Here! (Min. {props.min})
-            {!dzActive && props.uploaded === null && (<p>{props.pinningRate}</p>)}
-        </div>
-        { props.fileData && (<div className="files">
+        >Drop Your File Here!</div>
+        { file && (<div className="files">
             <div className="file">
-                <p>First Month (to start) || ${(props.quote.bench / (10 ** 8))} USD as ~{(props.quote.gasBench) / (10 ** 18)} Tokens</p>
-                <p>Every Day After || ${(props.quote.perDiem / (10 ** 8))} USD as ~{(props.quote.gasPerDiem / (10 ** 18))} Tokens</p>
-            </div>
-            <div className="file">
-                <p>Please verify that the file was uploaded correctly before proceeding.</p>
-                <p>Projected Cost ({props.bytes(props.contractInput.size)}) || ${props.getProjectedCost("usd")} USD as ~{props.getProjectedCost("gas")} Tokens</p>
-                {props.hash.length !== 0 && (<div>IPFS CID: {props.hash}</div>)}
-                    
-                <p>
-                    <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
+                Please verify that the file was uploaded correctly before proceeding.
+                <div>
+                    <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + file.finalName) : ""}>{file.name}</a>
                     <span> || </span>
                     { getProgress() !== 100 ? (
                         <span>Progress: {getProgress()}% (please do not refresh the page) || <span onClick={abortFile}>Abort</span></span>
                         ) : (
                         <span onClick={deleteFile}>Delete</span>
                     )}
-                </p>
-                <hr/>
-                
+                </div>
                 <div className={"progress" + (getProgress() === 100 && (' done'))} style={{ width: getProgress().toString() + '%' }}>.</div>
             </div>
         </div>)}
