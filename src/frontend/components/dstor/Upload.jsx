@@ -48,6 +48,7 @@ function Upload(props) {
 	function pinToServer(event) {
 		const url = 'http://localhost:4001/pin'; 
 		const data = { fileName: fileData.finalName };
+		// console.log(data);
 		axios.post(url, data, {'Content-Type': 'application/json'});
 
 		props.ipfs.add(fileData).then((result) => {
