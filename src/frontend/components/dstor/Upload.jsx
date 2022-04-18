@@ -8,16 +8,20 @@ var readyMessage = "I have made sure that these are the correct details. Pin to 
 function Upload(props) {
 	const [fileData, setFileData] = useState(null);
     const [uploaded, setUploaded] = useState(null);
+
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
 
-	const defaultQuote = {
-		perDiem: 0,
-		bench: 0,
-		gasPerDiem: 0,
-		gasBench: 0
-	};
+	function handleChange(event) {
+		const { name, value } = event.target;
+		setContractInput(prev => {
+			return {...prev, [name]: value};
+		});
+	}
+
+	const defaultQuote = { perDiem: 0, bench: 0, gasPerDiem: 0, gasBench: 0 };
 	const [quote, setQuote] = useState(defaultQuote);
+
 	function getQuote(numBytes) {
 		props.getQuotes(numBytes).then((quotes) => {
 			const [perDiem, bench, gasPerDiem, gasBench] = quotes;
@@ -30,10 +34,18 @@ function Upload(props) {
 		});
 
 	}
-
+	
 	const [additionalTime, setAdditionalTime] = useState(0);
+	function handleTimeChange(event) { setAdditionalTime(event.target.value) }
 
-	function handleSubmit(event) {
+	function getProjectedCost(type) {
+		const bf = (type === "usd") ? (quote.bench / (10 ** 8)) : (quote.gasBench / (10 ** 18));
+		const pd = (type === "usd") ? (quote.perDiem / (10 ** 8)) : (quote.gasPerDiem / (10 ** 18));
+		const cost = (bf + (pd * additionalTime)).toString();
+		return (cost.slice(0, cost.indexOf(".") + 9));
+	}
+
+	function pinToServer(event) {
 		event.preventDefault();
 		props.ipfs.add(fileData).then((result) => {
 			readyMessage = "Uploading... Please Wait";
@@ -48,25 +60,7 @@ function Upload(props) {
 		});
 	}
 
-	function handleTimeChange(event) {
-		setAdditionalTime(event.target.value);
-	}
-
-	function getProjectedCost(type) {
-		const bf = (type === "usd") ? (quote.bench / (10 ** 8)) : (quote.gasBench / (10 ** 18));
-		const pd = (type === "usd") ? (quote.perDiem / (10 ** 8)) : (quote.gasPerDiem / (10 ** 18));
-		const cost = (bf + (pd * additionalTime)).toString();
-		return (cost.slice(0, cost.indexOf(".") + 9));
-	}
-
-	function handleChange(event) {
-		const { name, value } = event.target;
-		setContractInput(prev => {
-			return {...prev, [name]: value};
-		});
-	}
-
-	function submitForm(event) {
+	function makeTransaction(event) {
 		// console.log(contractInput);
 		const data = contractInput;
 		setFileData(null);
@@ -75,25 +69,30 @@ function Upload(props) {
 		props.uploadFile(data, messageValue);
 	}
 
+	console.log(contractInput);
+
 	return(<div>
-	<Dropzone 
-	bytes={props.bytes}
-	min={props.bytes(props.rules.minimumFileSize)}
-	pinningRate={props.rules.pinningRate}
-	hash={contractInput.hash}
-	getProjectedCost={getProjectedCost}
+	<div>{uploaded === null && (<p>{props.rules.pinningRate}</p>)}</div>
+	<div className="g-4 py-2">
+		<Dropzone 
+		bytes={props.bytes}
+		min={props.rules.minimumFileSize}
+		pinningRate={props.rules.pinningRate}
+		hash={contractInput.hash}
+		getProjectedCost={getProjectedCost}
 
-	quote={quote}
-	getQuote={getQuote}
+		quote={quote}
+		getQuote={getQuote}
 
-	contractInput={contractInput}
-	setContractInput={setContractInput}
-	fileData={fileData}
-	setFileData={setFileData}
-	uploaded={uploaded}
-	setUploaded={setUploaded}
-	/>
-	<Row className="g-4 py-5">
+		contractInput={contractInput}
+		setContractInput={setContractInput}
+		fileData={fileData}
+		setFileData={setFileData}
+		uploaded={uploaded}
+		setUploaded={setUploaded}
+		/>
+	</div>
+	<Row className="g-4 py-2">
 		<Form>
 		{fileData !== null && (<div>
 			<Row>
@@ -149,17 +148,17 @@ function Upload(props) {
 		</Form>	
 	</Row>
 
-	{  uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
+	{ uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0
+	 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
 	<Row>
 		<Button 
-		onClick={contractInput.hash.length === 0 ? handleSubmit : submitForm} 
-		variant={contractInput.hash.length === 0 ? "primary" : "warning" }
+		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
+		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
 		>{contractInput.hash.length === 0 ? readyMessage  : "Store the file to the blockchain!"}</Button>
 	</Row>
 	</div>) }
 
-
-	<p className="text-muted">
+	<p className="g-4 py-2 text-muted">
 		DISCLAIMER: This DApp will upload the specified file to IPFS; a free, secure, and decentralized file storage protocol. 
 		It is your responsibility to encrypt the file itself for enhanced privacy protection. When a file is uploaded to IPFS,
 		it is retrievable via a Content Identifier (CID) that is generated with respect to the file's contents and metadata. 

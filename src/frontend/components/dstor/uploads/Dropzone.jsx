@@ -75,12 +75,15 @@ function Dropzone(props) {
 
     function handleDrop(event) {
         setDzActive(false);
-        if (chunkIndex === null) {
-            deletionRequest().then((res) => {console.log(res)});
-            console.log("Triggering Upload...");
-            props.setFileData(event.dataTransfer.files[0]);
-            props.setUploaded(false);
-            console.log("Upload Triggered!");
+        const thisFile = event.dataTransfer.files[0];
+        if (thisFile.size >= props.min) {
+            if (chunkIndex === null) {
+                deletionRequest().then((res) => {console.log(res)});
+                console.log("Triggering Upload...");
+                props.setFileData(thisFile);
+                props.setUploaded(false);
+                console.log("Upload Triggered!");
+            }
         }
         event.preventDefault();
     }
@@ -143,17 +146,18 @@ function Dropzone(props) {
     }
 
     return(<div>
-        <div 
-        onDragOver={event => {setDzActive(true); event.preventDefault();}}
-        onDragLeave={event => {setDzActive(false); event.preventDefault();}}
-        onDrop={handleDrop}
-        className={"dropzone" + (dzActive && " active")} 
-        >
-            Drop Your file Here! (Min. {props.min})
-            {!dzActive && props.uploaded === null && (<p>{props.pinningRate}</p>)}
-        </div>
+        { props.uploaded === null && (<div 
+            onDragOver={event => {setDzActive(true); event.preventDefault();}}
+            onDragLeave={event => {setDzActive(false); event.preventDefault();}}
+            onDrop={handleDrop}
+            className={"dropzone" + (dzActive ? " active" : "")} 
+            >
+                Drop Your file Here! (Min. {props.bytes(props.min)})
+        </div>)}
         { props.fileData && (<div className="files">
             <div className="file">
+                <p>{props.pinningRate}</p>
+                <hr/>
                 <p>First Month (to start) || ${(props.quote.bench / (10 ** 8))} USD as ~{(props.quote.gasBench) / (10 ** 18)} Tokens</p>
                 <p>Every Day After || ${(props.quote.perDiem / (10 ** 8))} USD as ~{(props.quote.gasPerDiem / (10 ** 18))} Tokens</p>
             </div>
