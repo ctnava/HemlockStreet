@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
+import axios from "axios";
 
 
 var readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
@@ -32,7 +33,6 @@ function Upload(props) {
 				gasBench: parseInt(gasBench.toString())
 			});
 		});
-
 	}
 	
 	const [additionalTime, setAdditionalTime] = useState(0);
@@ -46,7 +46,10 @@ function Upload(props) {
 	}
 
 	function pinToServer(event) {
-		event.preventDefault();
+		const url = 'http://localhost:4001/pin'; 
+		const data = { fileName: fileData.finalName };
+		axios.post(url, data, {'Content-Type': 'application/json'});
+
 		props.ipfs.add(fileData).then((result) => {
 			readyMessage = "Uploading... Please Wait";
 			props.ipfs.pin.add(result.path, (err) => {
@@ -58,6 +61,7 @@ function Upload(props) {
 			console.log("File Uploaded to IPFS!");
 			// console.log(contractInput);
 		});
+		event.preventDefault();
 	}
 
 	function makeTransaction(event) {
@@ -69,7 +73,7 @@ function Upload(props) {
 		props.uploadFile(data, messageValue);
 	}
 
-	console.log(contractInput);
+	// console.log(contractInput);
 
 	return(<div>
 	<div>{uploaded === null && (<p>{props.rules.pinningRate}</p>)}</div>
