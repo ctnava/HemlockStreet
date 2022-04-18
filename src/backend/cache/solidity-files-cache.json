@@ -36,9 +36,9 @@
         "DStor"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStor.sol": {
-      "lastModificationDate": 1650223232240,
-      "contentHash": "105d722dadb83ebc02daf6f3c869d85b",
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\src\\backend\\contracts\\DStor.sol": {
+      "lastModificationDate": 1650233361814,
+      "contentHash": "0c6b9d5f5380e27539e59a3b0f5bba99",
       "sourceName": "src/backend/contracts/DStor.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -74,8 +74,8 @@
         "IFissionEngine"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
-      "lastModificationDate": 1649819538883,
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1650144727916,
       "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -111,8 +111,8 @@
         "Ownable"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1649819536392,
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1650144723721,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -146,7 +146,42 @@
         "Context"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\FissionEngine.sol": {
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\src\\backend\\contracts\\DStorInterface.sol": {
+      "lastModificationDate": 1650223183100,
+      "contentHash": "20be3e558e31d2101685f9495ee7ca5e",
+      "sourceName": "src/backend/contracts/DStorInterface.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "DStorInterface"
+      ]
+    },
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\src\\backend\\contracts\\FissionEngine.sol": {
       "lastModificationDate": 1649893766599,
       "contentHash": "bd78ce014d08b98f01b5dbdbb8919ec0",
       "sourceName": "src/backend/contracts/FissionEngine.sol",
@@ -183,8 +218,8 @@
         "FissionEngine"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\node_modules\\@chainlink\\contracts\\src\\v0.8\\interfaces\\AggregatorV3Interface.sol": {
-      "lastModificationDate": 1649890980292,
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\node_modules\\@chainlink\\contracts\\src\\v0.8\\interfaces\\AggregatorV3Interface.sol": {
+      "lastModificationDate": 1650144732601,
       "contentHash": "611f626b2447ccff9ba5332460fd217f",
       "sourceName": "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol",
       "solcConfig": {
@@ -218,7 +253,7 @@
         "AggregatorV3Interface"
       ]
     },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\PolygonLinkSim.sol": {
+    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\src\\backend\\contracts\\PolygonLinkSim.sol": {
       "lastModificationDate": 1649892689588,
       "contentHash": "973cdcbfe2d846c96bf320060c58d85e",
       "sourceName": "src/backend/contracts/PolygonLinkSim.sol",
@@ -253,41 +288,6 @@
       ],
       "artifacts": [
         "PolygonLinkSim"
-      ]
-    },
-    "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\src\\backend\\contracts\\DStorInterface.sol": {
-      "lastModificationDate": 1650223183100,
-      "contentHash": "20be3e558e31d2101685f9495ee7ca5e",
-      "sourceName": "src/backend/contracts/DStorInterface.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "DStorInterface"
       ]
     }
   }

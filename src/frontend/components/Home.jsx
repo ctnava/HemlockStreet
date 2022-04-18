@@ -1,14 +1,11 @@
 import React from 'react' //, useEffect, useRef
+import Dropzone from './dstor/uploads/Dropzone';
 // import { ethers } from "ethers"
 // import Identicon from 'identicon';
 
 
 function Home(props) {
-	return(
-		<main style={{ padding: "1rem 0" }}>
-      		<h2>WIP</h2>
-    	</main>
-	);
+	return(<Dropzone />);
 }
 
 export default Home;
