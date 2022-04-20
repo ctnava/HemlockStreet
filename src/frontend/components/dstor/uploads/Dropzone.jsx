@@ -82,7 +82,7 @@ function Dropzone(props) {
             // console.log(`Posting Chunk ${chunkIndex + 1} of ${totalChunks} || ${getProgress()}%`);
             axios.post(url, data, {headers}).then(res => {
                 const chunkNum = chunkIndex + 1;
-                console.log(`Posted!`);
+                // console.log(`Posted!`);
                 const lastChunk = (chunkNum === totalChunks);
                 if (lastChunk) {
                     console.log("Document Sent!");
