@@ -9,8 +9,6 @@ const url = 'http://localhost:4001/upload';
 function Dropzone(props) {
     const [chunkIndex, setChunkIndex] = useState(null);
     const [dzActive, setDzActive] = useState(false);
-    const [abort, setAbort] = useState([false, false]); // called abort, abort requested
-    // console.log("props.uploaded", props.uploaded, "chunkIndex", chunkIndex, "fileNotNull", props.fileData !== null);
 
     useEffect(() => { 
         if(props.fileData !== null && chunkIndex === null && props.uploaded === false) { 
@@ -18,7 +16,7 @@ function Dropzone(props) {
             setChunkIndex(0);
         } 
 
-        if(chunkIndex !== null && props.uploaded !== true) readAndUploadChunk();
+        if(chunkIndex !== null && props.uploaded === false) readAndUploadChunk();
 
         if(props.fileData === null) {
             setChunkIndex(null);
@@ -36,53 +34,18 @@ function Dropzone(props) {
                 props.getQuote(size);
             }
         }
-
-        if(abort[0] === true) {
-            if (abort[1] === true) {
-                setAbort([false, false]);
-                console.log("Resetting...");
-            } else {
-                setAbort([true, true]);
-                console.log("Aborting Upload...");
-                const params = new URLSearchParams();
-                params.set('fileName', props.fileData.tmpName);
-                async function sendReq() { await axios.delete(url+"?"+params.toString()).then((res) => {return res}) }
-                console.log("Abort Requested...");
-                sendReq().then((res) => {
-                    console.log("Request Fulfilled...");
-                    props.setFileData(null); 
-                    console.log("Upload Aborted!");
-                });
-            }
-        }
         
     }, [props.fileData, chunkIndex, props.uploaded]);
-
-    async function deletionRequest() {
-        if (props.fileData !== null) {
-            const params = new URLSearchParams();
-            if (props.uploaded === true) { // call to delete from server
-                console.log("Requesting Deletion...");
-                params.set('fileName', props.fileData.finalName);
-                await axios.delete(url+"?"+params.toString()).then((res) => {return res});
-            } else if (props.uploaded === false) {
-                console.log("Requesting Cancellation...");
-                params.set('fileName', props.fileData.tmpName);
-                await axios.delete(url+"?"+params.toString()).then((res) => {return res});
-            } else return "Continuing";
-        } else return "Continuing";
-    }
 
     function handleDrop(event) {
         setDzActive(false);
         const thisFile = event.dataTransfer.files[0];
         if (thisFile.size >= props.min) {
             if (chunkIndex === null) {
-                deletionRequest().then((res) => {console.log(res)});
-                console.log("Triggering Upload...");
+                // console.log("Triggering Upload...");
                 props.setFileData(thisFile);
                 props.setUploaded(false);
-                console.log("Upload Triggered!");
+                // console.log("Upload Triggered!");
             }
         }
         event.preventDefault();
@@ -99,15 +62,13 @@ function Dropzone(props) {
     }
 
     function readAndUploadChunk() {
-        if (props.fileData === null || props.uploaded === null) { return }
+        if (props.fileData === null || props.uploaded !== false) { return }
         const reader = new FileReader();
-        const start = chunkIndex * chunkSize;
-        const from = start;
+        const from = chunkIndex * chunkSize;
         const to = from + chunkSize;
         const blob = props.fileData.slice(from, to);
 
         function uploadChunk(event) {
-            const headers = {'Content-Type': 'application/octet-stream'};
             const totalChunks = Math.ceil(props.fileData.size / chunkSize);
             const dataString = JSON.stringify({
                 chunk: event.target.result,
@@ -115,9 +76,13 @@ function Dropzone(props) {
                 chunkIndex: chunkIndex,
                 totalChunks: totalChunks
             });
-            const data = Buffer.from(dataString); 
-            const chunkNum = chunkIndex + 1; // console.log(`Posting Chunk ${chunkNum} of ${totalChunks} || ${getProgress()}%`);
+            const data = Buffer.from(dataString);
+            const headers = {'Content-Type': 'application/octet-stream'};
+
+            // console.log(`Posting Chunk ${chunkIndex + 1} of ${totalChunks} || ${getProgress()}%`);
             axios.post(url, data, {headers}).then(res => {
+                const chunkNum = chunkIndex + 1;
+                console.log(`Posted!`);
                 const lastChunk = (chunkNum === totalChunks);
                 if (lastChunk) {
                     console.log("Document Sent!");
@@ -135,14 +100,32 @@ function Dropzone(props) {
     }
 
     function deleteFile() {
-        deletionRequest().then((res) => {console.log(res)});
-        props.setFileData(null);
-        props.setUploaded(null);
+        if (props.fileData !== null && props.uploaded === true) {
+            console.log("Requesting Deletion...");
+            const data = { fileName: props.fileData.finalName };
+            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
+            .then((res) => {
+                if (res.data === 'success') {
+                    props.setFileData(null);
+                    props.setUploaded(null);
+                }
+            });
+        } else { console.log("Something went wrong with deleteFile()") }
     }
 
     function abortFile() {
-        props.setUploaded(true);
-        setAbort([true, false]);
+        console.log("Aborting Upload...");
+        if (props.fileData !== null && props.uploaded === false) {
+            props.setUploaded(null);
+            console.log("Requesting Deletion...");
+            const data = { fileName: props.fileData.tmpName };
+            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
+            .then((res) => {
+                if (res.data === 'success') {
+                    props.setFileData(null);
+                }
+            });
+        } else { console.log("Something went wrong with abortFile()") }
     }
 
     return(<div>

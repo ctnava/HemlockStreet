@@ -12,6 +12,7 @@ function Upload(props) {
 
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
+	const [cipherInput, setCipherInput] = useState(undefined);
 
 	function handleChange(event) {
 		const { name, value } = event.target;
@@ -47,7 +48,14 @@ function Upload(props) {
 
 	function pinToServer(event) {
 		const url = 'http://localhost:4001/pin'; 
-		const data = { fileName: fileData.finalName };
+		const data = { 
+			fileName: fileData.finalName, 
+			contractMetadata: { 
+				chainId: props.client.chainId, 
+				contract: props.contract.address
+			}, 
+			contractInput: contractInput 
+		};
 		// console.log(data);
 		axios.post(url, data, {'Content-Type': 'application/json'});
 

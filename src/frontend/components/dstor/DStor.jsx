@@ -126,6 +126,8 @@ function DStor(props) {
 				<Upload 
 				className="panel" 
 				ipfs={props.ipfs} 
+				client={props.client}
+				contract={contract}
 				rules={rules}
 				getQuotes={getQuotes}
 				bytes={humanBytes} 
