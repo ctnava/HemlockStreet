@@ -57,7 +57,10 @@ function Upload(props) {
 			contractInput: contractInput 
 		};
 		// console.log(data);
-		axios.post(url, data, {'Content-Type': 'application/json'});
+		axios.post(url, data, {'Content-Type': 'application/json'})
+			.then((res) => {
+				console.log(res);
+			});
 
 		props.ipfs.add(fileData).then((result) => {
 			readyMessage = "Uploading... Please Wait";
