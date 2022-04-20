@@ -21,6 +21,16 @@ function Dropzone(props) {
         if(props.fileData === null) {
             setChunkIndex(null);
             props.setUploaded(null);
+            if (props.contractInput.hash !== null) {
+                props.setContractInput((prev) => {return (
+                    {...prev, 
+                        hash: "", 
+                        size: 0, 
+                        type: "", 
+                        name: ""
+                    })
+                });
+            }
         } else  {
             const inputs = props.contractInput;
             const size = props.fileData.size;
