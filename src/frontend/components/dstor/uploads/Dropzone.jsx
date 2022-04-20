@@ -108,7 +108,7 @@ function Dropzone(props) {
                 if (res.data === 'success') {
                     props.setFileData(null);
                     props.setUploaded(null);
-                }
+                } else { console.log(res.data) }
             });
         } else { console.log("Something went wrong with deleteFile()") }
     }
