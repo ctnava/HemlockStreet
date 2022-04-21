@@ -53,8 +53,8 @@ function App(props) {
         />
 
         {
-          !hasWeb3 ? (<Routing client={client} ipfs={props.ipfs} />) :
-            initialized ? (<WalletPrompt />) : (<Routing client={client} ipfs={props.ipfs} />) }
+          !hasWeb3 ? (<Routing client={client} />) :
+            initialized ? (<WalletPrompt />) : (<Routing client={client} />) }
       </div>
     </BrowserRouter>
   );

@@ -105,7 +105,6 @@ function Downloads(props) {
 			</Row>
 
 			<DocumentTable 
-			ipfs={props.ipfs} 
 			bytes={props.bytes}
 
 			show={show} 

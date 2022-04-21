@@ -4,11 +4,12 @@ import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 import axios from "axios";
 
-
-var readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
+const readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
+const pinningMessage = "Pinning... Please Wait";
 function Upload(props) {
 	const [fileData, setFileData] = useState(null);
     const [uploaded, setUploaded] = useState(null);
+	const [pinning, setPinning] = useState(readyMessage);
 
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
@@ -47,6 +48,8 @@ function Upload(props) {
 	}
 
 	function pinToServer(event) {
+		setPinning(pinningMessage);
+
 		const url = 'http://localhost:4001/pin'; 
 		const data = { 
 			fileName: fileData.finalName, 
@@ -60,19 +63,11 @@ function Upload(props) {
 		axios.post(url, data, {'Content-Type': 'application/json'})
 			.then((res) => {
 				console.log(res);
+				setContractInput(prev => {return({...prev, hash: result.path})});
+				setPinning(readyMessage);
+				console.log("File Uploaded to IPFS!");
+				setCipherInput();
 			});
-
-		props.ipfs.add(fileData).then((result) => {
-			readyMessage = "Uploading... Please Wait";
-			props.ipfs.pin.add(result.path, (err) => {
-				readyMessage = "Pinning... Please Wait";
-				if(err) {console.log(err)}
-				else {readyMessage = "Pinned!";}
-			});
-			setContractInput(prev => {return({...prev, hash: result.path})});
-			console.log("File Uploaded to IPFS!");
-			// console.log(contractInput);
-		});
 		event.preventDefault();
 	}
 
@@ -119,7 +114,7 @@ function Upload(props) {
 						type="text"
 						name="recipient"
 						onChange={handleChange}
-						placeholder="0x....... (Must be an on-chain address)"
+						placeholder="0x......."
 						value={contractInput.recipient}
 						autoComplete="off"
 						/>
@@ -170,7 +165,7 @@ function Upload(props) {
 		<Button 
 		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
-		>{contractInput.hash.length === 0 ? readyMessage  : "Store the file to the blockchain!"}</Button>
+		>{contractInput.hash.length === 0 ? pinning  : "Store the file to the blockchain!"}</Button>
 	</Row>
 	</div>) }
 

@@ -125,7 +125,6 @@ function DStor(props) {
 			{ showUpload ? (
 				<Upload 
 				className="panel" 
-				ipfs={props.ipfs} 
 				client={props.client}
 				contract={contract}
 				rules={rules}
@@ -146,7 +145,6 @@ function DStor(props) {
 			{ showDownload ? (
 				<Downloads 
 				className="panel" 
-				ipfs={props.ipfs} 
 				bytes={humanBytes} 
 				inbox={inbox} 
 				outbox={outbox} 
