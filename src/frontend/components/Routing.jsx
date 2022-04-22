@@ -22,7 +22,7 @@ function Routing(props) {
 
         console.log(`Located ${byName} at ${metadata.address}`);
         const thisContract = new ethers.Contract(metadata.address, metadata.abi, signer);
-        return thisContract;
+        return { foundContract: thisContract, abi: metadata.abi};
     };
 
     return(

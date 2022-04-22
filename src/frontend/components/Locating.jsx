@@ -9,9 +9,10 @@ function Locating(props) {
         setLocated(true);
         if (props.loading) { 
             console.log(`Locating ${props.name}...`);
-            const foundContract = await props.loadContract("DStor")
+            const {foundContract, abi} = await props.loadContract("DStor")
                 .then((result) => { return result }); 
             await props.setContract(foundContract);
+            await props.setAbi(abi);
         }
     };
 

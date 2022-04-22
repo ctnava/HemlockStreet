@@ -59,7 +59,8 @@ function Upload(props) {
 			fileName: fileData.finalName, 
 			contractMetadata: { 
 				chainId: props.client.chainId, 
-				contract: props.contract.address
+				contract: props.contract.address,
+				abi: props.abi
 			}, 
 			contractInput: contractInput 
 		};
@@ -99,7 +100,8 @@ function Upload(props) {
 				cipher: cipherInput.hash,
 				contractMetadata: { 
 					chainId: props.client.chainId, 
-					contract: props.contract.address
+					contract: props.contract.address,
+					abi: props.abi
 				}, 
 				tx: tx.hash 
 			};

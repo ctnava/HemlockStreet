@@ -17,6 +17,7 @@ function humanBytes(x) {
 
 function DStor(props) {
 	const [contract, setContract] = useState();
+	const [abi, setAbi] = useState(undefined);
 	const [loading, setLoading] = useState(true);
 	const messageBox = {
 		contents: [],
@@ -115,6 +116,7 @@ function DStor(props) {
 			loading={loading}
 			loadContract={props.loadContract}
 			setContract={setContract}
+			setAbi={setAbi}
 			initialize={initialize}
 			/>
 		) : (<div>
@@ -128,6 +130,7 @@ function DStor(props) {
 				
 				client={props.client}
 				contract={contract}
+				abi={abi}
 				rules={rules}
 				getQuotes={getQuotes}
 				bytes={humanBytes} 
