@@ -15,6 +15,10 @@ function Upload(props) {
 	const [contractInput, setContractInput] = useState(defaultInput);
 	const [cipherInput, setCipherInput] = useState(defaultInput);
 
+	function resetCipherInput() {
+		setCipherInput(defaultInput);
+	}
+
 	function handleChange(event) {
 		const { name, value } = event.target;
 		setContractInput(prev => {
@@ -50,7 +54,7 @@ function Upload(props) {
 	function pinToServer(event) {
 		setPinning(pinningMessage);
 
-		const url = 'http://localhost:4001/pin'; 
+		const url = 'http://localhost:4001/'; 
 		const data = { 
 			fileName: fileData.finalName, 
 			contractMetadata: { 
@@ -60,7 +64,7 @@ function Upload(props) {
 			contractInput: contractInput 
 		};
 		// console.log(data);
-		axios.post(url, data, {'Content-Type': 'application/json'})
+		axios.post(url + "pin", data, {'Content-Type': 'application/json'})
 			.then((res) => {
 				console.log(res);
 				setContractInput(prev => {return({...prev, hash: res.data.hash})});
@@ -98,6 +102,7 @@ function Upload(props) {
 
 		contractInput={contractInput}
 		setContractInput={setContractInput}
+		resetCipherInput={resetCipherInput}
 		fileData={fileData}
 		setFileData={setFileData}
 		uploaded={uploaded}

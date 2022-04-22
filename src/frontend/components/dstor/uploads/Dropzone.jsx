@@ -109,6 +109,21 @@ function Dropzone(props) {
         reader.onload = (event) => uploadChunk(event);
     }
 
+    function abortFile() {
+        console.log("Aborting Upload...");
+        if (props.fileData !== null && props.uploaded === false) {
+            props.setUploaded(null);
+            console.log("Requesting Deletion...");
+            const data = { fileName: props.fileData.tmpName };
+            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
+            .then((res) => {
+                if (res.data === 'success') {
+                    props.setFileData(null);
+                }
+            });
+        } else { console.log("Something went wrong with abortFile()") }
+    }
+
     function deleteFile() {
         if (props.fileData !== null && props.uploaded === true) {
             console.log("Requesting Deletion...");
@@ -123,19 +138,17 @@ function Dropzone(props) {
         } else { console.log("Something went wrong with deleteFile()") }
     }
 
-    function abortFile() {
-        console.log("Aborting Upload...");
-        if (props.fileData !== null && props.uploaded === false) {
-            props.setUploaded(null);
-            console.log("Requesting Deletion...");
-            const data = { fileName: props.fileData.tmpName };
-            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
-            .then((res) => {
-                if (res.data === 'success') {
-                    props.setFileData(null);
-                }
-            });
-        } else { console.log("Something went wrong with abortFile()") }
+    function unpinFile() {
+        console.log("Requesting Unpin...");
+        const data = { hash: props.contractInput.hash };
+        axios.post('http://localhost:4001/unpin', { data: data, 'Content-Type': 'application/json'})
+        .then((res) => {
+            if (res.data === 'success') {
+                deleteFile();
+                props.setContractInput(prev => { return { ...prev, hash: "" } });
+                props.resetCipherInput();
+            } else { console.log(res.data) }
+        });
     }
 
     return(<div>
@@ -162,10 +175,12 @@ function Dropzone(props) {
                 <p>
                     <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
                     <span> || </span>
-                    { getProgress() !== 100 ? (
-                        <span>Progress: {getProgress()}% (please do not refresh the page) || <span onClick={abortFile}>Abort</span></span>
+                    
+                    { props.contractInput.hash.length !== 0 ? (<span onClick={unpinFile}>[Unpin]</span>) : 
+                      getProgress() !== 100 ? (
+                        <span>Progress: {getProgress()}% (please do not refresh the page) || <span onClick={abortFile}>[Abort]</span></span>
                         ) : (
-                        <span onClick={deleteFile}>Delete</span>
+                        <span onClick={deleteFile}>[Delete]</span>
                     )}
                 </p>
                 <hr/>
