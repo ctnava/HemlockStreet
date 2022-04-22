@@ -63,7 +63,8 @@ function DStor(props) {
 	const uploadFile = async (file, msgValue) => {
 		const val = ethers.utils.parseUnits(msgValue.toString(), "wei");
 		// console.log(val);
-		const txdata = await contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: val })
+		const tx = await contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: val });
+		const txdata = await tx.wait(1);
 		console.log(txdata);
 		return txdata;
 	};
