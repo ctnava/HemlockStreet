@@ -61,14 +61,11 @@ function DStor(props) {
 	};
 
 	const uploadFile = async (file, msgValue) => {
-		setShowUpload(false);
-		setLoading(true);
 		const val = ethers.utils.parseUnits(msgValue.toString(), "wei");
-		console.log(val);
-		contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: val })
-			.then((result) => {
-				console.log("transaction", result);
-			});
+		// console.log(val);
+		const txdata = await contract.upload(file.hash, file.size, file.type, file.name, file.description, file.recipient, { value: val })
+		console.log(txdata);
+		return txdata;
 	};
 
 	const getQuotes = async (size) => {
@@ -125,6 +122,9 @@ function DStor(props) {
 			{ showUpload ? (
 				<Upload 
 				className="panel" 
+				setShowUpload={setShowUpload}
+				setLoading={setLoading}
+				
 				client={props.client}
 				contract={contract}
 				rules={rules}

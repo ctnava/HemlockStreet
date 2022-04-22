@@ -4,6 +4,7 @@ import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
 import axios from "axios";
 
+const url = 'http://localhost:4001/'; 
 const readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
 function Upload(props) {
@@ -54,7 +55,6 @@ function Upload(props) {
 	function pinToServer(event) {
 		setPinning(pinningMessage);
 
-		const url = 'http://localhost:4001/'; 
 		const data = { 
 			fileName: fileData.finalName, 
 			contractMetadata: { 
@@ -66,7 +66,7 @@ function Upload(props) {
 		// console.log(data);
 		axios.post(url + "pin", data, {'Content-Type': 'application/json'})
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 				setContractInput(prev => {return({...prev, hash: res.data.hash})});
 				setPinning(readyMessage);
 				console.log("File Uploaded to IPFS!");
@@ -75,14 +75,37 @@ function Upload(props) {
 		event.preventDefault();
 	}
 
+	function deleteFile() {
+        if (fileData !== null && uploaded === true) {
+            console.log("Requesting Deletion...");
+            const data = { fileName: fileData.finalName };
+            axios.delete(url + "upload", { data: data, 'Content-Type': 'application/json'})
+            .then((res) => {
+                if (res.data === 'success') {
+                    setFileData(null);
+                    setUploaded(null);
+                } else { console.log(res.data) }
+            });
+        } else { console.log("Something went wrong with deleteFile()") }
+    }
+
 	function makeTransaction(event) {
 		// console.log(contractInput);
-		const data = cipherInput;
-		setFileData(null);
-		setContractInput(defaultInput);
-		setCipherInput(defaultInput);
+		const input = cipherInput;
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
-		props.uploadFile(data, messageValue);
+		props.uploadFile(input, messageValue).then((tx) => {
+			const data = { hash: contractInput.hash, tx: tx.hash };
+			axios.post(url + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
+				if (res.data === "success") {
+					setFileData(null);
+					setContractInput(defaultInput);
+					setCipherInput(defaultInput);
+					deleteFile();
+					props.setShowUpload(false);
+					props.setLoading(true);
+				}
+			});
+		});
 	}
 
 	// console.log(contractInput);
