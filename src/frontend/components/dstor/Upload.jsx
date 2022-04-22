@@ -96,6 +96,7 @@ function Upload(props) {
 		props.uploadFile(input, messageValue).then((tx) => {
 			const data = { 
 				hash: contractInput.hash, 
+				cipher: cipherInput.hash,
 				contractMetadata: { 
 					chainId: props.client.chainId, 
 					contract: props.contract.address
