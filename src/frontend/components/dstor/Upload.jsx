@@ -94,7 +94,14 @@ function Upload(props) {
 		const input = cipherInput;
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
 		props.uploadFile(input, messageValue).then((tx) => {
-			const data = { hash: contractInput.hash, tx: tx.hash };
+			const data = { 
+				hash: contractInput.hash, 
+				contractMetadata: { 
+					chainId: props.client.chainId, 
+					contract: props.contract.address
+				}, 
+				tx: tx.hash 
+			};
 			axios.post(url + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
 				if (res.data === "success") {
 					setFileData(null);
