@@ -13,7 +13,7 @@ function Upload(props) {
 
 	const defaultInput = { hash: "", size: 0, type: "", name: "", description: "", recipient: "" };
 	const [contractInput, setContractInput] = useState(defaultInput);
-	const [cipherInput, setCipherInput] = useState(undefined);
+	const [cipherInput, setCipherInput] = useState(defaultInput);
 
 	function handleChange(event) {
 		const { name, value } = event.target;
@@ -63,19 +63,20 @@ function Upload(props) {
 		axios.post(url, data, {'Content-Type': 'application/json'})
 			.then((res) => {
 				console.log(res);
-				setContractInput(prev => {return({...prev, hash: result.path})});
+				setContractInput(prev => {return({...prev, hash: res.data.hash})});
 				setPinning(readyMessage);
 				console.log("File Uploaded to IPFS!");
-				setCipherInput();
+				setCipherInput(res.data.encryptedInputs);
 			});
 		event.preventDefault();
 	}
 
 	function makeTransaction(event) {
 		// console.log(contractInput);
-		const data = contractInput;
+		const data = cipherInput;
 		setFileData(null);
 		setContractInput(defaultInput);
+		setCipherInput(defaultInput);
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
 		props.uploadFile(data, messageValue);
 	}
