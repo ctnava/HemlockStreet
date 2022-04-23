@@ -140,8 +140,11 @@ function Dropzone(props) {
 
     function unpinFile() {
         console.log("Requesting Unpin...");
-        const data = { hash: props.contractInput.hash };
-        axios.post('http://localhost:4001/unpin', { data: data, 'Content-Type': 'application/json'})
+        const data = { 
+            hash: props.contractInput.hash,
+            cipher: props.cipherInput.hash
+        };
+        axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
         .then((res) => {
             if (res.data === 'success') {
                 deleteFile();

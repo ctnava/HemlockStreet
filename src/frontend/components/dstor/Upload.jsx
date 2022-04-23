@@ -135,6 +135,7 @@ function Upload(props) {
 
 		contractInput={contractInput}
 		setContractInput={setContractInput}
+		cipherInput={cipherInput}
 		resetCipherInput={resetCipherInput}
 		fileData={fileData}
 		setFileData={setFileData}
