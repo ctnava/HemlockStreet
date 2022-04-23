@@ -67,11 +67,15 @@ function Upload(props) {
 		// console.log(data);
 		axios.post(url + "pin", data, {'Content-Type': 'application/json'})
 			.then((res) => {
-				// console.log(res);
-				setContractInput(prev => {return({...prev, hash: res.data.hash})});
-				setPinning(readyMessage);
-				console.log("File Uploaded to IPFS!");
-				setCipherInput(res.data.encryptedInputs);
+				if (res.data.hash && res.data.encryptedInputs) {
+					setContractInput(prev => {return({...prev, hash: res.data.hash})});
+					setPinning(readyMessage);
+					console.log("File Uploaded to IPFS!");
+					setCipherInput(res.data.encryptedInputs);
+				} else {
+					setPinning(readyMessage);
+					console.log(res.data);
+				}
 			});
 		event.preventDefault();
 	}
