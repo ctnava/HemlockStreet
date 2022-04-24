@@ -40,9 +40,13 @@ function DStor(props) {
 		if (!loading) { setLoading(true); }
 		console.log("Querying DStor...");
 		const [sent, sentExps, sentIds, received, receivedExps, receivedIds] = await contract.getAllData();
+		var formattedSentIds = [];
+		sentIds.forEach(id => { formattedSentIds.push(parseInt(id.toString())) });
+		var formattedReceivedIds = [];
+		receivedIds.forEach(id => { formattedReceivedIds.push(parseInt(id.toString())) });
 		const ownerAddress = await contract.owner();
-		setOutbox({ contents: sent, expDates: sentExps, ids: sentIds });
-		setInbox({ contents: received, expDates: receivedExps, ids: receivedIds });
+		setOutbox({ contents: sent, expDates: sentExps, ids: formattedSentIds });
+		setInbox({ contents: received, expDates: receivedExps, ids: formattedReceivedIds });
 		if (ownerAddress.toLowerCase() === props.client.account) { 
 			const balance = await (props.client.provider).getBalance(contract.address);
 			const fsMin = await contract.minimumFileSize();

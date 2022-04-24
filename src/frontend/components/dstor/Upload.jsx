@@ -94,9 +94,11 @@ function Upload(props) {
         } else { console.log("Something went wrong with deleteFile()") }
     }
 
+	// disable input before transaction
 	function makeTransaction(event) {
 		// console.log(contractInput);
 		const input = cipherInput;
+		console.log(input);
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
 		props.uploadFile(input, messageValue).then((tx) => {
 			const data = { 

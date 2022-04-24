@@ -11,7 +11,8 @@ function DocumentTable(props) {
     function filteredResults() {
         const collection = props.docs.contents;
 		const expDates = props.docs.expDates;
-		const qr = {contents: [], expDates: []};
+        const ids = props.docs.ids;
+		const qr = {contents: [], expDates: [], ids: []};
 		collection.forEach((document, index) => { 
 			const normalized = { 
 				name: document.fileName, 
@@ -72,6 +73,7 @@ function DocumentTable(props) {
 			if (!matchedStrFields.includes(false) && !matchedNumFields.includes(false) && !matchedDateFields.includes(false)) { 
                 qr.contents.push(document); 
                 qr.expDates.push(expDates[index]); 
+                qr.ids.push(ids[index]); 
             }
 		});
 
@@ -81,6 +83,7 @@ function DocumentTable(props) {
     const docs = filteredResults();
     const messages = docs.contents;
     const expDates = docs.expDates;
+    const ids = docs.ids;
 
     return(
     <Row>
