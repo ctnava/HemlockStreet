@@ -13,6 +13,14 @@ function quickDecrypt(data, key) {
 const cachedKeyTemplate = { id: undefined, key: undefined };
 function DocumentTable(props) {
     const [secrets, setSecrets] = useState([]);
+    
+    function matchSecret(id) {
+        var idx;
+        if (secrets.length !== 0) {
+            secrets.forEach((secret, index) => { if (secret.id === id) idx = index })
+        }
+        return idx;
+    }
     const show = props.show;
     const query = props.query;
 
@@ -177,16 +185,20 @@ function DocumentTable(props) {
             {show.from && (<td>{message.uploader}</td>)}
             {show.to && (<td>{message.recipient}</td>)}
             <td>
-                <div onClick={(event) => {
-                    handleDecryption(ids[index], message.fileHash);
-                    event.preventDefault();
-                    }}>[decrypt]</div>
-                <span> / </span>
-                <a 
-                href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
-                rel="noopener noreferrer"
-                target="_blank"
-                >[download]</a>
+                {(matchSecret(ids[index]) === undefined || matchSecret(ids[index]) === null) ? (
+                    <div 
+                    onClick={(event) => {
+                        handleDecryption(ids[index], message.fileHash);
+                        event.preventDefault();
+                    }}
+                    >[decrypt]
+                    </div>) : (
+                    <a 
+                    href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >[download]
+                    </a>)}
             </td>
         </tr>);
         }) }
