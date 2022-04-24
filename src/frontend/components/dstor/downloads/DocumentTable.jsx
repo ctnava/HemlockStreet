@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Fields from './Fields';
 import Query from './Query';
-import { Table, Row } from 'react-bootstrap'
+import { Table, Row } from 'react-bootstrap';
+import CryptoJS from "crypto-js";
+import axios from "axios";
 
+function quickDecrypt(data, key) { 
+    const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
+    return decrypted;
+} 
 
+const cachedKeyTemplate = { id: undefined, key: undefined };
 function DocumentTable(props) {
+    const [secrets, setSecrets] = useState([]);
     const show = props.show;
     const query = props.query;
 
@@ -71,9 +79,19 @@ function DocumentTable(props) {
             });
 
 			if (!matchedStrFields.includes(false) && !matchedNumFields.includes(false) && !matchedDateFields.includes(false)) { 
-                qr.contents.push(document); 
-                qr.expDates.push(expDates[index]); 
                 qr.ids.push(ids[index]); 
+                qr.expDates.push(expDates[index]); 
+                const finalDoc = {
+                    fileHash: autoDecrypt(ids[index], document.fileHash),
+                    fileName: autoDecrypt(ids[index], document.fileName),
+                    fileType: autoDecrypt(ids[index], document.fileType),
+                    fileDescription: autoDecrypt(ids[index], document.fileDescription),
+                    fileSize: document.fileSize,
+                    recipient: document.recipient,
+                    uploader: document.uploader,
+                    uploadTime: document.uploadTime
+                };
+                qr.contents.push(finalDoc); 
             }
 		});
 
@@ -84,6 +102,28 @@ function DocumentTable(props) {
     const messages = docs.contents;
     const expDates = docs.expDates;
     const ids = docs.ids;
+
+    function autoDecrypt(id, data) {
+        var idx;
+        if (secrets.length !== 0) {
+            secrets.forEach((secret, index) => { if (secret.id === id) idx = index });
+            // console.log(secrets[idx].key);
+            if (idx !== undefined && idx !== null) return quickDecrypt(data, secrets[idx].key);
+            else return data;
+        }
+        else return data;
+    }
+
+    function handleDecryption(id, hash) {
+        axios.post("http://localhost:4001/decipher", { hash: hash }, {'Content-Type': 'application/json'})
+			.then((res) => {
+				if (res.data) {
+					setSecrets(prev => [...prev, {id:id, key:res.data}]);
+				} else {
+					console.log(res);
+				}
+			});
+    }
 
     return(
     <Row>
@@ -127,7 +167,7 @@ function DocumentTable(props) {
         <tr key={ids[index]}>
             <td>{ids[index]}</td>
             {show.hash && (<td>{message.fileHash}</td>)}
-            {show.name && (<td>{message.fileName}{message.fileType}</td>)}
+            {show.name && (<td>{message.fileName}.{message.fileType}</td>)}
             {show.type && (<td>{message.fileType}</td>)}
             {show.memo && (<td>{message.fileDescription}</td>)}
             {show.size && (<td>{props.bytes(message.fileSize.toNumber())}</td>)}
@@ -136,11 +176,16 @@ function DocumentTable(props) {
             {show.from && (<td>{message.uploader}</td>)}
             {show.to && (<td>{message.recipient}</td>)}
             <td>
+                <div onClick={(event) => {
+                    handleDecryption(ids[index], message.fileHash);
+                    event.preventDefault();
+                    }}>[decrypt]</div>
+                <span> / </span>
                 <a 
                 href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
                 rel="noopener noreferrer"
                 target="_blank"
-                >download</a>
+                >[download]</a>
             </td>
         </tr>);
         }) }
