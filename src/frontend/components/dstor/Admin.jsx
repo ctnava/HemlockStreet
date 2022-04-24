@@ -27,14 +27,8 @@ function Admin(props) {
                         console.log("transaction", result);
                     });
                 break;
-            case "setMinimumPin":
-                contract.setRules(true, value)
-                    .then((result) => {
-                        console.log("transaction", result);
-                    });
-                break;
             case "setMinimumFileSize":
-                contract.setRules(false, value)
+                contract.setMinFileSize(false, value)
                     .then((result) => {
                         console.log("transaction", result);
                     });
@@ -58,7 +52,6 @@ function Admin(props) {
             <InputGroup>
                 <DropdownButton variant="secondary" className="mb-3 my-3" title="Contract Methods">
                 {contractMethod !== "setPinningRate" && (<Dropdown.Item name="setPinningRate" onClick={selectMethod}>setPinningRate</Dropdown.Item>)}
-                {contractMethod !== "setMinimumPin" && (<Dropdown.Item name="setMinimumPin" onClick={selectMethod}>setMinimumPin</Dropdown.Item>)}
                 {contractMethod !== "setMinimumFileSize" && (<Dropdown.Item name="setMinimumFileSize" onClick={selectMethod}>setMinimumFileSize</Dropdown.Item>)}
                 {contractMethod !== "setFission" && (<Dropdown.Item name="setFission" onClick={selectMethod}>setFission</Dropdown.Item>)}
                 </DropdownButton>
@@ -80,7 +73,6 @@ function Admin(props) {
                 <InputGroup.Text>
                 Current Value: {
                 contractMethod === "setPinningRate" ? (details.pinRate).toString() : 
-                contractMethod === "setMinimumPin" ? (details.pinMin).toString() : 
                 contractMethod === "setMinimumFileSize" ? (details.fsMin).toString() :
                 contractMethod === "setFission" ? details.fission : "null"
                 }

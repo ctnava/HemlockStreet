@@ -256,8 +256,7 @@ describe("DStor", () => {
 		});
 		it("Allow modifications by the owner", async () => {
 			await setUp();
-			await (await DStor.connect(deployer).setRules(false, 1)).wait(1);
-			await (await DStor.connect(deployer).setRules(true, 1)).wait(1);
+			await (await DStor.connect(deployer).setMinFileSize(1)).wait(1);
 			await (await DStor.connect(deployer).setPinningRate(1)).wait(1);
 			await (await DStor.connect(deployer).setFission(client1.address)).wait(1);
 			var val;

@@ -106,6 +106,9 @@ function Downloads(props) {
 
 			<DocumentTable 
 			bytes={props.bytes}
+			getQuotes={props.getQuotes}
+			contract={props.contract}
+			setLoading={props.setLoading}
 
 			show={show} 
 			setShow={setShow} 

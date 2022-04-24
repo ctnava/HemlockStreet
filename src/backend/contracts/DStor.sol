@@ -9,8 +9,8 @@ contract DStor is Ownable {
 	event FileUpdated(address recipient);
 	string public constant name = 'DeadDrop@HemlockStreet';
 	address public fissionEngine;
+	uint public constant minimumPin = 30; // days
 	uint public pinningRate = 150; // pennies
-	uint public minimumPin = 30; // days
 	uint public minimumFileSize = 1024; // bytes
 
 	constructor( ) { }
@@ -29,12 +29,16 @@ contract DStor is Ownable {
 	mapping(uint => File) private files;
 	uint public fileCount = 0;
 
+	function basicInfo() public view returns(string memory n, address fe, uint mp, uint pr, uint mfs, uint fc){
+		n = name; fe = fissionEngine; mp = minimumPin; pr = pinningRate; mfs = minimumFileSize; fc = fileCount;
+	}
+
 	function quote(uint numBytes) public view returns(uint perDiem, uint benchFee){
 		require(numBytes >= minimumFileSize, badCall);
 		uint numKb = numBytes / 1024;
 		if (numBytes % 1024 > 0) { numKb++; }
 		benchFee = numKb * ((pinningRate * (10 ** 6)) / 1048576); // (1.50/1048576) * 10e8 == 1430.5
-		perDiem =  (benchFee / 30);
+		perDiem =  (benchFee / minimumPin);
 	}
 
 	function gasQuote(uint numBytes) public view returns(uint weiPerDiem, uint weiBenchFee) {
@@ -43,6 +47,11 @@ contract DStor is Ownable {
 		uint flipped = FissionEngine.flipRate();
 		weiPerDiem = (perDiem * flipped) / (10**8);
 		weiBenchFee = (benchFee * flipped) / (10**8);
+	}
+
+	function bothQuotes(uint numBytes) public view returns(uint perDiem, uint benchFee, uint weiPerDiem, uint weiBenchFee) {
+		(perDiem, benchFee) = quote(numBytes);
+		(weiPerDiem, weiBenchFee) = quote(numBytes);
 	}
 
 	string private constant badCall = "BAD CALL";
@@ -161,9 +170,8 @@ contract DStor is Ownable {
 		tilExpiry = timeTil;
 	}
 
-	function setRules(bool isMinimumPin, uint value) public onlyOwner {
-		if (isMinimumPin == true) { minimumPin = value; }
-		else { minimumFileSize = value; }
+	function setMinFileSize(uint value) public onlyOwner {
+		minimumFileSize = value;
 	}
 
 	function setPinningRate(uint value) public onlyOwner {

@@ -30,7 +30,6 @@ function DStor(props) {
 		show: false,
 		balance: 0,
 		fsMin: 0,
-		pinMin: 0,
 		pinRate: 0,
 		fission: ""
 	}
@@ -154,6 +153,9 @@ function DStor(props) {
 			{ showDownload ? (
 				<Downloads 
 				className="panel" 
+				contract={contract}
+				getQuotes={getQuotes}
+				setLoading={setLoading}
 				bytes={humanBytes} 
 				inbox={inbox} 
 				outbox={outbox} 

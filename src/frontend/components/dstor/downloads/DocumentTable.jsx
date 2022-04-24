@@ -2,17 +2,71 @@ import React, { useState } from 'react';
 import Fields from './Fields';
 import Query from './Query';
 import { Table, Row } from 'react-bootstrap';
+import ReactTooltip from 'react-tooltip';
 import CryptoJS from "crypto-js";
 import axios from "axios";
+import TimeExtension from './TimeExtension';
+import { formatMsgVal } from '../../dapps/utils/calling';
+
+const defaultRequest = {
+    index: undefined,
+    days: 1,
+    quote: {
+        gas: undefined,
+        fiat: undefined
+    }
+};
 
 function quickDecrypt(data, key) { 
     const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
     return decrypted;
 } 
 
-const cachedKeyTemplate = { id: undefined, key: undefined };
+// const cachedKeyTemplate = { id: undefined, key: undefined };
 function DocumentTable(props) {
+    const [request, setRequest] = useState(defaultRequest);
+
+    function handleRequestChange(event) {
+        const [name, value] = event.target;
+        if (name === "index") {
+            var size;
+            docs.ids.forEach((fileId, idx) => {
+                if (fileId === value) size = parseInt(docs.contents[idx].fileSize.toString());
+            });
+            props.getQuotes(size).then(quotes => {
+                // console.log(size/1024);
+                const pdQuotes = { 
+                    gas: parseInt(quotes[2].toString()), 
+                    fiat: parseInt(quotes[0].toString()) 
+                };
+                const newRequest = {
+                    index: value,
+                    days: 1,
+                    quote: pdQuotes
+                };
+                setRequest(newRequest);
+            });
+        } else {
+            setRequest(prev => {return{...prev, days: value}})
+        }
+    }
+
+    function submitRequest(event) {
+        event.preventDefault();
+        async function addTime() {
+            const val = formatMsgVal(request.quote.gas * request.days);
+            const tx = await props.contract.addTime(request.index, { value: val });
+            const txdata = await tx.wait(1);
+            return txdata;
+        }
+        addTime().then(tx => {
+            console.log(tx);
+            props.setLoading(true);
+        });
+    }
+
     const [secrets, setSecrets] = useState([]);
+    console.log(secrets);
     
     function matchSecret(id) {
         var idx;
@@ -151,6 +205,13 @@ function DocumentTable(props) {
             handleDateQuery={props.handleDateQuery}
             />
         </Row>
+        { request.index !== undefined && (<Row>
+            <TimeExtension 
+            request={request}
+            handleChange={handleRequestChange}
+            handleClick={submitRequest}
+            />
+        </Row>)}
     <Table className="px-5 container" striped bordered hover variant="dark">
     <thead>
         <tr>
@@ -176,29 +237,41 @@ function DocumentTable(props) {
         <tr key={ids[index]}>
             <td>{ids[index]}</td>
             {show.hash && (<td>{message.fileHash}</td>)}
-            {show.name && (<td>{message.fileName}.{message.fileType}</td>)}
+            {show.name && (<td>{message.fileName}</td>)}
             {show.type && (<td>{message.fileType}</td>)}
             {show.memo && (<td>{message.fileDescription}</td>)}
             {show.size && (<td>{props.bytes(message.fileSize.toNumber())}</td>)}
             {show.timestamp && (<td>{timestamp.toLocaleString()}</td>)}
-            {show.expiration && (<td>{expDate.toLocaleString()}</td>)}
+            {show.expiration && (<td>
+            <a data-tip data-for={`expiration${ids[index]}`} onClick={()=>{
+                const event = { target: ["index", ids[index]] }
+                handleRequestChange(event);
+            }}>{expDate.toLocaleString()}</a>
+            <ReactTooltip id={`expiration${ids[index]}`} type='warning' effect='solid'>
+            Need more time?<br/>
+            Click to extend!
+            </ReactTooltip>
+            </td>)}
             {show.from && (<td>{message.uploader}</td>)}
             {show.to && (<td>{message.recipient}</td>)}
             <td>
                 {(matchSecret(ids[index]) === undefined || matchSecret(ids[index]) === null) ? (
                     <div 
                     onClick={(event) => {
+                        console.log(message.fileHash);
                         handleDecryption(ids[index], message.fileHash);
                         event.preventDefault();
                     }}
                     >[decrypt]
-                    </div>) : (
+                    </div>
+                    ) : (
                     <a 
                     href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
                     rel="noopener noreferrer"
                     target="_blank"
                     >[download]
-                    </a>)}
+                    </a>
+                    )}
             </td>
         </tr>);
         }) }
