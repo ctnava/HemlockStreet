@@ -120,7 +120,7 @@ function DocumentTable(props) {
             const timestamp = new Date((message.uploadTime.toNumber()) * 1000);
             const expDate = new Date((expDates[index].toNumber()) * 1000);
             return(
-        <tr key={index}>
+        <tr key={ids[index]}>
             {show.hash && (<td>{message.fileHash}</td>)}
             {show.name && (<td>{message.fileName}{message.fileType}</td>)}
             {show.type && (<td>{message.fileType}</td>)}

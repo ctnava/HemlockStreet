@@ -139,11 +139,13 @@ contract DStor is Ownable {
 		return result;
 	}
 
-	function getAllData() public view returns(File[] memory sent, uint[] memory sentExps, File[] memory received, uint[] memory receivedExps) {
+	function getAllData() public view returns(File[] memory sent, uint[] memory sentExps, uint[] memory sentIds, File[] memory received, uint[] memory receivedExps, uint[] memory receivedIds) {
 		sent = getAccessibleFiles(true);
 		sentExps = getAccessibleExps(true);
+		sentIds = getAccessibleFileIds(true);
 		received = getAccessibleFiles(false);
 		receivedExps = getAccessibleExps(false);
+		receivedIds = getAccessibleFileIds(false);
 	}
 
 	function batchExpQuery(string[] memory query) public view returns(bool[] memory isExpired, uint[] memory tilExpiry) {

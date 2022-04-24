@@ -21,7 +21,8 @@ function DStor(props) {
 	const [loading, setLoading] = useState(true);
 	const messageBox = {
 		contents: [],
-		expDates: []
+		expDates: [],
+		ids: []
 	};
 	const [outbox, setOutbox] = useState(messageBox);
 	const [inbox, setInbox] = useState(messageBox);
@@ -38,10 +39,10 @@ function DStor(props) {
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
 		console.log("Querying DStor...");
-		const [sent, sentExps, received, receivedExps] = await contract.getAllData();
+		const [sent, sentExps, sentIds, received, receivedExps, receivedIds] = await contract.getAllData();
 		const ownerAddress = await contract.owner();
-		setOutbox({ contents: sent, expDates: sentExps });
-		setInbox({ contents: received, expDates: receivedExps });
+		setOutbox({ contents: sent, expDates: sentExps, ids: sentIds });
+		setInbox({ contents: received, expDates: receivedExps, ids: receivedIds });
 		if (ownerAddress.toLowerCase() === props.client.account) { 
 			const balance = await (props.client.provider).getBalance(contract.address);
 			const fsMin = await contract.minimumFileSize();

@@ -30,12 +30,12 @@ const defaultQueryFieldVisibility = {
 
 const defaultInboxView = {
 	fields: false,
-	name: true,
+	name: false,
 	type: false,
-	memo: true,
+	memo: false,
 	hash: false,
-	timestamp: false,
-	expiration: false,
+	timestamp: true,
+	expiration: true,
 	size: true,
 	from: true,
 	to: false
@@ -43,12 +43,12 @@ const defaultInboxView = {
 
 const defaultOutboxView = {
 	fields: false,
-	name: true,
+	name: false,
 	type: false,
-	memo: true,
+	memo: false,
 	hash: false,
-	timestamp: false,
-	expiration: false,
+	timestamp: true,
+	expiration: true,
 	size: true,
 	from: false,
 	to: true
