@@ -105,6 +105,7 @@ function DocumentTable(props) {
     <Table className="px-5 container" striped bordered hover variant="dark">
     <thead>
         <tr>
+            <th>Index</th>
             {show.hash && (<th>IPFS</th>)}
             {show.name && (<th>File</th>)}
             {show.type && (<th>Type</th>)}
@@ -124,6 +125,7 @@ function DocumentTable(props) {
             const expDate = new Date((expDates[index].toNumber()) * 1000);
             return(
         <tr key={ids[index]}>
+            <td>{ids[index]}</td>
             {show.hash && (<td>{message.fileHash}</td>)}
             {show.name && (<td>{message.fileName}{message.fileType}</td>)}
             {show.type && (<td>{message.fileType}</td>)}
