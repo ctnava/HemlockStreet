@@ -22,11 +22,22 @@ function DocumentTable(props) {
         const ids = props.docs.ids;
 		const qr = {contents: [], expDates: [], ids: []};
 		collection.forEach((document, index) => { 
+            const decryptedDoc = {
+                fileHash: autoDecrypt(ids[index], document.fileHash),
+                fileName: autoDecrypt(ids[index], document.fileName),
+                fileType: autoDecrypt(ids[index], document.fileType),
+                fileDescription: autoDecrypt(ids[index], document.fileDescription),
+                fileSize: document.fileSize,
+                recipient: document.recipient,
+                uploader: document.uploader,
+                uploadTime: document.uploadTime
+            };
+
 			const normalized = { 
-				name: document.fileName, 
-				type: document.fileType, 
-				memo: document.fileDescription, 
-				hash: document.fileHash, 
+				hash: decryptedDoc.fileHash,
+                name: decryptedDoc.fileName,
+                type: decryptedDoc.fileType,
+                memo: decryptedDoc.fileDescription,
 				timestamp: document.timestamp,
 				expiration: expDates[index],
 				size: document.fileSize,
@@ -81,17 +92,7 @@ function DocumentTable(props) {
 			if (!matchedStrFields.includes(false) && !matchedNumFields.includes(false) && !matchedDateFields.includes(false)) { 
                 qr.ids.push(ids[index]); 
                 qr.expDates.push(expDates[index]); 
-                const finalDoc = {
-                    fileHash: autoDecrypt(ids[index], document.fileHash),
-                    fileName: autoDecrypt(ids[index], document.fileName),
-                    fileType: autoDecrypt(ids[index], document.fileType),
-                    fileDescription: autoDecrypt(ids[index], document.fileDescription),
-                    fileSize: document.fileSize,
-                    recipient: document.recipient,
-                    uploader: document.uploader,
-                    uploadTime: document.uploadTime
-                };
-                qr.contents.push(finalDoc); 
+                qr.contents.push(decryptedDoc); 
             }
 		});
 
