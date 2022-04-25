@@ -177,15 +177,20 @@ function DocumentTable(props) {
         else return data;
     }
 
-    function handleDecryption(id, hash) {
-        axios.post("http://localhost:4001/decipher", { hash: hash }, {'Content-Type': 'application/json'})
-			.then((res) => {
-				if (res.data) {
-					setSecrets(prev => [...prev, {id:id, key:res.data}]);
-				} else {
-					console.log(res);
-				}
-			});
+    function handleDecryption(id, cipher) {
+        props.client.signer.signMessage(cipher).then((signature) => {
+            const data = {cipher: cipher, signature: signature};
+            axios.post("http://localhost:4001/decipher", data, {'Content-Type': 'application/json'})
+            .then((res) => {
+                const errors = [
+                    "err: Cid.findOne @ app.post('/decipher')",
+                    "err: signature failure @ app.post('/decipher')",
+                    "err: empty cipher @ app.post('/decipher')"
+                ];
+                if (!errors.includes(res.data)) setSecrets(prev => [...prev, {id:id, key:res.data}]);
+                else console.log(res);
+            });
+        });
     }
 
     return(

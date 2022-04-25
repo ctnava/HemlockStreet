@@ -154,6 +154,7 @@ function DStor(props) {
 				<Downloads 
 				className="panel" 
 				contract={contract}
+				client={props.client}
 				getQuotes={getQuotes}
 				setLoading={setLoading}
 				bytes={humanBytes} 

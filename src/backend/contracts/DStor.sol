@@ -33,6 +33,16 @@ contract DStor is Ownable {
 		n = name; fe = fissionEngine; mp = minimumPin; pr = pinningRate; mfs = minimumFileSize; fc = fileCount;
 	}
 
+	function getAddresses(string memory query) public view returns(address from, address to) {
+		for (uint i = 1; i <= fileCount; i++) {
+			File memory file = files[i];
+			if (keccak256(abi.encodePacked(file.fileHash)) == keccak256(abi.encodePacked(query))) {  
+				from = file.uploader;
+				to = file.recipient;
+			}
+		}
+	}
+
 	function quote(uint numBytes) public view returns(uint perDiem, uint benchFee){
 		require(numBytes >= minimumFileSize, badCall);
 		uint numKb = numBytes / 1024;

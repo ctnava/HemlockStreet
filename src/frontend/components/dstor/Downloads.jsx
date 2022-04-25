@@ -109,6 +109,7 @@ function Downloads(props) {
 			getQuotes={props.getQuotes}
 			contract={props.contract}
 			setLoading={props.setLoading}
+			client={props.client}
 
 			show={show} 
 			setShow={setShow} 

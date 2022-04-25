@@ -9,6 +9,7 @@ function App(props) {
   const [initialized, setInitialized] = useState(true);
   const [client, setClient] = useState({
     account: null,
+    signer: null,
     chainId: null,
     provider: null
   });
@@ -27,9 +28,11 @@ function App(props) {
         chainId = res });
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-
+    
+    const signer = await provider.getSigner();
     setClient({
       account: account,
+      signer: signer,
       chainId: chainId,
       provider: provider
     })
