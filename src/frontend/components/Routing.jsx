@@ -8,14 +8,14 @@ import DStor from "./dstor/DStor";
 function Routing(props) {
     const client = props.client; 
     console.log(`Detected account (active): \n${client.account}`);
-    console.log(`ChainId: ${parseInt(client.chainId, 16)}`);
+    console.log(`ChainId: ${client.chainId}`);
 
     const loadContract = async (byName) => {
         const signer = client.provider.getSigner();
         var metadata = { name: null, abi: null, address: null };
-        await import(`../contractsData/${parseInt(client.chainId, 16)}/${byName}.json`)
+        await import(`../contractsData/${client.chainId}/${byName}.json`)
             .then(async (contractInterface) => {
-                await import(`../contractsData/${parseInt(client.chainId, 16)}/${byName}-address.json`)
+                await import(`../contractsData/${client.chainId}/${byName}-address.json`)
                     .then((addressMap) => { metadata = { name: byName, abi: contractInterface.abi, address: addressMap.address }; })
                     .catch((err) => console.error(err));
             }).catch((err) => console.error(err));

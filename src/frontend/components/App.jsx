@@ -33,7 +33,7 @@ function App(props) {
     setClient({
       account: account,
       signer: signer,
-      chainId: chainId,
+      chainId: parseInt(chainId, 16),
       provider: provider
     })
 
