@@ -98,7 +98,7 @@ function Upload(props) {
 	function makeTransaction(event) {
 		// console.log(contractInput);
 		const input = cipherInput;
-		console.log(input);
+		// console.log(input);
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
 		props.uploadFile(input, messageValue).then((tx) => {
 			const data = { 
@@ -163,6 +163,7 @@ function Upload(props) {
 						placeholder="0x......."
 						value={contractInput.recipient}
 						autoComplete="off"
+						disabled={contractInput.hash.length !== 0 ? "not":""}
 						/>
 					</InputGroup>
 				</Form.Group>
@@ -177,6 +178,7 @@ function Upload(props) {
 						rows={5}
 						name="description" 
 						onChange={handleChange} 
+						disabled={contractInput.hash.length !== 0 ? "not":""}
 						placeholder="The password is 'saltyH4ckerTears[2_1337_4U]' (single quotes not included)
 						(This memo will only visible to you and the recipient through this DApp. )"
 						value={contractInput.description}
