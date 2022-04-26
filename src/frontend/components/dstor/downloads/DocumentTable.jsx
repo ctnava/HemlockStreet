@@ -66,7 +66,7 @@ function DocumentTable(props) {
     }
 
     const [secrets, setSecrets] = useState([]);
-    console.log(secrets);
+    // console.log(secrets); // comment me before prod
     
     function matchSecret(id) {
         var idx;
