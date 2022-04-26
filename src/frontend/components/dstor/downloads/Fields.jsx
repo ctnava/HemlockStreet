@@ -19,7 +19,6 @@ function Fields(props) {
         <Field name="fields" label="Fields" />
         { show.fields && (
         <Row>
-            <Field name="hash" label="CID" />
             <Field name="name" label="Name" />
             <Field name="type" label="Extension" />
             <Field name="memo" label="Memo" />

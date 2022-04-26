@@ -20,7 +20,6 @@ function Query(props) {
             {!showQueryField.name && (<Dropdown.Item name="name" onClick={handleClick}>File Name</Dropdown.Item>)}
             {!showQueryField.type && (<Dropdown.Item name="type" onClick={handleClick}>File Type</Dropdown.Item>)}
             {!showQueryField.memo && (<Dropdown.Item name="memo" onClick={handleClick}>File Memo</Dropdown.Item>)}
-            {!showQueryField.hash && (<Dropdown.Item name="hash" onClick={handleClick}>IPFS CID (Hash)</Dropdown.Item>)}
             {!showQueryField.timestamp && (<Dropdown.Item name="timestamp" onClick={handleClick}>Timestamp</Dropdown.Item>)}
             {!showQueryField.expiration && (<Dropdown.Item name="expiration" onClick={handleClick}>Expiration</Dropdown.Item>)}
             {!showQueryField.size && (<Dropdown.Item name="size" onClick={handleClick}>File Size</Dropdown.Item>)}
@@ -80,23 +79,6 @@ function Query(props) {
                 <Button name="memo" variant="secondary" onClick={handleClick}>Close</Button>
             </InputGroup>
         </Form.Group>   
-        </div>) }
-
-        { showQueryField.hash && (<div>
-        <Form.Group className="row">
-            <InputGroup className="mb-3 my-3">
-                <InputGroup.Text>IPFS CID (Hash)</InputGroup.Text>
-                <Form.Control 
-                type="text" 
-                name="hash"
-                onChange={props.handleQuery} 
-                placeholder="..."
-                value={query.hash}
-                autoComplete="off"
-                />
-                <Button name="hash" variant="secondary" onClick={handleClick}>Close</Button>
-            </InputGroup>
-        </Form.Group>    
         </div>) }
 
         { showQueryField.timestamp && (<div>

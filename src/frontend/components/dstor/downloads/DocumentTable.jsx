@@ -85,7 +85,7 @@ function DocumentTable(props) {
 		const qr = {contents: [], expDates: [], ids: []};
 		collection.forEach((document, index) => { 
             const decryptedDoc = {
-                fileHash: autoDecrypt(ids[index], document.fileHash),
+                fileHash: document.fileHash,
                 fileName: autoDecrypt(ids[index], document.fileName),
                 fileType: autoDecrypt(ids[index], document.fileType),
                 fileDescription: autoDecrypt(ids[index], document.fileDescription),
@@ -107,7 +107,7 @@ function DocumentTable(props) {
 				to: document.recipient 
 			}
 
-			const strFields = ["name", "type", "memo", "hash", "from", "to"];
+			const strFields = ["name", "type", "memo", "from", "to"];
 			var matchedStrFields = [];
 			strFields.forEach((field) => {matchedStrFields.push(
                 query[field].length === 0 ? true : false
@@ -221,7 +221,6 @@ function DocumentTable(props) {
     <thead>
         <tr>
             <th>Index</th>
-            {show.hash && (<th>IPFS</th>)}
             {show.name && (<th>File</th>)}
             {show.type && (<th>Type</th>)}
             {show.memo && (<th>Memo</th>)}
@@ -241,7 +240,6 @@ function DocumentTable(props) {
             return(
         <tr key={ids[index]}>
             <td>{ids[index]}</td>
-            {show.hash && (<td>{message.fileHash}</td>)}
             {show.name && (<td>{message.fileName}</td>)}
             {show.type && (<td>{message.fileType}</td>)}
             {show.memo && (<td>{message.fileDescription}</td>)}
@@ -263,7 +261,7 @@ function DocumentTable(props) {
                 {(matchSecret(ids[index]) === undefined || matchSecret(ids[index]) === null) ? (
                     <div 
                     onClick={(event) => {
-                        console.log(message.fileHash);
+                        // console.log(message.fileHash);
                         handleDecryption(ids[index], message.fileHash);
                         event.preventDefault();
                     }}
