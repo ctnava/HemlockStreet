@@ -5,8 +5,9 @@ import { Buffer } from 'buffer';
 import axios from "axios";
 
 const url = 'http://localhost:4001/'; 
-const readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
+const readyMessage = "Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
+var timeLeft = "";
 function Upload(props) {
     const [busy, setBusy] = useState(false);
 	const [fileData, setFileData] = useState(null);
@@ -55,12 +56,13 @@ function Upload(props) {
 			if (delTimer === 0) {
 				setDelTimer(undefined);
 				deleteFile();
-			} else {
+			} else if (delTimer !== 0 && pinning !== pinningMessage) {
 				const intervalId = setInterval(() => {setDelTimer(delTimer-1)}, 1000);
+				timeLeft = ` || Time Left(${delTimer}s)`;
 				return () => clearInterval(intervalId);
 			}
 		}
-	}, [delTimer]);
+	}, [delTimer, pinning]);
 
 	const defaultQuote = { perDiem: 0, bench: 0, gasPerDiem: 0, gasBench: 0 };
 	const [quote, setQuote] = useState(defaultQuote);
@@ -88,6 +90,8 @@ function Upload(props) {
 	}
 
 	function pinToServer(event) {
+		timeLeft = "";
+		setPinTimer(undefined);
 		setPinning(pinningMessage);
 
 		const data = { 
@@ -116,6 +120,7 @@ function Upload(props) {
 	}
 
 	function deleteFile() {
+		timeLeft = "";
         if (fileData !== null && uploaded === true) {
             console.log("Requesting Deletion...");
             const data = { fileName: fileData.finalName };
@@ -267,7 +272,7 @@ function Upload(props) {
 		<Button 
 		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
-		>{contractInput.hash.length === 0 ? (pinning + " || Time Left("+delTimer+"s)")  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
+		>{contractInput.hash.length === 0 ? (pinning + timeLeft)  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
 	</Row>
 	</div>) }
 
