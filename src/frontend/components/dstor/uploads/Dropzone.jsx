@@ -141,6 +141,7 @@ function Dropzone(props) {
     }
 
     function unpinFile() {
+		props.setRequestsActive(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
         props.setBusy(true)
         const data = { 
@@ -149,6 +150,7 @@ function Dropzone(props) {
         };
         axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
         .then((res) => {
+			props.setRequestsActive(prev=> {return{...prev, unpin: false}});
             if (res.data === 'success') {
                 deleteFile();
                 props.setContractInput(prev => { return { ...prev, hash: "" } });
@@ -180,13 +182,13 @@ function Dropzone(props) {
                     
                 <p>
                     <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
-                    <span> || </span>
+                    {!props.requestsActive.pin && !props.requestsActive.unpin && (<span> || </span>)}
                     
-                    { props.contractInput.hash.length !== 0 ? (!props.busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>) : 
+                    { props.contractInput.hash.length !== 0 ? (!props.requestsActive.unpin && (!props.busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>)) : 
                       getProgress() !== 100 ? (
                         <span>Progress: {getProgress()}% (please do not refresh the page) || <span onClick={abortFile}>[Abort]</span></span>
                         ) : 
-                        !props.busy ? (<span onClick={deleteFile}>[Delete]</span>) : (<span>Deleting...</span>)
+                        (!props.requestsActive.pin && ((!props.busy) ? (<span onClick={deleteFile}>[Delete]</span>) : (<span>Deleting...</span>)))
                     }
                 </p>
                 <hr/>

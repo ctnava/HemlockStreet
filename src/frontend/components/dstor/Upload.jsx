@@ -8,6 +8,11 @@ const url = 'http://localhost:4001/';
 const readyMessage = "Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
 var timeLeft = "";
+const defaultRequestsMade = {
+	unpin: false,
+	pin: false,
+	transaction: false
+};
 function Upload(props) {
     const [busy, setBusy] = useState(false);
 	const [fileData, setFileData] = useState(null);
@@ -89,6 +94,7 @@ function Upload(props) {
 		return (cost.slice(0, cost.indexOf(".") + 9));
 	}
 
+	const [request, setRequest] = useState(defaultRequestsMade);
 	function pinToServer(event) {
 		timeLeft = "";
 		setPinTimer(undefined);
@@ -106,6 +112,7 @@ function Upload(props) {
 		// console.log(data);
 		axios.post(url + "pin", data, {'Content-Type': 'application/json'})
 			.then((res) => {
+				setRequest(prev=> {return{...prev, pin: false}});
 				if (res.data.hash && res.data.encryptedInputs) {
 					setContractInput(prev => {return({...prev, hash: res.data.hash})});
 					setPinning(readyMessage);
@@ -116,7 +123,6 @@ function Upload(props) {
 					console.log(res.data);
 				}
 			});
-		event.preventDefault();
 	}
 
 	function deleteFile() {
@@ -135,6 +141,7 @@ function Upload(props) {
     }
 
 	function unpinFile() {
+		setRequest(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
         setBusy(true)
         const data = { 
@@ -143,6 +150,7 @@ function Upload(props) {
         };
         axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
         .then((res) => {
+			setRequest(prev=> {return{...prev, unpin: false}});
             if (res.data === 'success') {
                 deleteFile();
                 setContractInput(prev => { return { ...prev, hash: "" } });
@@ -152,7 +160,7 @@ function Upload(props) {
     }
 
 	// disable input before transaction
-	function makeTransaction(event) {
+	function makeTransaction() {
 		// console.log(contractInput);
 		const input = cipherInput;
 		// console.log(input);
@@ -169,6 +177,7 @@ function Upload(props) {
 				tx: tx.hash 
 			};
 			axios.post(url + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
+				setRequest(prev=> {return{...prev, transaction: false}});
 				if (res.data === "success") {
 					setFileData(null);
 					setContractInput(defaultInput);
@@ -178,15 +187,35 @@ function Upload(props) {
 					props.setLoading(true);
 				}
 			});
-		});
+		}).catch(()=>{setRequest(prev=> {return{...prev, transaction: false}})});
 	}
 
 	// console.log(contractInput);
+
+	function handlePin(event) {
+		event.preventDefault();
+		if (!request.pin && !request.unpin) {
+			console.log("pin acknowledged");
+			setRequest(prev=> {return{...prev, pin: true}});
+			pinToServer();
+		}
+	}
+
+	function handleTx(event) {
+		event.preventDefault();
+		if (!request.transaction && !request.unpin) {
+			console.log("tx acknowledged");
+			setRequest(prev=> {return{...prev, transaction: true}}); 
+			makeTransaction();
+		}
+	}
 
 	return(<div>
 	<div>{uploaded === null && (<p>{props.rules.pinningRate}</p>)}</div>
 	<div className="g-4 py-2">
 		<Dropzone 
+		requestsActive={request}
+		setRequestsActive={setRequest}
 		bytes={props.bytes}
 		min={props.rules.minimumFileSize}
 		pinningRate={props.rules.pinningRate}
@@ -270,7 +299,7 @@ function Upload(props) {
 	 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && busy === false && (<div>	
 	<Row>
 		<Button 
-		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
+		onClick={contractInput.hash.length === 0 ? handlePin : handleTx} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
 		>{contractInput.hash.length === 0 ? (pinning + timeLeft)  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
 	</Row>
