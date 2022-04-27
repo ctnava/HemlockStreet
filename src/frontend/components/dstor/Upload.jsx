@@ -28,22 +28,39 @@ function Upload(props) {
 		});
 	}
 
-	const [timer, setTimer] = useState(undefined);
+	const [pinTimer, setPinTimer] = useState(undefined);
 	useEffect(() => {
-		if (contractInput.hash.length !== 0 && timer === undefined) setTimer(60);
-	}, [contractInput, timer]);
+		if (contractInput.hash.length !== 0 && pinTimer === undefined) setPinTimer(60);
+	}, [contractInput, pinTimer]);
 
 	useEffect(() => {
-		if (timer !== undefined) {
-			if (timer === 0) {
-				setTimer(undefined);
+		if (pinTimer !== undefined) {
+			if (pinTimer === 0) {
+				setPinTimer(undefined);
 				unpinFile();
 			} else {
-				const intervalId = setInterval(() => {setTimer(timer-1)}, 1000);
+				const intervalId = setInterval(() => {setPinTimer(pinTimer-1)}, 1000);
 				return () => clearInterval(intervalId);
 			}
 		}
-	}, [timer]);
+	}, [pinTimer]);
+
+	const [delTimer, setDelTimer] = useState(undefined);
+	useEffect(() => {
+		if (fileData !== null && delTimer === undefined) setDelTimer(300);
+	}, [fileData, delTimer]);
+
+	useEffect(() => {
+		if (delTimer !== undefined) {
+			if (delTimer === 0) {
+				setDelTimer(undefined);
+				deleteFile();
+			} else {
+				const intervalId = setInterval(() => {setDelTimer(delTimer-1)}, 1000);
+				return () => clearInterval(intervalId);
+			}
+		}
+	}, [delTimer]);
 
 	const defaultQuote = { perDiem: 0, bench: 0, gasPerDiem: 0, gasBench: 0 };
 	const [quote, setQuote] = useState(defaultQuote);
@@ -250,7 +267,7 @@ function Upload(props) {
 		<Button 
 		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
-		>{contractInput.hash.length === 0 ? pinning  : "Transact || Time Left(" + timer+ "s)"}</Button>
+		>{contractInput.hash.length === 0 ? (pinning + " || Time Left("+delTimer+"s)")  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
 	</Row>
 	</div>) }
 
