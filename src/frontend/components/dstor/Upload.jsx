@@ -39,12 +39,12 @@ function Upload(props) {
 			if (pinTimer === 0) {
 				setPinTimer(undefined);
 				unpinFile();
-			} else {
+			} else if (pinTimer !== 0 && fileData !== null) {
 				const intervalId = setInterval(() => {setPinTimer(pinTimer-1)}, 1000);
 				return () => clearInterval(intervalId);
 			}
 		}
-	}, [pinTimer]);
+	}, [pinTimer, fileData]);
 
 	const [delTimer, setDelTimer] = useState(undefined);
 	useEffect(() => {
