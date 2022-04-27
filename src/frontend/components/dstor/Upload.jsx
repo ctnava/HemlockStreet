@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import { Buffer } from 'buffer';
@@ -8,6 +8,7 @@ const url = 'http://localhost:4001/';
 const readyMessage = "I have made sure that these are the correct details. Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
 function Upload(props) {
+    const [busy, setBusy] = useState(false);
 	const [fileData, setFileData] = useState(null);
     const [uploaded, setUploaded] = useState(null);
 	const [pinning, setPinning] = useState(readyMessage);
@@ -26,6 +27,23 @@ function Upload(props) {
 			return {...prev, [name]: value};
 		});
 	}
+
+	const [timer, setTimer] = useState(undefined);
+	useEffect(() => {
+		if (contractInput.hash.length !== 0 && timer === undefined) setTimer(60);
+	}, [contractInput, timer]);
+
+	useEffect(() => {
+		if (timer !== undefined) {
+			if (timer === 0) {
+				setTimer(undefined);
+				unpinFile();
+			} else {
+				const intervalId = setInterval(() => {setTimer(timer-1)}, 1000);
+				return () => clearInterval(intervalId);
+			}
+		}
+	}, [timer]);
 
 	const defaultQuote = { perDiem: 0, bench: 0, gasPerDiem: 0, gasBench: 0 };
 	const [quote, setQuote] = useState(defaultQuote);
@@ -94,6 +112,23 @@ function Upload(props) {
         } else { console.log("Something went wrong with deleteFile()") }
     }
 
+	function unpinFile() {
+        console.log("Requesting Unpin...");
+        setBusy(true)
+        const data = { 
+            hash: contractInput.hash,
+            cipher: cipherInput.hash
+        };
+        axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
+        .then((res) => {
+            if (res.data === 'success') {
+                deleteFile();
+                setContractInput(prev => { return { ...prev, hash: "" } });
+                resetCipherInput();
+            } else { console.log(res.data) }
+        });
+    }
+
 	// disable input before transaction
 	function makeTransaction(event) {
 		// console.log(contractInput);
@@ -135,6 +170,8 @@ function Upload(props) {
 		pinningRate={props.rules.pinningRate}
 		hash={contractInput.hash}
 		getProjectedCost={getProjectedCost}
+		busy={busy}
+		setBusy={setBusy}
 
 		quote={quote}
 		getQuote={getQuote}
@@ -208,12 +245,12 @@ function Upload(props) {
 	</Row>
 
 	{ uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0
-	 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && (<div>	
+	 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && busy === false && (<div>	
 	<Row>
 		<Button 
 		onClick={contractInput.hash.length === 0 ? pinToServer : makeTransaction} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
-		>{contractInput.hash.length === 0 ? pinning  : "Store the file to the blockchain!"}</Button>
+		>{contractInput.hash.length === 0 ? pinning  : "Transact || Time Left(" + timer+ "s)"}</Button>
 	</Row>
 	</div>) }
 

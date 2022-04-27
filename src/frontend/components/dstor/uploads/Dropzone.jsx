@@ -9,7 +9,6 @@ const url = 'http://localhost:4001/upload';
 function Dropzone(props) {
     const [chunkIndex, setChunkIndex] = useState(null);
     const [dzActive, setDzActive] = useState(false);
-    const [busy, setBusy] = useState(false);
 
     useEffect(() => { 
         if(props.fileData !== null && chunkIndex === null && props.uploaded === false) { 
@@ -128,12 +127,12 @@ function Dropzone(props) {
     function deleteFile() {
         if (props.fileData !== null && props.uploaded === true) {
             console.log("Requesting Deletion...");
-            if (busy === false) setBusy(true);
+            if (props.busy === false) props.setBusy(true);
             const data = { fileName: props.fileData.finalName };
             axios.delete(url, { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
-                    setBusy(false);
+                    props.setBusy(false);
                     props.setFileData(null);
                     props.setUploaded(null);
                 } else { console.log(res.data) }
@@ -143,7 +142,7 @@ function Dropzone(props) {
 
     function unpinFile() {
         console.log("Requesting Unpin...");
-        setBusy(true)
+        props.setBusy(true)
         const data = { 
             hash: props.contractInput.hash,
             cipher: props.cipherInput.hash
@@ -183,11 +182,11 @@ function Dropzone(props) {
                     <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
                     <span> || </span>
                     
-                    { props.contractInput.hash.length !== 0 ? (!busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>) : 
+                    { props.contractInput.hash.length !== 0 ? (!props.busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>) : 
                       getProgress() !== 100 ? (
                         <span>Progress: {getProgress()}% (please do not refresh the page) || <span onClick={abortFile}>[Abort]</span></span>
                         ) : 
-                        !busy ? (<span onClick={deleteFile}>[Delete]</span>) : (<span>Deleting...</span>)
+                        !props.busy ? (<span onClick={deleteFile}>[Delete]</span>) : (<span>Deleting...</span>)
                     }
                 </p>
                 <hr/>
