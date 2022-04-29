@@ -178,6 +178,7 @@ function Upload(props) {
 			};
 			axios.post(url + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
 				setRequest(prev=> {return{...prev, transaction: false}});
+				console.log(res);
 				if (res.data === "success") {
 					setFileData(null);
 					setContractInput(defaultInput);

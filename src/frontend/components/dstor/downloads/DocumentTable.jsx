@@ -192,6 +192,34 @@ function DocumentTable(props) {
             });
         });
     }
+    const [links, setLinks] = useState([]);
+    function matchLink(id) {
+        var idx;
+        if (links.length !== 0) {
+            links.forEach((link, index) => { if (link.id === id) idx = index })
+        }
+        return idx;
+    }
+
+    function bufferDownload(id, cipher, name, type) {
+        props.client.signer.signMessage(cipher).then((signature) => {
+            setLinks(prev => [...prev, {id:id, link:undefined}]);
+            const fileName = `${name}.${type}`;
+            const data = { cipher, signature, fileName };
+            axios.post("http://localhost:4001/download", data, {'Content-Type': 'application/json'})
+            .then((res) => {
+                const errors = [
+                    "err: Pin.findOne @ app.post('/download')",
+                    "err: signature failure @ app.post('/download')",
+                    "err: empty cipher @ app.post('/download')"
+                ];
+                if (!errors.includes(res.data)) {
+                    setLinks(prev => [...prev, {id:id, link:`http://localhost:4001/downloads/decrypted/${res.data}/${fileName}`}]);
+                }
+                else console.log(res);
+            });
+        });
+    }
 
     return(
     <Row>
@@ -267,13 +295,20 @@ function DocumentTable(props) {
                     }}
                     >[decrypt]
                     </div>
-                    ) : (
-                    <a 
-                    href={`https://ipfs.infura.io/ipfs/${message.fileHash}?filename=${message.fileName}${message.fileType}&download=true`}
-                    rel="noopener noreferrer"
-                    target="_blank"
+                    ) : (matchLink(ids[index]) === undefined || matchLink(ids[index]) === null) ? (
+                    (<div 
+                    onClick={(event) => {
+                        bufferDownload(ids[index], message.fileHash, message.fileName, message.fileType);
+                        event.preventDefault();
+                    }}
                     >[download]
-                    </a>
+                    </div>)
+                    ) : (
+                    <a
+                    href={links[matchLink(ids[index])].link}
+                    >
+                    [download]
+                    </a>    
                     )}
             </td>
         </tr>);
