@@ -12,6 +12,7 @@ import Actions from './Actions';
 const defaultRequest = {
     index: undefined,
     days: 1,
+    cipher: undefined,
     quote: {
         gas: undefined,
         fiat: undefined
@@ -30,9 +31,13 @@ function DocumentTable(props) {
     function handleRequestChange(event) {
         const [name, value] = event.target;
         if (name === "index") {
-            var size;
+            console.log();
+            var size; var hash;
             docs.ids.forEach((fileId, idx) => {
-                if (fileId === value) size = parseInt(docs.contents[idx].fileSize.toString());
+                if (fileId === value) {
+                    size = parseInt(docs.contents[idx].fileSize.toString());
+                    hash = docs.contents[idx].fileHash
+                }
             });
             props.getQuotes(size).then(quotes => {
                 // console.log(size/1024);
@@ -41,6 +46,7 @@ function DocumentTable(props) {
                     fiat: parseInt(quotes[0].toString()) 
                 };
                 const newRequest = {
+                    cipher: hash,
                     index: value,
                     days: 1,
                     quote: pdQuotes
@@ -62,7 +68,19 @@ function DocumentTable(props) {
         }
         addTime().then(tx => {
             console.log(tx);
-            props.setLoading(true);
+            const data = { 
+                cipher: request.cipher, 
+                contractMetadata: {
+                    chainId: props.client.chainId,
+                    contract: props.contract.address,
+                    abi: props.abi
+                } 
+            }
+            axios.post("http://localhost:4001/extension", data, {'Content-Type': 'application/json'})
+                .then(res => {
+                    console.log(res);
+                    props.setLoading(true);
+                });
         });
     }
 

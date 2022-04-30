@@ -106,6 +106,7 @@ function Downloads(props) {
 			contract={props.contract}
 			setLoading={props.setLoading}
 			client={props.client}
+			abi={props.abi}
 
 			show={show} 
 			setShow={setShow} 

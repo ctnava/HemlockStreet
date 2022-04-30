@@ -153,6 +153,7 @@ function DStor(props) {
 			{ showDownload ? (
 				<Downloads 
 				className="panel" 
+				abi={abi}
 				contract={contract}
 				client={props.client}
 				getQuotes={getQuotes}
