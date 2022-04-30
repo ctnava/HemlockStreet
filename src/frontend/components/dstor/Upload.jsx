@@ -97,6 +97,7 @@ function Upload(props) {
 	const [request, setRequest] = useState(defaultRequestsMade);
 	function pinToServer(event) {
 		timeLeft = "";
+		setDelTimer(undefined);
 		setPinTimer(undefined);
 		setPinning(pinningMessage);
 
