@@ -129,10 +129,12 @@ function Upload(props) {
 		timeLeft = "";
         if (fileData !== null && uploaded === true) {
             console.log("Requesting Deletion...");
+			if (busy === false) setBusy(true);
             const data = { fileName: fileData.finalName };
             axios.delete(url + "upload", { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
+					setBusy(false);
                     setFileData(null);
                     setUploaded(null);
                 } else { console.log(res.data) }
@@ -143,7 +145,7 @@ function Upload(props) {
 	function unpinFile() {
 		setRequest(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
-        setBusy(true)
+        setBusy(true);
         const data = { 
             hash: contractInput.hash,
             cipher: cipherInput.hash

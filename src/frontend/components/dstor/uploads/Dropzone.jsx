@@ -143,7 +143,7 @@ function Dropzone(props) {
     function unpinFile() {
 		props.setRequestsActive(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
-        props.setBusy(true)
+        props.setBusy(true);
         const data = { 
             hash: props.contractInput.hash,
             cipher: props.cipherInput.hash
