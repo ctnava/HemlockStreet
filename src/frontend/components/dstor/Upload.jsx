@@ -53,7 +53,7 @@ function Upload(props) {
 
 	const [delTimer, setDelTimer] = useState(undefined);
 	useEffect(() => {
-		if (fileData !== null && delTimer === undefined) setDelTimer(300);
+		if (fileData !== null && delTimer === undefined && uploaded === true) setDelTimer(300);
 	}, [fileData, delTimer]);
 
 	useEffect(() => {
