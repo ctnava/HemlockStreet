@@ -7,6 +7,7 @@ import CryptoJS from "crypto-js";
 import axios from "axios";
 import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../dapps/utils/calling';
+import Actions from './Actions';
 
 const defaultRequest = {
     index: undefined,
@@ -201,6 +202,15 @@ function DocumentTable(props) {
         return idx;
     }
 
+    function getLink(idx) {
+        const index = matchLink(idx);
+        const linkObject = links[index];
+        if (linkObject !== null && linkObject !== undefined) {
+            const link = linkObject.link;
+            if (link !== null && link !== undefined) return link;
+        }
+    }
+
     function bufferDownload(id, cipher, name, type) {
         props.client.signer.signMessage(cipher).then((signature) => {
             setLinks(prev => [...prev, {id:id, link:undefined}]);
@@ -220,6 +230,7 @@ function DocumentTable(props) {
             });
         });
     }
+
 
     return(
     <Row>
@@ -286,30 +297,17 @@ function DocumentTable(props) {
             {show.from && (<td>{message.uploader}</td>)}
             {show.to && (<td>{message.recipient}</td>)}
             <td>
-                {(matchSecret(ids[index]) === undefined || matchSecret(ids[index]) === null) ? (
-                    <div 
-                    onClick={(event) => {
-                        // console.log(message.fileHash);
-                        handleDecryption(ids[index], message.fileHash);
-                        event.preventDefault();
-                    }}
-                    >[decrypt]
-                    </div>
-                    ) : (matchLink(ids[index]) === undefined || matchLink(ids[index]) === null) ? (
-                    (<div 
-                    onClick={(event) => {
-                        bufferDownload(ids[index], message.fileHash, message.fileName, message.fileType);
-                        event.preventDefault();
-                    }}
-                    >[download]
-                    </div>)
-                    ) : (
-                    <a
-                    href={links[matchLink(ids[index])].link}
-                    >
-                    [download]
-                    </a>    
-                    )}
+                <Actions 
+                idx={ids[index]}
+                matchSecret={matchSecret}
+                matchLink={matchLink}
+                getLink={getLink}
+                bufferDownload={bufferDownload}
+                handleDecryption={handleDecryption}
+                fileHash={message.fileHash}
+                fileName={message.fileName}
+                fileType={message.fileType}
+                />
             </td>
         </tr>);
         }) }
