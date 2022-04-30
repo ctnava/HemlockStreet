@@ -126,6 +126,7 @@ function Dropzone(props) {
 
     function deleteFile() {
         if (props.fileData !== null && props.uploaded === true) {
+            props.setDelTimer(undefined);
             console.log("Requesting Deletion...");
             if (props.busy === false) props.setBusy(true);
             const data = { fileName: props.fileData.finalName };
@@ -141,6 +142,8 @@ function Dropzone(props) {
     }
 
     function unpinFile() {
+        props.setDelTimer(undefined);
+        props.setPinTimer(undefined);
 		props.setRequestsActive(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
         props.setBusy(true);

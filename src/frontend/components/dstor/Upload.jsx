@@ -127,8 +127,9 @@ function Upload(props) {
 	}
 
 	function deleteFile() {
-		timeLeft = "";
         if (fileData !== null && uploaded === true) {
+			timeLeft = "";
+			setDelTimer(undefined);
             console.log("Requesting Deletion...");
 			if (busy === false) setBusy(true);
             const data = { fileName: fileData.finalName };
@@ -144,6 +145,8 @@ function Upload(props) {
     }
 
 	function unpinFile() {
+		setDelTimer(undefined);
+		setPinTimer(undefined);
 		setRequest(prev=> {return{...prev, unpin: true}});
         console.log("Requesting Unpin...");
         setBusy(true);
@@ -227,6 +230,8 @@ function Upload(props) {
 		getProjectedCost={getProjectedCost}
 		busy={busy}
 		setBusy={setBusy}
+		setDelTimer={setDelTimer}
+		setPinTimer={setPinTimer}
 
 		quote={quote}
 		getQuote={getQuote}
