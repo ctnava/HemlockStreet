@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
-import { Buffer } from 'buffer';
 import axios from "axios";
 
 const url = 'http://localhost:4001/'; 

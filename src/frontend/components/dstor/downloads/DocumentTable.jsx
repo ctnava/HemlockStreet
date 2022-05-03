@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Fields from './Fields';
 import Query from './Query';
-import { Table, Row } from 'react-bootstrap';
+import { Table, Row, Col, Button } from 'react-bootstrap';
 import ReactTooltip from 'react-tooltip';
 import CryptoJS from "crypto-js";
 import axios from "axios";
@@ -201,7 +201,7 @@ function DocumentTable(props) {
             axios.post("http://localhost:4001/decipher", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 const errors = [
-                    "err: Cid.findOne @ app.post('/decipher')",
+                    "err: Pin.findOne @ app.post('/decipher')",
                     "err: signature failure @ app.post('/decipher')",
                     "err: empty cipher @ app.post('/decipher')"
                 ];
@@ -210,6 +210,50 @@ function DocumentTable(props) {
             });
         });
     }
+
+
+    function decryptAll(event) {
+        event.preventDefault();
+        var toDecipher = [];
+        var returnedSecrets = [];
+        messages.forEach((message, index) => {
+            const cipher = message.fileHash;
+            const id = ids[index];
+            var isDecrypted = false;
+            if (secrets.length !== 0) {
+                secrets.forEach((secret) => {
+                    if (secret.id === id) isDecrypted = true;
+                });
+            }
+            if (!isDecrypted) {
+                toDecipher.push(cipher);
+                returnedSecrets.push({ id:id, key:undefined });
+            }
+        });
+
+        props.client.signer.signMessage(toDecipher.toString())
+        .then((signature) => {
+            const data = {ciphers: toDecipher, signature: signature};
+            axios.post("http://localhost:4001/batchDecipher", data, {'Content-Type': 'application/json'})
+            .then((res) => {
+                if (typeof res.data !== typeof "string") {
+                    returnedSecrets.forEach((entry, index) => {
+                        entry.key = res.data[index];
+                    });
+                    setSecrets(prev => [...prev, ...returnedSecrets]);
+                    props.setShow({ 
+                        ...props.show, 
+                        name:true, 
+                        memo:true, 
+                        type:true 
+                    });
+                }
+                else console.log(res.data);
+            });
+        });
+    }
+
+
     const [links, setLinks] = useState([]);
     function matchLink(id) {
         var idx;
@@ -273,6 +317,9 @@ function DocumentTable(props) {
             handleClick={submitRequest}
             />
         </Row>)}
+        { messages.length !== secrets.length && (<Row><Col>
+            <Button className="my-3" variant="secondary" onClick={decryptAll}>Decrypt All</Button>
+        </Col></Row>)}
     <Table className="px-5 container" striped bordered hover variant="dark">
     <thead>
         <tr>
