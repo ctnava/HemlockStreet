@@ -72,8 +72,7 @@ function DocumentTable(props) {
                 cipher: request.cipher, 
                 contractMetadata: {
                     chainId: props.client.chainId,
-                    contract: props.contract.address,
-                    abi: props.abi
+                    address: props.contract.address
                 } 
             }
             axios.post("http://localhost:4001/extension", data, {'Content-Type': 'application/json'})
