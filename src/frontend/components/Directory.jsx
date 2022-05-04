@@ -8,6 +8,8 @@ import {
 import scannerUrl from "./dapps/utils/scanner";
 
 
+const homeUrl = "http://localhost:3000/";
+// const homeUrl = "https://deaddrop-dapp-alpha.herokuapp.com";
 function Directory(props) {
 	let account = props.account;
   let chainId = props.chainId;
@@ -16,7 +18,7 @@ function Directory(props) {
 	return(
 		<Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
-              <Navbar.Brand href="http://localhost:3000/" >
+              <Navbar.Brand href={homeUrl} >
                 <img
                 src={process.env.PUBLIC_URL + "/images/logo192.png"}
                 width="40" height="40"
