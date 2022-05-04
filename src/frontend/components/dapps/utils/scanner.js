@@ -69,13 +69,13 @@ function scannerUrl(chainId, address) {
 
         case 25: // unsupported
             baseUrl = "https://cronoscan.com/address/";
-        // case 26: // unsupported
+        // case 26: // unsupported on blockscan
             // baseUrl = "https://testnet.cronoscan.com/address/";
 
 
         case 70: // unsupported
             baseUrl = "https://hooscan.com/address/";
-        // case 71: // unsupported
+        // case 71: // unsupported on blockscan
             // baseUrl = "https://testnet.hooscan.com/address/";
 
 
