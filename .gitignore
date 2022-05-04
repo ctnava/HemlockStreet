@@ -18,14 +18,14 @@ artifacts
 /coverage
 coverage
 coverage.json
-src/backend/artifacts
-src/backend/cache
+/src/backend/artifacts
+/src/backend/cache
 
 # production
 /build
 build
-src/frontend/contractsData/31337
-src/frontend/contractsData/1337
+/src/frontend/contractsData/31337
+/src/frontend/contractsData/1337
 
 # misc
 .DS_Store
