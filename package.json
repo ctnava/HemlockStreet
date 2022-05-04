@@ -61,6 +61,7 @@
   "scripts": {
     "deploy": "npx hardhat run src/backend/scripts/deploy.js --network localhost",
     "rinkebyDeploy": "npx hardhat run src/backend/scripts/deploy.js --network rinkeby",
+    "mumbaiDeploy": "npx hardhat run src/backend/scripts/deploy.js --network mumbai",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

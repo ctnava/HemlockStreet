@@ -3,7 +3,7 @@ import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import axios from "axios";
 
-const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/"; 
+const apiUrl = "http://localhost:4001/";// "https://deaddrop-api-alpha.herokuapp.com/";
 
 const readyMessage = "Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";

@@ -9,7 +9,7 @@ import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../dapps/utils/calling';
 import Actions from './Actions';
 
-const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = "http://localhost:4001/";// "https://deaddrop-api-alpha.herokuapp.com/";
 
 const defaultRequest = {
     index: undefined,

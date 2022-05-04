@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import axios from "axios";
 import './Dropzone.css';
-const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = "http://localhost:4001/";// "https://deaddrop-api-alpha.herokuapp.com/";
 
 const chunkSize = 10 * 1024;
 function Dropzone(props) {
