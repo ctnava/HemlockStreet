@@ -1,12 +1,7 @@
 ##NOTICE
 removed "eslintConfig": { "extends": [ "react-app", "react-app/jest" ] }, from package.json
-
-
 you need to set the chainId for the localhost network on metamask to 31337 instead of 1337
 
-#TODO
-- Upload only hashed strings || EJS server has decryption key
-- express server with data chunking (FETCH x CORS)
 
 ##WEBSITE
 "npm i" to install dependencies then 
@@ -31,4 +26,3 @@ name // just type it in and it will print
 
 .exit
 ```
-

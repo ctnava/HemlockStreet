@@ -7,7 +7,7 @@ interface IFissionEngine { function flipRate() external view returns(uint tokens
 
 contract DStor is Ownable {
 	event FileUpdated(address recipient);
-	string public constant name = 'DeadDrop@HemlockStreet';
+	string public constant name = 'deadDrop@HemlockStreet';
 	address public fissionEngine;
 	uint public constant minimumPin = 30; // days
 	uint public pinningRate = 150; // pennies

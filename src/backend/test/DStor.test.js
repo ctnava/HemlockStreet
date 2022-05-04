@@ -28,7 +28,7 @@ describe("DStor", () => {
 	});
 	describe("Deployment", () => {
 		it("Should track name, fileCount, and owner", async () => {
-			expect(await DStor.name()).to.equal("DeadDrop@HemlockStreet");
+			expect(await DStor.name()).to.equal("deadDrop@HemlockStreet");
 			expect(await DStor.fileCount()).to.equal(0);
 			expect(await DStor.owner()).to.equal(deployer.address);
 			const usdQuote = await DStor.quote(42069);
