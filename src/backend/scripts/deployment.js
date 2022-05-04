@@ -3,7 +3,7 @@ const { constructorArgs } = require("../utils/constructorArgs");
 const fs = require("fs");
 
 
-async function runDeployment(contractName) {
+async function runDeployment(contractName, chainId) {
   const [deployer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
@@ -15,8 +15,6 @@ async function runDeployment(contractName) {
   console.log(`${contractName} deployed to ${NewContract.address}\n`);
   
   // For each contract, pass the deployed contract and name to this function to save a copy of the contract ABI and address to the front end.
-  let provider = new ethers.providers.JsonRpcProvider();
-  const { chainId } = await provider.getNetwork()
   saveFrontendFiles(NewContract, contractName, chainId);
   return NewContract;
 }
