@@ -1,3 +1,4 @@
+require('dotenv').config();
 import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import axios from "axios";

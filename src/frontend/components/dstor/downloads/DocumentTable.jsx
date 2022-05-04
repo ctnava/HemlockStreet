@@ -1,3 +1,4 @@
+require('dotenv').config();
 import React, { useState } from 'react';
 import Fields from './Fields';
 import Query from './Query';

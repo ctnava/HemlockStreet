@@ -1,3 +1,4 @@
+require('dotenv').config();
 import React, { useState, useEffect } from 'react'
 import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
