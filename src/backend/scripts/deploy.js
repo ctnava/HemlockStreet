@@ -7,7 +7,6 @@ const getProvider = require("../utils/provider");
 async function deployAll() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
-
     const provider = getProvider(chainId);
     const { chainId } = await provider.getNetwork();
 

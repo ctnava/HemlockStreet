@@ -88,6 +88,7 @@ function scannerUrl(chainId, address) {
         case 1666700000: // unsupported Shard0
             baseUrl = "https://explorer.testnet.harmony.one/address/";
 
+            
         default:
             baseUrl = "https://blockscan.com/address/";
     }
