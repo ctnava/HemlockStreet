@@ -1,5 +1,6 @@
 function scannerUrl(chainId, address) {
     var baseUrl;
+    // console.log("@scanner", chainId, typeof chainId);
     switch (chainId) {
         case 1:
             baseUrl = "https://etherscan.io/address/";

@@ -1,13 +1,10 @@
-require('dotenv').config();
 import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import axios from "axios";
 import './Dropzone.css';
-const apiUrl = process.env.API_URL;
-
+const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
 
 const chunkSize = 10 * 1024;
-const uploadUrl = apiUrl + 'upload'; 
 function Dropzone(props) {
     const [chunkIndex, setChunkIndex] = useState(null);
     const [dzActive, setDzActive] = useState(false);
@@ -92,7 +89,7 @@ function Dropzone(props) {
             const headers = {'Content-Type': 'application/octet-stream'};
 
             // console.log(`Posting Chunk ${chunkIndex + 1} of ${totalChunks} || ${getProgress()}%`);
-            axios.post(uploadUrl, data, {headers}).then(res => {
+            axios.post(apiUrl + 'upload', data, {headers}).then(res => {
                 const chunkNum = chunkIndex + 1;
                 // console.log(`Posted!`);
                 const lastChunk = (chunkNum === totalChunks);
@@ -117,7 +114,7 @@ function Dropzone(props) {
             props.setUploaded(null);
             console.log("Requesting Deletion...");
             const data = { fileName: props.fileData.tmpName };
-            axios.delete(uploadUrl, { data: data, 'Content-Type': 'application/json'})
+            axios.delete(apiUrl + 'upload', { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
                     props.setFileData(null);
@@ -132,7 +129,7 @@ function Dropzone(props) {
             console.log("Requesting Deletion...");
             if (props.busy === false) props.setBusy(true);
             const data = { fileName: props.fileData.finalName };
-            axios.delete(uploadUrl, { data: data, 'Content-Type': 'application/json'})
+            axios.delete(apiUrl + 'upload', { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
                     props.setBusy(false);

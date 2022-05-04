@@ -1,4 +1,3 @@
-require('dotenv').config();
 import { Link } from "react-router-dom";
 import {
   Navbar,
@@ -17,7 +16,7 @@ function Directory(props) {
 	return(
 		<Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
-              <Navbar.Brand href={process.env.CLIENT_URL}>
+              <Navbar.Brand href="http://localhost:3000/" >
                 <img
                 src={process.env.PUBLIC_URL + "/images/logo192.png"}
                 width="40" height="40"

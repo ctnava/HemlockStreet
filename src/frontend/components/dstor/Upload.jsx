@@ -1,10 +1,10 @@
-require('dotenv').config();
 import React, { useState, useEffect } from 'react'
 import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import axios from "axios";
 
-const apiUrl = process.env.API_URL; 
+const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/"; 
+
 const readyMessage = "Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
 var timeLeft = "";

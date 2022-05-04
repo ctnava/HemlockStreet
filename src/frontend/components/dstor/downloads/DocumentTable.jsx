@@ -1,4 +1,3 @@
-require('dotenv').config();
 import React, { useState } from 'react';
 import Fields from './Fields';
 import Query from './Query';
@@ -10,7 +9,7 @@ import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../dapps/utils/calling';
 import Actions from './Actions';
 
-const apiUrl = process.env.API_URL
+const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
 
 const defaultRequest = {
     index: undefined,
