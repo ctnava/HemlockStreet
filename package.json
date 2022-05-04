@@ -4,7 +4,7 @@
   "description": "Hemlock Street Website",
   "author": "cat6",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.17.9",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
@@ -53,9 +53,8 @@
     "solhint": "^3.3.6",
     "typechain": "^8.0.0",
     "uuid": "^8.3.2",
-    "web-vitals": "^2.1.4"
-  },
-  "dependencies": {
+    "web-vitals": "^2.1.4",
+
     "@ensdomains/ens-contracts": "^0.0.11",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "ethereum-waffle": "^3.4.4",
