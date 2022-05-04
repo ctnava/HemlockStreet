@@ -8,8 +8,8 @@ import axios from "axios";
 import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../dapps/utils/calling';
 import Actions from './Actions';
-// const apiUrl = "http://localhost:4001/";
-const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = "http://localhost:4001/";
+// const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
 
 const defaultRequest = {
     index: undefined,
@@ -294,6 +294,20 @@ function DocumentTable(props) {
         });
     }
 
+    function redownload(id, cipher, name, type) {
+        const fileUrl = links[matchLink(id)].link;
+        const pieces = fileUrl.split('/');
+        const rawCid = pieces[pieces.length - 2];
+        axios.delete(apiUrl + "download", {'data': { cid: rawCid }})
+        .then(res => {
+            if (res.data === "success") {
+                const filtered = links.filter(link => link.id !== id);
+                setLinks(filtered);
+                bufferDownload(id, cipher, name, type);
+            } else console.log(res.data);
+        });
+    }
+
 
     return(
     <Row>
@@ -370,6 +384,7 @@ function DocumentTable(props) {
                 getLink={getLink}
                 bufferDownload={bufferDownload}
                 handleDecryption={handleDecryption}
+                redownload={redownload}
                 fileHash={message.fileHash}
                 fileName={message.fileName}
                 fileType={message.fileType}

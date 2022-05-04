@@ -33,7 +33,12 @@ function Actions(props) {
         else {
             const link = props.getLink(props.idx);
             const linkExists = (link !== undefined && link !== null);
-            if (linkExists) return (<a href={link}>[download]</a>);
+            if (linkExists) return (<span>
+            <a href={link}>[download]</a> / <div onClick={(event) => {
+                event.preventDefault();
+                props.redownload(props.idx, props.fileHash, props.fileName, props.fileType);
+            }}>[redownload]</div>
+            </span>);
             else return (<div>downloading...</div>);
         }
     }

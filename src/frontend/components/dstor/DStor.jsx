@@ -37,13 +37,16 @@ function DStor(props) {
 
 	const initialize = async () => {
 		if (!loading) { setLoading(true); }
-		console.log("Querying DStor...");
+		console.log(contract);
+		console.log("Gathering Messages...");
 		const [sent, sentExps, sentIds, received, receivedExps, receivedIds] = await contract.getAllData();
 		var formattedSentIds = [];
 		sentIds.forEach(id => { formattedSentIds.push(parseInt(id.toString())) });
 		var formattedReceivedIds = [];
 		receivedIds.forEach(id => { formattedReceivedIds.push(parseInt(id.toString())) });
+		console.log("Messages received!");
 		const ownerAddress = await contract.owner();
+		console.log("owner:", ownerAddress);
 		setOutbox({ contents: sent, expDates: sentExps, ids: formattedSentIds });
 		setInbox({ contents: received, expDates: receivedExps, ids: formattedReceivedIds });
 		if (ownerAddress.toLowerCase() === props.client.account) { 
