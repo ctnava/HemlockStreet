@@ -2,8 +2,8 @@ const oracles = {
     "1": "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419", // ETH
     "10": "0x13e3Ee699D1909E989722E753853AE30b17e08c5", // Optimism
     "3": "", // ETH Ropsten
-    "4": "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e", // ETH Kovan
-    "42": "0x9326BFA02ADD2366b30bacB125260Af641031331",
+    "4": "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e", // ETH Rinkeby
+    "42": "0x9326BFA02ADD2366b30bacB125260Af641031331", // ETH Kovan
     "420": "", // ETH Goerli
     "69": "0x7f8847242a530E809E17bF2DA5D2f9d2c4A43261", // Optimism Kovan
     "42161": "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", // Arbitrum
@@ -55,4 +55,4 @@ const oracles = {
 };
 
 
-module.exports.default = oracles;
+module.exports = oracles;

@@ -37,14 +37,14 @@
       ]
     },
     "C:\\Users\\cyaar\\Desktop\\repositories\\ctnava\\DStor\\main\\client\\src\\backend\\contracts\\DStor.sol": {
-      "lastModificationDate": 1650912513857,
-      "contentHash": "3a0d028979747ce100e9dee2ddb4347d",
+      "lastModificationDate": 1651623561451,
+      "contentHash": "a95e46c24702ab07e3e8ea930bb57108",
       "sourceName": "src/backend/contracts/DStor.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -82,7 +82,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -119,7 +119,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -154,7 +154,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -189,7 +189,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -226,7 +226,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
@@ -261,7 +261,7 @@
         "version": "0.8.4",
         "settings": {
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
           "outputSelection": {
