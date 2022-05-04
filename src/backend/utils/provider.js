@@ -29,6 +29,13 @@ function getProvider(chainId) {
       case 69:
         endpoint = "https://opt-kovan." + aUrl + aTNodeKey;
 
+
+      case 42161:
+        endpoint = mUrl + "arbitrum/mainnet";
+      case 421611:
+        endpoint = mUrl + "arbitrum/testnet";
+
+
       case 56:
         endpoint = mUrl + "bsc/mainnet";
       case 97:
@@ -39,26 +46,22 @@ function getProvider(chainId) {
       case 80001:
         endpoint = mUrl + "polygon/mumbai";  
 
-      case 42161:
-        endpoint = mUrl + "arbitrum/mainnet";
-      case 421611:
-        endpoint = mUrl + "arbitrum/testnet";
 
       case 43114:
         endpoint = mUrl + "avalanche/mainnet";
       case 43113:
         endpoint = mUrl + "avalanche/testnet";
 
+        
       case 250:
         endpoint = mUrl + "fantom/mainnet";
         
+
       default:
         endpoint = invalidChain;
     }
-    const rpcUrl = mUrl + endpoint;
-    // console.log("rpcUrl", rpcUrl); // COMMENT ME BEFORE PROD
     if (endpoint === invalidChain) return endpoint;
-    else return new ethers.providers.JsonRpcProvider(rpcUrl);
+    else return new ethers.providers.JsonRpcProvider(endpoint);
   }
 }
 
