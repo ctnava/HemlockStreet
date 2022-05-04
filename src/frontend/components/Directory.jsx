@@ -5,9 +5,12 @@ import {
   Button,
   Container
 } from "react-bootstrap";
+import scannerUrl from "./dapps/utils/scanner";
+
 
 function Directory(props) {
 	let account = props.account;
+  let chainId = props.chainId;
 	let web3Handler = props.web3Handler;
   let hasWeb3 = props.hasWeb3;
 	return(
@@ -43,7 +46,7 @@ function Directory(props) {
                   {
                     account ? (
                       <Nav.Link
-                        href={`https://etherscan.io/address/${account}`}
+                        href={scannerUrl(chainId, account)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button nav-button btn-sm mx-4">
@@ -64,5 +67,6 @@ function Directory(props) {
           </Navbar>
 	);
 }
+
 
 export default Directory;
