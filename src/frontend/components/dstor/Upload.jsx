@@ -3,7 +3,7 @@ import Dropzone from './uploads/Dropzone';
 import { Row, Form, Button, InputGroup } from 'react-bootstrap'
 import axios from "axios";
 
-const url = 'http://localhost:4001/'; 
+const apiUrl = process.env.API_URL; 
 const readyMessage = "Pin to IPFS!";
 const pinningMessage = "Pinning... Please Wait";
 var timeLeft = "";
@@ -109,7 +109,7 @@ function Upload(props) {
 			contractInput: contractInput 
 		};
 		// console.log(data);
-		axios.post(url + "pin", data, {'Content-Type': 'application/json'})
+		axios.post(apiUrl + "pin", data, {'Content-Type': 'application/json'})
 			.then((res) => {
 				setRequest(prev=> {return{...prev, pin: false}});
 				if (res.data.hash && res.data.encryptedInputs) {
@@ -131,7 +131,7 @@ function Upload(props) {
             console.log("Requesting Deletion...");
 			if (busy === false) setBusy(true);
             const data = { fileName: fileData.finalName };
-            axios.delete(url + "upload", { data: data, 'Content-Type': 'application/json'})
+            axios.delete(apiUrl + "upload", { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
 					setBusy(false);
@@ -152,7 +152,7 @@ function Upload(props) {
             hash: contractInput.hash,
             cipher: cipherInput.hash
         };
-        axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
+        axios.delete(apiUrl + 'pin', { data: data, 'Content-Type': 'application/json'})
         .then((res) => {
 			setRequest(prev=> {return{...prev, unpin: false}});
             if (res.data === 'success') {
@@ -179,7 +179,7 @@ function Upload(props) {
 				}, 
 				tx: tx.hash 
 			};
-			axios.post(url + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
+			axios.post(apiUrl + "transaction", data, {'Content-Type': 'application/json'}).then(res => {
 				setRequest(prev=> {return{...prev, transaction: false}});
 				console.log(res);
 				if (res.data === "success") {

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import axios from "axios";
 import './Dropzone.css';
+const apiUrl = process.env.API_URL;
 
 
 const chunkSize = 10 * 1024;
-const url = 'http://localhost:4001/upload'; 
+const uploadUrl = apiUrl + 'upload'; 
 function Dropzone(props) {
     const [chunkIndex, setChunkIndex] = useState(null);
     const [dzActive, setDzActive] = useState(false);
@@ -90,7 +91,7 @@ function Dropzone(props) {
             const headers = {'Content-Type': 'application/octet-stream'};
 
             // console.log(`Posting Chunk ${chunkIndex + 1} of ${totalChunks} || ${getProgress()}%`);
-            axios.post(url, data, {headers}).then(res => {
+            axios.post(uploadUrl, data, {headers}).then(res => {
                 const chunkNum = chunkIndex + 1;
                 // console.log(`Posted!`);
                 const lastChunk = (chunkNum === totalChunks);
@@ -115,7 +116,7 @@ function Dropzone(props) {
             props.setUploaded(null);
             console.log("Requesting Deletion...");
             const data = { fileName: props.fileData.tmpName };
-            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
+            axios.delete(uploadUrl, { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
                     props.setFileData(null);
@@ -130,7 +131,7 @@ function Dropzone(props) {
             console.log("Requesting Deletion...");
             if (props.busy === false) props.setBusy(true);
             const data = { fileName: props.fileData.finalName };
-            axios.delete(url, { data: data, 'Content-Type': 'application/json'})
+            axios.delete(uploadUrl, { data: data, 'Content-Type': 'application/json'})
             .then((res) => {
                 if (res.data === 'success') {
                     props.setBusy(false);
@@ -151,7 +152,7 @@ function Dropzone(props) {
             hash: props.contractInput.hash,
             cipher: props.cipherInput.hash
         };
-        axios.delete('http://localhost:4001/pin', { data: data, 'Content-Type': 'application/json'})
+        axios.delete(apiUrl + 'pin', { data: data, 'Content-Type': 'application/json'})
         .then((res) => {
 			props.setRequestsActive(prev=> {return{...prev, unpin: false}});
             if (res.data === 'success') {
@@ -184,7 +185,7 @@ function Dropzone(props) {
                 {props.hash.length !== 0 && (<div>IPFS CID: {props.hash}</div>)}
                     
                 <p>
-                    <a className="name" target="_blank" href={getProgress() === 100 ? ('http://localhost:4001/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
+                    <a className="name" target="_blank" href={getProgress() === 100 ? (apiUrl + 'uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
                     {!props.requestsActive.pin && !props.requestsActive.unpin && (<span> || </span>)}
                     
                     { props.contractInput.hash.length !== 0 ? (!props.requestsActive.unpin && (!props.busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>)) : 

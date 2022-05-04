@@ -9,6 +9,8 @@ import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../dapps/utils/calling';
 import Actions from './Actions';
 
+const apiUrl = process.env.API_URL
+
 const defaultRequest = {
     index: undefined,
     days: 1,
@@ -75,7 +77,7 @@ function DocumentTable(props) {
                     address: props.contract.address
                 } 
             }
-            axios.post("http://localhost:4001/extension", data, {'Content-Type': 'application/json'})
+            axios.post(apiUrl + "extension", data, {'Content-Type': 'application/json'})
                 .then(res => {
                     console.log(res);
                     props.setLoading(true);
@@ -198,7 +200,7 @@ function DocumentTable(props) {
     function handleDecryption(id, cipher) {
         props.client.signer.signMessage(cipher).then((signature) => {
             const data = {cipher: cipher, signature: signature};
-            axios.post("http://localhost:4001/decipher", data, {'Content-Type': 'application/json'})
+            axios.post(apiUrl + "decipher", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 const errors = [
                     "err: Pin.findOne @ app.post('/decipher')",
@@ -234,7 +236,7 @@ function DocumentTable(props) {
         props.client.signer.signMessage(toDecipher.toString())
         .then((signature) => {
             const data = {ciphers: toDecipher, signature: signature};
-            axios.post("http://localhost:4001/batchDecipher", data, {'Content-Type': 'application/json'})
+            axios.post(apiUrl + "batchDecipher", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 if (typeof res.data !== typeof "string") {
                     returnedSecrets.forEach((entry, index) => {
@@ -277,7 +279,7 @@ function DocumentTable(props) {
             setLinks(prev => [...prev, {id:id, link:undefined}]);
             const fileName = `${name}.${type}`;
             const data = { cipher, signature, fileName };
-            axios.post("http://localhost:4001/download", data, {'Content-Type': 'application/json'})
+            axios.post(apiUrl + "download", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 const errors = [
                     "err: Pin.findOne @ app.post('/download')",
@@ -285,7 +287,7 @@ function DocumentTable(props) {
                     "err: empty cipher @ app.post('/download')"
                 ];
                 if (!errors.includes(res.data)) {
-                    setLinks(prev => [...prev, {id:id, link:`http://localhost:4001/downloads/decrypted/${res.data}/${fileName}`}]);
+                    setLinks(prev => [...prev, {id:id, link:`${apiUrl}downloads/decrypted/${res.data}/${fileName}`}]);
                 }
                 else console.log(res);
             });

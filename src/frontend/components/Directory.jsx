@@ -16,7 +16,7 @@ function Directory(props) {
 	return(
 		<Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
-              <Navbar.Brand href="http://ctnava.github.io">
+              <Navbar.Brand href={process.env.CLIENT_URL}>
                 <img
                 src={process.env.PUBLIC_URL + "/images/logo192.png"}
                 width="40" height="40"

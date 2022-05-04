@@ -1,4 +1,3 @@
-import { useState, useRef } from "react";
 import { ethers } from "ethers";
 
 const signMessage = async ({ message }) => {
