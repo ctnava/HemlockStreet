@@ -1,30 +1,68 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # root
-.DS_Store
-/node_modules
-/.pnp
-.pnp.js
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-yarn.lock
 /*.env
+/.DS_Store
 /*.code-workspace
-typechain
+/node_modules
+/package-lock.json
+/npm-debug.log*
+/yarn.lock
+/yarn-debug.log*
+/yarn-error.log*
+/.pnp
+/.pnp.js
+/typechain
 
 # solidity
+src/solidity/*.env
+src/solidity/.DS_Store
+src/solidity/*.code-workspace
+src/solidity/node_modules
+src/solidity/package-lock.json
+src/solidity/npm-debug.log*
+src/solidity/yarn.lock
+src/solidity/yarn-debug.log*
+src/solidity/yarn-error.log*
+src/solidity/.pnp
+src/solidity/.pnp.js
+
+src/solidity/typechain
 src/solidity/artifacts
 src/solidity/cache
 src/solidity/coverage
 src/solidity/coverage.json
 
 # client
-src/client/.env
+src/client/*.env
+src/client/.DS_Store
+src/client/*.code-workspace
+src/client/node_modules
+src/client/package-lock.json
+src/client/npm-debug.log*
+src/client/yarn.lock
+src/client/yarn-debug.log*
+src/client/yarn-error.log*
+src/client/.pnp
+src/client/.pnp.js
+
+src/client/src/data/31337
+src/client/src/data/1337
+
 src/client/build
-src/client/contractsData/31337
-src/client/contractsData/1337
 
 # api
-src/api/.env
+src/api/*.env
+src/api/.DS_Store
+src/api/*.code-workspace
+src/api/node_modules
+src/api/package-lock.json
+src/api/npm-debug.log*
+src/api/yarn.lock
+src/api/yarn-debug.log*
+src/api/yarn-error.log*
+src/api/.pnp
+src/api/.pnp.js
+
+src/api/data/31337
+src/api/data/1337

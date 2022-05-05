@@ -18,21 +18,28 @@ async function runDeployment(contractName, chainId) {
 }
 
 function saveFrontendFiles(contract, name, chainId) {
-  const contractsDir = __dirname + `/../../frontend/contractsData`;
-  const chainDir = contractsDir + `/${chainId}`;
-
-  if (!fs.existsSync(contractsDir)) { fs.mkdirSync(contractsDir); }
-  if (!fs.existsSync(chainDir)) { fs.mkdirSync(chainDir); }
+  const clientDir = __dirname + `/../../client/src/data/${chainId}`;
+  const apiDir = __dirname + `/../../api/data/${chainId}`;
+  if (!fs.existsSync(clientDir)) { fs.mkdirSync(clientDir, { recursive: true }); }
+  if (!fs.existsSync(apiDir)) { fs.mkdirSync(apiDir, { recursive: true }); }
 
   fs.writeFileSync(
-    chainDir + `/${name}-address.json`,
+    clientDir + `/${name}-address.json`,
+    JSON.stringify({ address: contract.address }, undefined, 2)
+  );
+  fs.writeFileSync(
+    apiDir + `/${name}-address.json`,
     JSON.stringify({ address: contract.address }, undefined, 2)
   );
 
   const contractArtifact = artifacts.readArtifactSync(name);
 
   fs.writeFileSync(
-    chainDir + `/${name}.json`,
+    clientDir + `/${name}.json`,
+    JSON.stringify(contractArtifact, null, 2)
+  );
+  fs.writeFileSync(
+    apiDir + `/${name}.json`,
     JSON.stringify(contractArtifact, null, 2)
   );
   console.log(`${name} deployment data saved to chain directory\n`);

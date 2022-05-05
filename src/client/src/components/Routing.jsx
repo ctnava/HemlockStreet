@@ -13,9 +13,9 @@ function Routing(props) {
     const loadContract = async (byName) => {
         const signer = client.provider.getSigner();
         var metadata = { name: null, abi: null, address: null };
-        await import(`../contractsData/${client.chainId}/${byName}.json`)
+        await import(`../data/${client.chainId}/${byName}.json`)
             .then(async (contractInterface) => {
-                await import(`../contractsData/${client.chainId}/${byName}-address.json`)
+                await import(`../data/${client.chainId}/${byName}-address.json`)
                     .then((addressMap) => { metadata = { name: byName, abi: contractInterface.abi, address: addressMap.address }; })
                     .catch((err) => console.error(err));
             }).catch((err) => console.error(err));

@@ -156,10 +156,10 @@ module.exports = {
 
 
   paths: {
-    sources: "./src/solidity/contracts",
-    tests: "./src/solidity/test",
-    cache: "./src/solidity/cache",
-    artifacts: "./src/solidity/artifacts"
+    sources: "./contracts",
+    tests: "./test",
+    cache: "./cache",
+    artifacts: "./artifacts"
   },
 
   mocha: { timeout: 40000 }
