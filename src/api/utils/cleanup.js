@@ -4,7 +4,7 @@
     const paths = [
         "./.DS_Store", "./node_modules", "./package-lock.json", "./npm-debug.log",
         "./yarn.lock", "./yarn-debug.log", "./yarn-error.log", "./.pnp", "./.pnp.js",
-        "./src/data/1337", "./src/data/31337",
+        "./data/1337", "./data/31337",
         "./downloads", "./uploads"
     ];
     
