@@ -1,5 +1,7 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
+
+
 const mNodeKey = process.env.MORALIS_KEY;
 const aMNodeKey = process.env.ALCHEMY_OPTM_KEY;
 const aTNodeKey = process.env.ALCHEMY_OPTT_KEY;
@@ -58,22 +60,21 @@ function getProvider(chainId) {
   }
 }
 
+const mainnetAccount = [process.env.MAINNET_KEY];
+const bank = fs.readFileSync("./utils/testnetBank.json");
+const testnetAccounts = (JSON.parse(bank)).privateKeys;
 
-const testnet1 = process.env.TESTNET_BANK1;
-const testnet2 = process.env.TESTNET_BANK2;
-const testnetAccounts = [testnet1, testnet2];
-const productionAccount = [process.env.PROD_BANK];
 
 module.exports = {
   defaultNetwork: "localhost",
   networks: {
     ethereum: {
       url: getProvider(1),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     optimism: {
       url: getProvider(10),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     ropsten: {
       url: getProvider(3),
@@ -99,7 +100,7 @@ module.exports = {
 
     arbitrum: {
       url: getProvider(42161),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     arbitrumTestnet: {
       url: getProvider(421611),
@@ -109,7 +110,7 @@ module.exports = {
 
     binance: {
       url: getProvider(56),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     binanceTestnet: {
       url: getProvider(97),
@@ -119,7 +120,7 @@ module.exports = {
 
     polygon: {
       url: getProvider(137),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     mumbai: {
       url: getProvider(80001),
@@ -129,7 +130,7 @@ module.exports = {
 
     avalanche: {
       url: getProvider(43114),
-      accounts: productionAccount
+      accounts: mainnetAccount
     },
     avalancheTestnet: {
       url: getProvider(43113),
@@ -139,7 +140,7 @@ module.exports = {
 
     fantom: {
       url: getProvider(250),
-      accounts: productionAccount
+      accounts: mainnetAccount
     }
   },
 
