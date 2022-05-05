@@ -16,29 +16,37 @@ to
     ipfs: version
 }
 ```
-### Changed .env Vars?
-Set App > Settings > Config Vars
-config must include
+## Mandatory .env values
 ```
-# Dapp Client 
-CLIENT_URL 
+# Client
+API_URL=https://deaddrop-api-alpha.herokuapp.com/
 
-# IPFS Infura
-IPFS_HOST
-IPFS_PORT
-IPFS_PROTOCOL
-IPFS_PROJECT_ID
-IPFS_PROJECT_SECRET
 
-# Web3 
-MORALIS_KEY # Most Networks
-ALCHEMY_OPTM_KEY # Optimism Mainnet
-ALCHEMY_OPTT_KEY # Optimism Testnet
+# IPFS @ https://infura.io/
+PORT=4001
+IPFS_HOST=ipfs.infura.io
+IPFS_PORT=5001
+IPFS_PROTOCOL=https
+IPFS_PROJECT_ID=YOUR_OWN
+IPFS_PROJECT_SECRET=YOUR_OWN
 
-# MongoDB
-DB_URL # include login credentials
-DB_KEY # decrypt secrets
+# PINATA_PUBLIC=NOT_YET_IMPLEMENTED
+# PINATA_PRIVATE=NOT_YET_IMPLEMENTED
+# PINATA_JWT=NOT_YET_IMPLEMENTED
 
-# On-Chain
-BC_KEY # decrypt the double encrypted hash stored on chain
+# API @ https://cloud.mongodb.com/
+CLIENT_URL=http://localhost:3000
+DB_URL=mongodb+srv://<USERNAME>:<PASSWORD>@<YOUR_CLUSTER>.6vpdm.mongodb.net/deadDropDB?retryWrites=true&w=majority 
+DB_KEY=YOUR_OWN # decrypt secrets
+BC_KEY=YOUR_OWN # decrypt the double encrypted hash stored on chain
+
+
+# Web3 @ https://moralis.io/ & https://dashboard.alchemyapi.io/apps
+MORALIS_KEY=YOUR_OWN
+ALCHEMY_OPTM_KEY=YOUR_OWN # Optimism Mainnet
+ALCHEMY_OPTT_KEY=YOUR_OWN # Optimism Testnet
+
+
+# Wallet
+MAINNET_KEY=YOUR_OWN
 ```
