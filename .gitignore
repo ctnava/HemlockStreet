@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# root
+# common
 /*.env
 /.DS_Store
 /*.code-workspace
@@ -12,14 +12,6 @@
 /yarn-error.log*
 /.pnp
 /.pnp.js
-/typechain
-
-/downloads
-/uploads
-/data/1337
-/data/31337
-
-# solidity
 src/solidity/*.env
 src/solidity/.DS_Store
 src/solidity/*.code-workspace
@@ -31,14 +23,6 @@ src/solidity/yarn-debug.log*
 src/solidity/yarn-error.log*
 src/solidity/.pnp
 src/solidity/.pnp.js
-
-src/solidity/typechain
-src/solidity/artifacts
-src/solidity/cache
-src/solidity/coverage
-src/solidity/coverage.json
-
-# client
 src/client/*.env
 src/client/.DS_Store
 src/client/*.code-workspace
@@ -50,13 +34,6 @@ src/client/yarn-debug.log*
 src/client/yarn-error.log*
 src/client/.pnp
 src/client/.pnp.js
-
-src/client/src/data/31337
-src/client/src/data/1337
-
-src/client/build
-
-# api
 src/api/*.env
 src/api/.DS_Store
 src/api/*.code-workspace
@@ -69,8 +46,37 @@ src/api/yarn-error.log*
 src/api/.pnp
 src/api/.pnp.js
 
+
+# devNet
+/data/1337
+/data/31337
+src/solidity/data/1337
+src/solidity/data/31337
+src/client/src/data/31337
+src/client/src/data/1337
 src/api/data/31337
 src/api/data/1337
 
+
+# client
+/build
+src/client/build
+
+
+# typechain
+/typechain
+src/solidity/typechain
+
+
+# api
+downloads
+uploads
 src/api/uploads
 src/api/downloads
+
+
+# solidity only
+src/solidity/artifacts
+src/solidity/cache
+src/solidity/coverage
+src/solidity/coverage.json
