@@ -19,3 +19,8 @@
 # contracts
 /data/31337
 /data/1337
+
+
+# build
+/uploads
+/downloads

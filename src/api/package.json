@@ -1,0 +1,30 @@
+{
+  "name": "hemlock-street-api",
+  "version": "1.0.0",
+  "description": "Hemlock Street REST Server",
+  "main": "index.js",
+  "scripts": {
+    "api": "nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@chilkat/ck-node16-win64": "^9.50.90",
+    "archiver": "^5.3.1",
+    "archiver-zip-encrypted": "^1.0.11",
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "ethers": "^5.6.4",
+    "express": "^4.17.3",
+    "ipfs-http-client": "^56.0.2",
+    "js-ipfs-fetch": "^3.5.1",
+    "md5": "^2.3.0",
+    "mongoose": "^6.3.0",
+    "mongoose-encryption": "^2.1.2"
+  }
+}

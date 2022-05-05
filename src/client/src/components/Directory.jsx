@@ -8,7 +8,7 @@ import {
 import scannerUrl from "./dapps/utils/scanner";
 
 
-const homeUrl = "http://localhost:3000/";
+const homeUrl = "http://localhost:4002/";
 // const homeUrl = "https://deaddrop-dapp-alpha.herokuapp.com";
 function Directory(props) {
 	let account = props.account;

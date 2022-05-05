@@ -14,6 +14,9 @@
 /.pnp.js
 /typechain
 
+/downloads
+/uploads
+
 # solidity
 src/solidity/*.env
 src/solidity/.DS_Store
@@ -66,3 +69,6 @@ src/api/.pnp.js
 
 src/api/data/31337
 src/api/data/1337
+
+src/api/uploads
+src/api/downloads
