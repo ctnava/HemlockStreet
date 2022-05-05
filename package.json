@@ -2,7 +2,7 @@
   "name": "hemlock-street",
   "version": "1.0.0",
   "description": "HemlockStreet Platform",
-  "author": "cat6",
+  "author": "ctnava.github.io",
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.17.9",
