@@ -75,6 +75,7 @@
     "mongoose-encryption": "^2.1.2"
   },
   "scripts": {
+    "ship": "node utils/ship.js",
     "clean": "node utils/cleanup.js",
     
     "sim": "npx hardhat node",
