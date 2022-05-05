@@ -1,10 +1,10 @@
 const fs = require('fs');
+const { type } = require('os');
 
 const ignored = [
     ".DS_Store", "node_modules", "package-lock.json", "npm-debug.log",
     "yarn.lock", "yarn-debug.log", "yarn-error.log", ".pnp", ".pnp.js",
-    "downloads", "uploads", ".env", "api.code-workspace",
-    "package.json"
+    "downloads", "uploads", ".env", "api.code-workspace"
 ];
 
 (() => {
@@ -13,14 +13,12 @@ const ignored = [
     if (sinkExists) {
         const allFiles = fs.readdirSync(sink);
         allFiles.forEach(file => { 
-            if (file !== "package.json") {
-                const pathTo = sink + "/" + file;
-                const isDir = (fs.lstatSync(pathTo)).isDirectory();
-                if (isDir) fs.rmSync(pathTo, {recursive:true});
-                else fs.rmSync(pathTo);
-            }
+            const pathTo = sink + "/" + file;
+            const isDir = (fs.lstatSync(pathTo)).isDirectory();
+            if (isDir) fs.rmSync(pathTo, {recursive:true});
+            else fs.rmSync(pathTo);
         });
-    } else fs.cpSync(source + "/package.json", sink + "/package.json");
+    } 
 
 
     const source = "./src/api";
@@ -42,12 +40,15 @@ const ignored = [
     if (fs.existsSync(dev31337)) fs.rmSync(dev31337, {recursive:true});
 
 
-    // compare "package.json"
-    if (sinkExists) {
-        const current = JSON.parse(fs.readFileSync(source + "/package.json"));
-        const incumbent = JSON.parse(fs.readFileSync(sink + "/package.json"));
-        // compare states
-    } else {
-        // fix chilkat import
-    }
+    const pkg = JSON.parse(fs.readFileSync(sink + "/package.json"));
+    const allPackages = Object.keys(pkg.dependencies);
+    allPackages.forEach(name => {
+        const herokuSupported = "@chilkat/ck-node16-linux64";
+        if (name.includes("@chilkat/ck-node16-") && name !== herokuSupported) {
+            pkg.dependencies[herokuSupported] = pkg.dependencies[name];
+            delete pkg.dependencies[name];
+        }
+    });
+    console.log(pkg);
+    fs.writeFileSync(sink + "/package.json", JSON.stringify(pkg, null, 2));
 })();
