@@ -1,7 +1,7 @@
 {
   "name": "hemlock-street",
   "version": "1.0.0",
-  "description": "Hemlock Street Website",
+  "description": "HemlockStreet Platform",
   "author": "cat6",
   "license": "MIT",
   "dependencies": {

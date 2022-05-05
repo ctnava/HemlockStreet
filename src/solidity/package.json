@@ -1,8 +1,8 @@
 {
     "name": "hemlock-street-contracts",
     "version": "1.0.0",
-    "description": "Hemlock Street Contracts",
-    "author": "cat6",
+    "description": "HemlockStreet Solidity Smart Contracts",
+    "author": "ctnava.github.io",
     "license": "MIT",
     "dependencies": {
         "@chainlink/contracts": "^0.4.0",

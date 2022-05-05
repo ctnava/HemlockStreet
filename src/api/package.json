@@ -1,13 +1,13 @@
 {
-  "name": "hemlock-street-api",
+  "name": "hemlock-street-deaddrop",
   "version": "1.0.0",
-  "description": "Hemlock Street REST Server",
+  "description": "HemlockStreet DeadDrop REST Server",
   "main": "index.js",
   "scripts": {
     "api": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "ctnava.github.io",
   "license": "MIT",
   "dependencies": {
     "@chilkat/ck-node16-win64": "^9.50.90",
