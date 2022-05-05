@@ -1,5 +1,8 @@
 # HemlockStreet || Platform
+## NOTICE
 for more details, refer to readme files in the individual project "root" folders under "./src"
+
+
 ## Deployment Instructions
 ### Step 1: Contract Deployment
 to boot up local blockchain & deploy to localhost
@@ -17,6 +20,7 @@ to launch the dapp client
 ```
 yarn client 
 ```
+
 
 ## Utils
 to show configured hardhat networks
