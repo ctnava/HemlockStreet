@@ -75,11 +75,14 @@
     "mongoose-encryption": "^2.1.2"
   },
   "scripts": {
-    "api": "nodemon src/api/app",
     "sim": "npx hardhat node",
     "deploy": "npx hardhat run src/solidity/scripts/deploy.js --network localhost",
+
     "rinkebyDeploy": "npx hardhat run src/solidity/scripts/deploy.js --network rinkeby",
     "mumbaiDeploy": "npx hardhat run src/solidity/scripts/deploy.js --network mumbai",
+    
+    "api": "nodemon src/api/app",
+    
     "client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

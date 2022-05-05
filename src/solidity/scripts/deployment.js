@@ -1,6 +1,6 @@
+const fs = require("fs");
 const { ethers, artifacts } = require("hardhat");
 const { constructorArgs } = require("../utils/constructorArgs");
-const fs = require("fs");
 
 
 async function runDeployment(contractName, chainId) {
@@ -17,32 +17,33 @@ async function runDeployment(contractName, chainId) {
   return NewContract;
 }
 
+
 function saveFrontendFiles(contract, name, chainId) {
-  const clientDir = __dirname + `/../../client/src/data/${chainId}`;
-  const apiDir = __dirname + `/../../api/data/${chainId}`;
-  if (!fs.existsSync(clientDir)) { fs.mkdirSync(clientDir, { recursive: true }); }
-  if (!fs.existsSync(apiDir)) { fs.mkdirSync(apiDir, { recursive: true }); }
+  function writeFiles(pathToRoot, label) {
+    if (fs.existsSync(pathToRoot)) { 
+      const pathToData = `${pathToRoot}/data/${chainId}`;
+      const missingFolder = !fs.existsSync(pathToData);
+      if (missingFolder) fs.mkdirSync(pathToData, { recursive: true }); 
 
-  fs.writeFileSync(
-    clientDir + `/${name}-address.json`,
-    JSON.stringify({ address: contract.address }, undefined, 2)
-  );
-  fs.writeFileSync(
-    apiDir + `/${name}-address.json`,
-    JSON.stringify({ address: contract.address }, undefined, 2)
-  );
+      const pathToAddress = `${pathToData}/${name}-address.json`;
+      const addressCache = JSON.stringify({ address: contract.address }, undefined, 2);
+      fs.writeFileSync(pathToAddress, addressCache);
 
-  const contractArtifact = artifacts.readArtifactSync(name);
-
-  fs.writeFileSync(
-    clientDir + `/${name}.json`,
-    JSON.stringify(contractArtifact, null, 2)
-  );
-  fs.writeFileSync(
-    apiDir + `/${name}.json`,
-    JSON.stringify(contractArtifact, null, 2)
-  );
-  console.log(`${name} deployment data saved to chain directory\n`);
+      const pathToArtifact = `${pathToData}/${name}.json`;
+      const artifactCache = JSON.stringify(artifacts.readArtifactSync(name), null, 2);
+      fs.writeFileSync(pathToArtifact, artifactCache);
+      
+      console.log(`${label}: ${name} artifacts saved || chain:${chainId}`);
+    }
+  }
+  
+  const isAggregate = fs.existsSync("./src/solidity");
+  writeFiles("./", (isAggregate ? "HSCombined" : "HSContracts"));
+  if (isAggregate) {
+    writeFiles("./src/solidity", "HSContracts");
+    writeFiles("./src/client/src", "HSDappClient");
+    writeFiles("./src/api", "HSApi");
+  }
 }
 
 
