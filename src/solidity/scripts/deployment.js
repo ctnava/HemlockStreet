@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { ethers, artifacts } = require("hardhat");
-const { constructorArgs } = require("../utils/constructorArgs");
+const { constructorArgs } = require("./utils/constructorArgs");
 
 
 async function runDeployment(contractName, chainId) {

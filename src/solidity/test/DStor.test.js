@@ -1,8 +1,8 @@
 /* eslint-disable jest/valid-expect */
 const { ethers } = require("hardhat");
 const { assert, expect } = require("chai");
-const { constructorArgs } = require("../utils/constructorArgs");
-const { txHist } = require("../utils/utils"); // eslint-disable-line no-unused-vars
+const { constructorArgs } = require("../scripts/utils/constructorArgs");
+const { txHist } = require("../scripts/utils/utils"); // eslint-disable-line no-unused-vars
 
 describe("DStor", () => {
 	let DStor; let PLS; let FissionEngine;

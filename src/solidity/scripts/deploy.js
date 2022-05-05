@@ -2,7 +2,7 @@ const { runDeployment, saveFrontendFiles } = require("./deployment");
 const hre = require("hardhat");
 const ethers = hre.ethers;
 
-const oracles = require("../utils/oracles");
+const oracles = require("./utils/oracles");
 async function deployAll() {
     const provider = new ethers.providers.JsonRpcProvider(hre.network.config.url);
     const {chainId} = await provider.getNetwork();
