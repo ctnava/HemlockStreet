@@ -72,14 +72,10 @@ function getProvider(chainId) {
 
 
 function checkDropAddress(address, chainId) {
-  var valid = false;
-  const interface = JSON.parse(fs.readFileSync('./lib/data/deadDropInterface.json'));
-  const addresses = interface.addresses;
-  addresses.forEach(entry => {
-      const isMatch = (entry.address === address) && (entry.chainId === chainId);
-      if (isMatch) valid = true;
-  });
-  return valid;
+  const pathToAddress = `./data/${chainId}/DStor-address.json`;
+  if (!fs.existsSync(pathToAddress)) return false;
+  const cachedAddress = (JSON.parse(fs.readFileSync(pathToAddress))).address;
+  return (cachedAddress === address);
 }
 
 
@@ -95,18 +91,18 @@ function getContract(address, abi, chainId) {
 // PROBLEM_CHILD
 const messageKey = process.env.BC_KEY;
 async function getCachedContract(cipher) {
-  const interface = JSON.parse(fs.readFileSync('./lib/data/deadDropInterface.json'));
-  const abi = interface.abi;
   // console.log("cipher:", cipher);
   const unhashed = quickDecrypt(cipher, messageKey);
   // console.log("unhashed:", unhashed);
   const pin = await findPin(unhashed);
   // console.log("pin:", pin);
-  const metadata = JSON.parse(pin.contract);
+  const chainId = (JSON.parse(pin.contract)).chainId;
   // console.log("metadata:", metadata);
-  const provider = getProvider(metadata.chainId);
+  const provider = getProvider(chainId);
+  const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
+  const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
   if (provider === invalidChain) return invalidChain;
-  else return new ethers.Contract(metadata.address, abi, provider);
+  else return new ethers.Contract(address, abi, provider);
 }
 
 

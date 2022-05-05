@@ -16,6 +16,8 @@
 
 /downloads
 /uploads
+/data/1337
+/data/31337
 
 # solidity
 src/solidity/*.env

@@ -66,8 +66,10 @@ function serviceRoutes(app) {
         if (contractMetadata !== null && contractMetadata !== undefined &&
             hash !== null && hash !== undefined &&
             cipher !== null && cipher !== undefined) {
-            const interface = JSON.parse(fs.readFileSync('./lib/data/deadDropInterface.json'));
-            const contract = getContract(contractMetadata.address, interface.abi, contractMetadata.chainId);
+            const chainId = contractMetadata.chainId;
+            const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
+            const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
+            const contract = getContract(address, abi, chainId);
             const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
             if (failure === true) res.json("err: bad addr/chainId @ app.patch('/pin')");
             else {
@@ -105,8 +107,10 @@ function serviceRoutes(app) {
     .post((req, res) => {
         const { contractMetadata, hash, cipher } = req.body;
         // console.log(contractMetadata);
-        const interface = JSON.parse(fs.readFileSync('./lib/data/deadDropInterface.json'));
-        const contract = getContract(contractMetadata.address, interface.abi, contractMetadata.chainId);
+        const chainId = contractMetadata.chainId;
+        const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
+        const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
+        const contract = getContract(address, abi, chainId);
         const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
         if (failure === true) res.json("err: bad addr/chainId @ app.post('/transaction')");
         else {
@@ -128,9 +132,10 @@ function serviceRoutes(app) {
     })
     .patch((req, res) => {
         const { contractMetadata, cipher } = req.body;
-        // console.log(req.body);
-        const interface = JSON.parse(fs.readFileSync('./lib/data/deadDropInterface.json'));
-        const contract = getContract(contractMetadata.address, interface.abi, contractMetadata.chainId);
+        const chainId = contractMetadata.chainId;
+        const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
+        const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
+        const contract = getContract(address, abi, chainId);
         if (contract === "unsupported/address") res.json("err: bad addr @ app.patch('/transaction')");
         else {
             contract.expirationDates(cipher).then(rawExpDate => {
