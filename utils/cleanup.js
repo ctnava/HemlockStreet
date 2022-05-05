@@ -1,5 +1,5 @@
-function rootPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/${entry}`]}
-function devNetPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/src/${entry}`]}
+function rootPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/${entry}`, `./src/client/${entry}`]}
+function devNetPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/${entry}`, `./src/client/src/${entry}`]}
 function sharedPaths(entry, repo) {return [`./${entry}`, `./src/${repo}/${entry}`]}
 function unsharedPath(entry, repo) {return `./src/${repo}/${entry}`}
 function solidityTrash(entry) {return unsharedPath(entry, "solidity")}
