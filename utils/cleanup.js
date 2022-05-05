@@ -32,21 +32,30 @@ const exclusiveTrash = [
     solidityTrash("coverage.json")
 ];
 
-const clutterPaths = [
+const paths = [
     ...commonTrash,
     ...semiExclusiveTrash,
     ...exclusiveTrash
 ];
 
 
+const fs = require('fs');
 function removeFileOrDirectory(path) {
-    const fs = require('fs');
+    const index = paths.indexOf(path);
+    if (index === 0) console.log("\nBeginning cleanup operation...\n");
+
     if(fs.existsSync(path)) {
-        const file = fs.lstatSync(path);
-        if (!file.isDirectory()) fs.rmSync(path);
+        const parts = path.split('/');
+        const repo = parts[1] === "src" ? parts[2] : "project root";
+        const fod = parts[parts.length - 1];
+        const isDir = (fs.lstatSync(path)).isDirectory();
+        console.log(`\nRemoved: ${fod} ${isDir?"folder ":""}from ${repo}`);
+        if (!isDir) fs.rmSync(path);
         else fs.rmSync(path, { recursive: true });
     }
+
+    if (index === paths.length - 1) console.log("\n\nCleanup complete!\n");
 }
 
 
-(() => {clutterPaths.forEach(path => removeFileOrDirectory)})();
+(() => {paths.forEach(path => {removeFileOrDirectory(path)})})();

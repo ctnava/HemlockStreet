@@ -1,4 +1,4 @@
-# deadDrop@HemlockStreet || API
+# HemlockStreet || API
 Documentation for the Web2 backend for the deadDrop Dapp
 
 ## HEROKU DEPLOYMENT
@@ -20,25 +20,25 @@ to
 Set App > Settings > Config Vars
 config must include
 ```
-// Dapp Client 
+# Dapp Client 
 CLIENT_URL 
 
-// IPFS Infura
+# IPFS Infura
 IPFS_HOST
 IPFS_PORT
 IPFS_PROTOCOL
 IPFS_PROJECT_ID
 IPFS_PROJECT_SECRET
 
-// Web3 
-MORALIS_KEY // Most Networks
-ALCHEMY_OPTM_KEY // Optimism Mainnet
-ALCHEMY_OPTT_KEY // Optimism Testnet
+# Web3 
+MORALIS_KEY # Most Networks
+ALCHEMY_OPTM_KEY # Optimism Mainnet
+ALCHEMY_OPTT_KEY # Optimism Testnet
 
-// MongoDB
-DB_URL // include login credentials
-DB_KEY // decrypt secrets
+# MongoDB
+DB_URL # include login credentials
+DB_KEY # decrypt secrets
 
-// On-Chain
-BC_KEY // decrypt the double encrypted hash stored on chain
+# On-Chain
+BC_KEY # decrypt the double encrypted hash stored on chain
 ```
