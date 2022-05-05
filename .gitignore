@@ -80,3 +80,8 @@ src/solidity/artifacts
 src/solidity/cache
 src/solidity/coverage
 src/solidity/coverage.json
+
+
+# heroku
+/herokuApi
+/herokuClient
