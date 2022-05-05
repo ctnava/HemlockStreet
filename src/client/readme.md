@@ -1,4 +1,4 @@
-# HemlockStreet || DappClient
+# HemlockStreet || Dapp Client
 
 ## NOTICE
 removed "eslintConfig": { "extends": [ "react-app", "react-app/jest" ] }, from package.json
