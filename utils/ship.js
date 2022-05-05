@@ -1,12 +1,4 @@
 const fs = require('fs');
-const { exec, execSync } = require('child_process');
-
-const ignored = [
-    ".DS_Store", "node_modules", "package-lock.json", "npm-debug.log",
-    "yarn.lock", "yarn-debug.log", "yarn-error.log", ".pnp", ".pnp.js",
-    "downloads", "uploads", ".env", "api.code-workspace"
-];
-
 function stageApi() {
     console.log("\nPreparing API for Heroku Deployment...\n");
 
@@ -23,13 +15,18 @@ function stageApi() {
         });
     } else fs.mkdirSync(sink);
 
-
+    
     const source = "./src/api";
     console.log("Scanning API root...");
     const allFiles = fs.readdirSync(source);
     console.log(`${allFiles.length} paths detected.`);
     var accepted = 0;
     allFiles.forEach(file => {
+        const ignored = [
+            ".DS_Store", "node_modules", "package-lock.json", "npm-debug.log",
+            "yarn.lock", "yarn-debug.log", "yarn-error.log", ".pnp", ".pnp.js",
+            "downloads", "uploads", ".env", "api.code-workspace"
+        ];
         if (!ignored.includes(file)) {
             accepted += 1;
             const pathTo = source + "/" + file;
@@ -64,13 +61,46 @@ function stageApi() {
 }
 
 
-function pushApi() {
-    console.log("Deploying API to Heroku...\n\nAdding to git...");
-    // const output = execSync('ls', { encoding: 'utf-8' });
-    console.log("Committing changes...");
-    console.log("Pushing changes...");
-    console.log("\nComplete!\n");
+const { execSync, execFileSync } = require('child_process');
+function validateRepo() {
+    try {
+        execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
+        const parts = ((execSync('git remote -v').toString()).split(" ")[0]).split("/");
+        const repoName = parts[parts.length - 1];
+        if (repoName !== "HemlockStreet.git") throw "name mismatch";
+        return;
+    } catch (err) {
+        console.log("\nInvalid Repository..."); 
+        process.exit(1);
+    }
 }
 
-stageApi();
-pushApi();
+
+const platform = require('os').platform();
+const os = platform === "win32" ? 1 : 0;
+const ls = ["ls", "dir"];
+const pwd = ["pwd", "cd"];
+
+
+function pushApi() {
+    const dir = execSync(pwd[os]).toString().split("\r\n")[0];
+    const pathToSh = `${dir}\\bin\\${platform}\\ship.sh`;
+    console.log(execFileSync(pathToSh));
+
+    const stat = execSync(`git status ./herokuApi/`).toString();
+    const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
+    if (pushNeeded) {
+        console.log("Deploying API to Heroku...\n");
+        execFileSync(`bash bin/${platform}/ship.sh`);
+        console.log("Success!");
+    } else console.log("Deployment not necessary! Exiting...");
+}
+
+function ship() {
+    validateRepo(); 
+    stageApi(); 
+    pushApi();    
+}
+
+
+ship();
