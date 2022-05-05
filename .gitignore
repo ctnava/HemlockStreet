@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# root
 .DS_Store
 /node_modules
 /.pnp
@@ -14,15 +14,17 @@ yarn.lock
 /*.code-workspace
 typechain
 
-# testing
-/coverage
-coverage.json
-/artifacts
-src/backend/artifacts*
-/cache
-src/backend/cache*
+# solidity
+src/solidity/artifacts
+src/solidity/cache
+src/solidity/coverage
+src/solidity/coverage.json
 
-# production
-/build
-src/frontend/contractsData/31337*
-src/frontend/contractsData/1337*
+# client
+src/client/.env
+src/client/build
+src/client/contractsData/31337
+src/client/contractsData/1337
+
+# api
+src/api/.env

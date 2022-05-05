@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css';
-import './frontend/lib/styles.css';
-import aesthetics from "./frontend/lib/aesthetics";
-import App from './frontend/components/App';
+import './lib/styles.css';
+import aesthetics from "./lib/aesthetics";
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
