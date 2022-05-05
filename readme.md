@@ -20,6 +20,10 @@ to launch the dapp client
 ```
 yarn client 
 ```
+THEN
+```
+y
+```
 
 
 ## Utils
