@@ -1,6 +1,3 @@
-const fs = require('fs');
-
-
 function rootPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/${entry}`]}
 function devNetPaths(entry) {return [`./${entry}`, `./src/solidity/${entry}`, `./src/api/src/${entry}`]}
 function sharedPaths(entry, repo) {return [`./${entry}`, `./src/${repo}/${entry}`]}
@@ -42,12 +39,14 @@ const clutterPaths = [
 ];
 
 
-(() => {
-    clutterPaths.forEach(pathToClutter => {
-        if(fs.existsSync(pathToClutter)) {
-            const isFile = fs.pathIsFile(pathToClutter);
-            if (isFile) fs.rmSync(pathToClutter);
-            else fs.rmSync(pathToClutter, { recursive: true });
-        }
-    })
-})();
+function removeFileOrDirectory(path) {
+    const fs = require('fs');
+    if(fs.existsSync(path)) {
+        const file = fs.lstatSync(path);
+        if (!file.isDirectory()) fs.rmSync(path);
+        else fs.rmSync(path, { recursive: true });
+    }
+}
+
+
+(() => {clutterPaths.forEach(path => removeFileOrDirectory)})();
