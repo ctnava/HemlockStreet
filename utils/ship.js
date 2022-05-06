@@ -61,7 +61,9 @@ function stageApi() {
 }
 
 
-const { execSync, execFileSync } = require('child_process');
+const os = require('os');
+const { execSync, spawn } = require('child_process');
+const projectDir = __dirname.slice(0, __dirname.length - 5);
 function validateRepo() {
     try {
         execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
@@ -75,24 +77,16 @@ function validateRepo() {
     }
 }
 
-
-const platform = require('os').platform();
-const os = platform === "win32" ? 1 : 0;
-const ls = ["ls", "dir"];
-const pwd = ["pwd", "cd"];
-
-
 function pushApi() {
-    const dir = execSync(pwd[os]).toString().split("\r\n")[0];
-    const pathToSh = `${dir}\\bin\\${platform}\\ship.sh`;
-    console.log(execFileSync(pathToSh));
-
     const stat = execSync(`git status ./herokuApi/`).toString();
     const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
     if (pushNeeded) {
-        console.log("Deploying API to Heroku...\n");
-        execFileSync(`bash bin/${platform}/ship.sh`);
-        console.log("Success!");
+        if (os.platform() === "win32") {
+            child = spawn("powershell.exe",[`${projectDir}bin/ship.ps1`]);
+            child.stdout.on("data", (data)=>{console.log(data.toString())});
+            child.stderr.on("data", (data)=>{console.log("stderr: " + data)});
+            child.on("exit",()=>{console.log("Script Executed")});
+        }
     } else console.log("Deployment not necessary! Exiting...");
 }
 
