@@ -76,7 +76,7 @@ async function stage(repo) {
 
 async function deploy(repo, commitMessage) {
     const opts = {args:[repo, commitMessage]};
-    const result = await powershell('ship', opts);
+    const result = await require('./shell.js').powershell('ship', opts);
     return result;
 }
 
