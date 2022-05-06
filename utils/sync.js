@@ -10,7 +10,7 @@ async function synchronizeAll() {
     if (process.argv[4] !== undefined) 
         throw "did you forget to use quotation marks on your message?";
     
-    const rootIsClean = await git.status();
+    const rootIsClean = await git.status(); //
     console.log("rootIsClean:", rootIsClean);
 
     if (!rootIsClean) {
