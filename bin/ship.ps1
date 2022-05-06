@@ -1,5 +1,5 @@
 ﻿param($repo, $commitMessage)
 Set-Location $repo
 git add .
-git commit -m "push to heroku"
+git commit -m $commitMessage
 git push heroku main
