@@ -57,7 +57,7 @@ function stageApi() {
         }
     });
     fs.writeFileSync(sink + "/package.json", JSON.stringify(pkg, null, 2));    
-    console.log("\nStaging Complete! Detecting Changes...");
+    console.log("\nStaging Complete! Deploying...");
 }
 
 
@@ -74,7 +74,7 @@ async function stage(repo) {
 }
 
 
-async function deploy(repo) {
+async function deploy(repo, commitMessage) {
     const opts = {args:[repo, commitMessage]};
     const result = await powershell('ship', opts);
     return result;
