@@ -60,6 +60,53 @@ function stageApi() {
     console.log("\nStaging Complete! Deploying...");
 }
 
+function stageClient() {
+    console.log("\nPreparing Client for Heroku Deployment...\n");
+    const sink = "./heroku/client";
+    if (fs.existsSync(sink)) {
+        console.log("Previous build detected! Wiping...");
+        const allFiles = fs.readdirSync(sink);
+        allFiles.forEach(file => { 
+            if (file !== ".git") {
+                const pathTo = sink + "/" + file;
+                const isDir = (fs.lstatSync(pathTo)).isDirectory();
+                if (isDir) fs.rmSync(pathTo, {recursive:true});
+                else fs.rmSync(pathTo);
+            }
+        });
+    } else fs.mkdirSync(sink);
+
+    
+    const source = "./src/client";
+    console.log("Scanning Client root...");
+    const allFiles = fs.readdirSync(source);
+    console.log(`${allFiles.length} paths detected.`);
+    var accepted = 0;
+    allFiles.forEach(file => {
+        const ignored = [ ".git",
+            ".DS_Store", "node_modules", "package-lock.json", "npm-debug.log",
+            "yarn.lock", "yarn-debug.log", "yarn-error.log", ".pnp", ".pnp.js",
+            "downloads", "uploads", ".env", "client.code-workspace", "build"
+        ];
+        if (!ignored.includes(file)) {
+            accepted += 1;
+            const pathTo = source + "/" + file;
+            const end = sink + "/" + file;
+            const isDir = (fs.lstatSync(pathTo)).isDirectory();
+            if (!isDir) fs.cpSync(pathTo, end);
+            else fs.cpSync(pathTo, end, {recursive:true});
+        }
+    });
+    console.log(`${accepted} paths copied!`);
+
+    const dev1337 = sink + "/src/data/1337"
+    const dev31337 = sink + "/src/data/31337"
+    console.log("Pruning devnet caches...");
+    if (fs.existsSync(dev1337)) fs.rmSync(dev1337, {recursive:true});
+    if (fs.existsSync(dev31337)) fs.rmSync(dev31337, {recursive:true});
+    console.log("\nStaging Complete! Deploying...");
+}
+
 
 async function stage(repo) {
     switch (repo) {
