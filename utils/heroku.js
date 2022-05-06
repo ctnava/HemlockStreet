@@ -74,24 +74,25 @@ async function stage(repo) {
 }
 
 
-async function shipApi() {
+async function deployApi() {
     const opts = {args:[repo, commitMessage]};
     await powershell('ship', opts);
     return;
 }
 
 
-async function ship(repo) {
+async function deploy(repo) {
     switch (repo) {
         case "api":
             try {
-                await shipApi();
-                return true;
-            } catch {return false}
+                const result = await deployApi();
+                return result;
+            } 
+            catch {return false}
         default:
             return false;
     }
 }
 
 
-module.exports = { stage, ship }
+module.exports = { stage, deploy }
