@@ -73,6 +73,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "sync": "node utils/sync.js",
     "ship": "node utils/ship.js",
     "clean": "node utils/cleanup.js",
     "sim": "npx hardhat node",

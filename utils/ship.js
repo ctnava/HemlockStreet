@@ -63,51 +63,29 @@ function stageApi() {
 }
 
 
-const os = require('os');
-const { execSync, spawn } = require('child_process');
-const projectDir = __dirname.slice(0, __dirname.length - 6);
-function validateRepo() {
-    try {
-        execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
-        const parts = ((execSync('git remote -v').toString()).split(" ")[0]).split("/");
-        const repoName = parts[parts.length - 1];
-        if (repoName !== "HemlockStreet.git") throw "name mismatch";
-        return;
-    } catch (err) {
-        console.log("\nInvalid Repository..."); 
-        process.exit(1);
-    }
+const git = require('./git.js');
+async function ship() {
+    const rootIsClean = await git.status();
+    console.log("rootIsClean", rootIsClean);
+    const apiIsClean = await git.status("src/api");
+    console.log("apiIsClean", apiIsClean);
+    const cliIsClean = await git.status("src/client");
+    console.log("cliIsClean", cliIsClean);
+    const solIsClean = await git.status("src/solidity");
+    console.log("solIsClean", solIsClean);
+    // stageApi(); 
+    // const clean = 'nothing to commit, working tree clean';
+    // switch (require('os').platform()) {
+    //     case "win32":
+    //         (async () => {
+    //             const stat = await execute.ps1('shipStat', { returnData:true });
+    //             const treeStat = stat.split("\n")[3];
+    //             if (treeStat !== clean) await execute.ps1('ship', false);
+    //             else console.log("No Redeployment (Tree Clean)...\n");
+    //         })();
+    //     default:
+    //         return;
+    // }
 }
 
-
-const executePs1 = (script) => new Promise((resolve) => {
-    shipStat = spawn("powershell.exe",[`${projectDir}/bin/${script}.ps1`]);
-    shipStat.stdout.on("data", (data)=>{console.log("stdout: " + data)});
-    shipStat.stderr.on("data", (data)=>{console.log("stderr: " + data)});
-    shipStat.on("exit", ()=>{resolve()});
-});
-
-
-async function pushApiWin32() {
-    var stat = "";
-    await new Promise((resolve) => {
-        shipStat = spawn("powershell.exe",[`${projectDir}/bin/shipStat.ps1`]);
-        shipStat.stdout.on("data", (data)=>{stat = stat.concat(data)});
-        shipStat.stderr.on("data", (data)=>{console.log("stderr: " + data)});
-        shipStat.on("exit", ()=>{resolve()});
-    });
-    const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
-    console.log(pushNeeded);
-    if (pushNeeded) await executePs1('ship');
-    else console.log("Deployment not necessary! Exiting...");
-}
-
-function ship() {
-    validateRepo(); 
-    stageApi(); 
-    if (os.platform() === "win32") pushApiWin32();   
-    else return; 
-}
-
-
-ship();
+(async()=>{await ship();})();

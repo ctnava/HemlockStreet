@@ -5,6 +5,10 @@ for more details, refer to readme files in the individual project "root" folders
 
 ## Mandatory .env values
 ```
+# Utils
+PS_SUBDIR=/utils # for "./utils/bash.js"
+
+
 # Client
 API_URL=https://deaddrop-api-alpha.herokuapp.com/
 
