@@ -333,9 +333,9 @@ function DocumentTable(props) {
             handleClick={submitRequest}
             />
         </Row>)}
-        { messages.length !== secrets.length && (<Row><Col>
+        <Row><Col>
             <Button className="my-3" variant="secondary" onClick={decryptAll}>Decrypt All</Button>
-        </Col></Row>)}
+        </Col></Row>
     <Table className="px-5 container" striped bordered hover variant="dark">
     <thead>
         <tr>
