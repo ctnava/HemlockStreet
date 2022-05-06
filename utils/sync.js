@@ -9,13 +9,14 @@ async function synchronizeAll() {
         throw "missing branch or commitMessage";
     if (process.argv[4] !== undefined) 
         throw "did you forget to use quotation marks on your message?";
+    console.log("Scanning repos for changes...");
     
     const rootIsClean = await git.status(); //
-    console.log("rootIsClean:", rootIsClean);
+    console.log("\nrootIsClean:", rootIsClean);
 
     if (!rootIsClean) {
-        console.log("Committing Changes...");
-        const res = await git.push("root", branch, commitMessage);
+        console.log("\nCommitting Changes...");
+        await git.push("root", branch, commitMessage);
     }
 
     var subRepos = fs.readdirSync("./src");
@@ -27,8 +28,7 @@ async function synchronizeAll() {
 
         if (!isClean) {
             console.log("Committing Changes...");
-            const res = await git.push(pathTo, branch, commitMessage);
-            console.log(res);
+            await git.push(pathTo, branch, commitMessage);
         }
     }
 }
