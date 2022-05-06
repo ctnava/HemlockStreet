@@ -18,8 +18,18 @@ to
 ```
 ## Mandatory .env values
 ```
-# Client
+# API & Client
+# Possible Api Urls:
+# - https://deaddrop-api-alpha.herokuapp.com/       # Devel
+# - https://deaddrop-api-beta.herokuapp.com/        # Public Testing
+# - https://deaddrop-alpha.herokuapp.com/           # Production
 API_URL=https://deaddrop-api-alpha.herokuapp.com/
+
+# Possible Client Urls:
+# - https://deaddrop-dapp-alpha.herokuapp.com/      # Devel
+# - https://deaddrop-dapp-beta.herokuapp.com/       # Public Testing
+# - https://deaddrop-dapp.herokuapp.com/            # Production
+CLIENT_URL=http://localhost:3000
 
 
 # IPFS @ https://infura.io/
@@ -29,13 +39,12 @@ IPFS_PORT=5001
 IPFS_PROTOCOL=https
 IPFS_PROJECT_ID=YOUR_OWN
 IPFS_PROJECT_SECRET=YOUR_OWN
-
 # PINATA_PUBLIC=NOT_YET_IMPLEMENTED
 # PINATA_PRIVATE=NOT_YET_IMPLEMENTED
 # PINATA_JWT=NOT_YET_IMPLEMENTED
 
-# API @ https://cloud.mongodb.com/
-CLIENT_URL=http://localhost:3000
+
+# DB @ https://cloud.mongodb.com/
 DB_URL=mongodb+srv://<USERNAME>:<PASSWORD>@<YOUR_CLUSTER>.6vpdm.mongodb.net/deadDropDB?retryWrites=true&w=majority 
 DB_KEY=YOUR_OWN # decrypt secrets
 BC_KEY=YOUR_OWN # decrypt the double encrypted hash stored on chain

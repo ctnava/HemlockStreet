@@ -1,5 +1,6 @@
 # HemlockStreet || Platform
 ## NOTICE
+POWERSHELL INSTALLATION REQUIRED
 for more details, refer to readme files in the individual project "root" folders under "./src"
 
 
