@@ -117,7 +117,7 @@ async function stage(repo) {
             } catch {return false}
         case "client":
             try {
-                await stageApi();
+                await stageClient();
                 return true;
             } catch {return false}
         default:
