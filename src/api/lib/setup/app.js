@@ -13,7 +13,7 @@ function configureApp() {
     app.use(cors({origin: url}));
     app.use('/uploads', express.static('uploads'));
     app.use('/downloads', express.static('downloads'));
-    app.get('/', (req, res) => { res.json("Hello World!") });
+    app.get('/', (req, res) => { res.json("Hello, welcome to my back end! Now git out.") });
     app.listen(port, () => { console.log("Server Started on Port:" + port) });
     return app;
 }
