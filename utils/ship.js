@@ -22,7 +22,7 @@ function stageApi() {
     console.log(`${allFiles.length} paths detected.`);
     var accepted = 0;
     allFiles.forEach(file => {
-        const ignored = [
+        const ignored = [ ".git",
             ".DS_Store", "node_modules", "package-lock.json", "npm-debug.log",
             "yarn.lock", "yarn-debug.log", "yarn-error.log", ".pnp", ".pnp.js",
             "downloads", "uploads", ".env", "api.code-workspace"
@@ -78,7 +78,8 @@ function validateRepo() {
 }
 
 function pushApi() {
-    const stat = execSync(`git status ./herokuApi/`).toString();
+    console.log(execSync(`git remote -v`).toString())
+    const stat = execSync(`git status ./herokuApi`).toString();
     const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
     if (pushNeeded) {
         if (os.platform() === "win32") {
