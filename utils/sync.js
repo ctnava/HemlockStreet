@@ -11,7 +11,7 @@ async function synchronizeAll() {
         throw "did you forget to use quotation marks on your message?";
     console.log("\nScanning repos for changes...");
 
-    const rootIsClean = await git.status(); //
+    const rootIsClean = await git.status();
     console.log("\nrootIsClean:", rootIsClean);
 
     if (!rootIsClean) {
@@ -24,7 +24,7 @@ async function synchronizeAll() {
     for await (const repo of subRepos){
         const pathTo = `src/${repo}`;
         const isClean = await git.status(pathTo);
-        console.log(`\n${repo}IsClean:`, isClean);
+        console.log(`${repo}IsClean:`, isClean);
 
         if (!isClean) {
             console.log("Committing Changes...");
