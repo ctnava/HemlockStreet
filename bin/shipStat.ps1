@@ -1,0 +1,2 @@
+﻿cd .\herokuApi
+git status

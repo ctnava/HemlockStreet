@@ -65,7 +65,7 @@ function stageApi() {
 
 const os = require('os');
 const { execSync, spawn } = require('child_process');
-const projectDir = __dirname.slice(0, __dirname.length - 5);
+const projectDir = __dirname.slice(0, __dirname.length - 6);
 function validateRepo() {
     try {
         execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
@@ -79,24 +79,40 @@ function validateRepo() {
     }
 }
 
-function pushApi() {
-    console.log(execSync(`git remote -v`).toString())
-    const stat = execSync(`git status ./herokuApi`).toString();
+
+const executePs1 = (script) => new Promise((resolve) => {
+    shipStat = spawn("powershell.exe",[`${projectDir}/bin/${script}.ps1`]);
+    shipStat.stdout.on("data", (data)=>{console.log("stdout: " + data)});
+    shipStat.stderr.on("data", (data)=>{console.log("stderr: " + data)});
+    shipStat.on("exit", ()=>{resolve()});
+});
+
+
+async function pushApiWin32() {
+    var stat = "";
+    await new Promise((resolve) => {
+        shipStat = spawn("powershell.exe",[`${projectDir}/bin/shipStat.ps1`]);
+        shipStat.stdout.on("data", (data)=>{stat = stat.concat(data)});
+        shipStat.stderr.on("data", (data)=>{console.log("stderr: " + data)});
+        shipStat.on("exit", ()=>{resolve()});
+    });
     const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
-    if (pushNeeded) {
-        if (os.platform() === "win32") {
-            child = spawn("powershell.exe",[`${projectDir}bin/ship.ps1`]);
-            child.stdout.on("data", (data)=>{console.log(data.toString())});
-            child.stderr.on("data", (data)=>{console.log("stderr: " + data)});
-            child.on("exit",()=>{console.log("Script Executed")});
-        }
-    } else console.log("Deployment not necessary! Exiting...");
+    console.log(pushNeeded);
+    // if (pushNeeded) {
+    //     if (os.platform() === "win32") {
+    //         ship = spawn("powershell.exe",[`${projectDir}bin/ship.ps1`]);
+    //         ship.stdout.on("data", (data)=>{console.log(data.toString())});
+    //         ship.stderr.on("data", (data)=>{console.log("stderr: " + data)});
+    //         ship.on("exit",()=>{console.log("Script Executed")});
+    //     }
+    // } else console.log("Deployment not necessary! Exiting...");
 }
 
 function ship() {
     validateRepo(); 
     stageApi(); 
-    pushApi();    
+    if (os.platform() === "win32") pushApiWin32();   
+    else return; 
 }
 
 
