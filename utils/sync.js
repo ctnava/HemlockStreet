@@ -2,7 +2,7 @@ const fs = require('fs');
 const git = require('./git.js');
 
 
-async function synchronizeAll() {
+(async () => {
     const branch = process.argv[2];
     const commitMessage = process.argv[3];
     if (branch === undefined || commitMessage === undefined)
@@ -33,7 +33,4 @@ async function synchronizeAll() {
     }
 
     console.log("\nAll Repositories Synced!");
-}
-
-
-synchronizeAll()
+})();
