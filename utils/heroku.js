@@ -75,23 +75,16 @@ async function stage(repo) {
 
 
 async function deployApi() {
-    const opts = {args:[repo, commitMessage]};
-    await powershell('ship', opts);
+    
+    
     return;
 }
 
 
 async function deploy(repo) {
-    switch (repo) {
-        case "api":
-            try {
-                const result = await deployApi();
-                return result;
-            } 
-            catch {return false}
-        default:
-            return false;
-    }
+    const opts = {args:[repo, commitMessage]};
+    const result = await powershell('ship', opts);
+    return result;
 }
 
 
