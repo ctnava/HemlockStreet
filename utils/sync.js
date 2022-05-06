@@ -31,6 +31,8 @@ async function synchronizeAll() {
             await git.push(pathTo, branch, commitMessage);
         }
     }
+
+    console.log("\nAll Repositories Synced!");
 }
 
 
