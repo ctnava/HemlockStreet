@@ -43,7 +43,7 @@ IPFS_PROJECT_SECRET=YOUR_OWN
 # PINATA_JWT=NOT_YET_IMPLEMENTED
 
 
-# DB @ https://cloud.mongodb.com/
+# DB @ https://cloud.mongodb.com/ 
 DB_URL=mongodb+srv://<USERNAME>:<PASSWORD>@<YOUR_CLUSTER>.6vpdm.mongodb.net/deadDropDB?retryWrites=true&w=majority 
 DB_KEY=YOUR_OWN # decrypt secrets
 BC_KEY=YOUR_OWN # decrypt the double encrypted hash stored on chain
