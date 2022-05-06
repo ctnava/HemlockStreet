@@ -75,7 +75,7 @@ function serviceRoutes(app) {
             else {
                 contract.expirationDates(cipher)
                 .then(rawExpDate => {
-                    if (rawExpDate === 0) {
+                    if (parseInt(rawExpDate.toString()) === 0) {
                         findPin(quickDecrypt(cipher, messageKey))
                         .then(pin => {
                             const now = Math.floor(Date.now() / 1000);

@@ -192,7 +192,10 @@ function Upload(props) {
 					props.setLoading(true);
 				}
 			});
-		}).catch(()=>{setRequest(prev=> {return{...prev, transaction: false}})});
+		}).catch(()=>{
+			setRequest(prev=> {return{...prev, transaction: false}});
+			unpinFile();
+		});
 	}
 
 	// console.log(contractInput);
@@ -209,9 +212,23 @@ function Upload(props) {
 	function handleTx(event) {
 		event.preventDefault();
 		if (!request.transaction && !request.unpin) {
+			setRequest(prev=> {return{...prev, transaction: true}});
 			console.log("tx acknowledged");
-			setRequest(prev=> {return{...prev, transaction: true}}); 
-			makeTransaction();
+			const data = { 
+				hash: contractInput.hash, 
+				cipher: cipherInput.hash,
+				contractMetadata: { 
+					chainId: props.client.chainId, 
+					address: props.contract.address
+				}
+			};
+			axios.patch(apiUrl + "pin", data, {'Content-Type': 'application/json'})
+			.then(res => {
+				if (res.data === "success") {
+					setPinTimer(pinTimer + 900);
+					makeTransaction();
+				} else console.log(res.data);
+			});
 		}
 	}
 
@@ -302,12 +319,13 @@ function Upload(props) {
 		</Form>	
 	</Row>
 
-	{ uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && contractInput.description.length !== 0
-	 && contractInput.recipient.length === 42 && contractInput.recipient.slice(0,2) === "0x" && busy === false && (<div>	
+	{ uploaded === true && contractInput.name.length !== 0 && !contractInput.name.includes(".") && (<div>	
 	<Row>
 		<Button 
-		onClick={contractInput.hash.length === 0 ? handlePin : handleTx} 
-		variant={contractInput.hash.length === 0 ? "warning" : "danger" }
+		onClick={contractInput.description.length !== 0 && contractInput.recipient.length === 42 && 
+		contractInput.recipient.slice(0,2) === "0x" && busy === false && 
+		(contractInput.hash.length === 0 ? handlePin : handleTx)} 
+		variant={contractInput.hash.length === 0 ? "warning" : "danger"}
 		>{contractInput.hash.length === 0 ? (pinning + timeLeft)  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
 	</Row>
 	</div>) }
