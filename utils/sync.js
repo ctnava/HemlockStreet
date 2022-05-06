@@ -9,13 +9,13 @@ async function synchronizeAll() {
         throw "missing branch or commitMessage";
     if (process.argv[4] !== undefined) 
         throw "did you forget to use quotation marks on your message?";
-    console.log("Scanning repos for changes...");
-    
+    console.log("\nScanning repos for changes...");
+
     const rootIsClean = await git.status(); //
     console.log("\nrootIsClean:", rootIsClean);
 
     if (!rootIsClean) {
-        console.log("\nCommitting Changes...");
+        console.log("Committing Changes...");
         await git.push("root", branch, commitMessage);
     }
 
@@ -24,7 +24,7 @@ async function synchronizeAll() {
     for await (const repo of subRepos){
         const pathTo = `src/${repo}`;
         const isClean = await git.status(pathTo);
-        console.log(`${repo}IsClean:`, isClean);
+        console.log(`\n${repo}IsClean:`, isClean);
 
         if (!isClean) {
             console.log("Committing Changes...");
