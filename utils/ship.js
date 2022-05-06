@@ -98,14 +98,8 @@ async function pushApiWin32() {
     });
     const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
     console.log(pushNeeded);
-    // if (pushNeeded) {
-    //     if (os.platform() === "win32") {
-    //         ship = spawn("powershell.exe",[`${projectDir}bin/ship.ps1`]);
-    //         ship.stdout.on("data", (data)=>{console.log(data.toString())});
-    //         ship.stderr.on("data", (data)=>{console.log("stderr: " + data)});
-    //         ship.on("exit",()=>{console.log("Script Executed")});
-    //     }
-    // } else console.log("Deployment not necessary! Exiting...");
+    // if (pushNeeded) await executePs1('ship');
+    // else console.log("Deployment not necessary! Exiting...");
 }
 
 function ship() {
