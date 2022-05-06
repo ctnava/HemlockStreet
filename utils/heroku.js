@@ -1,9 +1,7 @@
 const fs = require('fs');
 function stageApi() {
     console.log("\nPreparing API for Heroku Deployment...\n");
-
-
-    const sink = "./herokuApi";
+    const sink = "./heroku/api";
     if (fs.existsSync(sink)) {
         console.log("Previous build detected! Wiping...");
         const allFiles = fs.readdirSync(sink);
@@ -59,33 +57,41 @@ function stageApi() {
         }
     });
     fs.writeFileSync(sink + "/package.json", JSON.stringify(pkg, null, 2));    
-    console.log("\nReady to deploy!");
+    console.log("\nStaging Complete! Detecting Changes...");
 }
 
 
-const git = require('./git.js');
-async function ship() {
-    const rootIsClean = await git.status();
-    console.log("rootIsClean", rootIsClean);
-    const apiIsClean = await git.status("src/api");
-    console.log("apiIsClean", apiIsClean);
-    const cliIsClean = await git.status("src/client");
-    console.log("cliIsClean", cliIsClean);
-    const solIsClean = await git.status("src/solidity");
-    console.log("solIsClean", solIsClean);
-    // stageApi(); 
-    // const clean = 'nothing to commit, working tree clean';
-    // switch (require('os').platform()) {
-    //     case "win32":
-    //         (async () => {
-    //             const stat = await execute.ps1('shipStat', { returnData:true });
-    //             const treeStat = stat.split("\n")[3];
-    //             if (treeStat !== clean) await execute.ps1('ship', false);
-    //             else console.log("No Redeployment (Tree Clean)...\n");
-    //         })();
-    //     default:
-    //         return;
-    // }
+async function stage(repo) {
+    switch (repo) {
+        case "api":
+            try {
+                await stageApi();
+                return true;
+            } catch {return false}
+        default:
+            return false;
+    }
 }
 
-(async()=>{await ship();})();
+
+async function shipApi() {
+    const opts = {args:[repo, commitMessage]};
+    await powershell('ship', opts);
+    return;
+}
+
+
+async function ship(repo) {
+    switch (repo) {
+        case "api":
+            try {
+                await shipApi();
+                return true;
+            } catch {return false}
+        default:
+            return false;
+    }
+}
+
+
+module.exports = { stage, ship }

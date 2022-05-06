@@ -74,7 +74,6 @@
   },
   "scripts": {
     "sync": "node utils/sync.js",
-    "ship": "node utils/ship.js",
     "clean": "node utils/cleanup.js",
     "sim": "npx hardhat node",
     "deploy": "npx hardhat run src/solidity/scripts/deploy.js --network localhost",

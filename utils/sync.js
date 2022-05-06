@@ -1,5 +1,6 @@
 const fs = require('fs');
 const git = require('./git.js');
+const heroku = require('./heroku.js');
 
 
 (async () => {
@@ -29,6 +30,12 @@ const git = require('./git.js');
         if (!isClean) {
             console.log("Committing Changes...");
             await git.push(pathTo, branch, commitMessage);
+            const herokuApps = ["api"];
+            if (branch === "main" && herokuApps.includes(repo)) {
+                const staged = await heroku.stage(repo);
+                if (!staged) throw `staging failure @${repo}`;
+                else await heroku.ship(repo);
+            }
         }
     }
 

@@ -22,4 +22,4 @@ async function powershell(script, {args, v}) {
 }
 
 
-module.exports = {powershell};
+module.exports = { powershell };
