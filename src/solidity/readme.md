@@ -19,7 +19,7 @@ const contract = await ethers.getContractAt("DStor", "0x9fE46736679d2D9a65F0992F
   
 
 const name = await contract.name() //hit enter to make a getter
-name // just type it in and it will print
+name // just type it in and it will print 
 
 .exit
 ```
