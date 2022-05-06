@@ -14,7 +14,7 @@ to
 { 
     port: process.env.PORT,
     ipfs: version
-}
+} 
 ```
 ## Mandatory .env values
 ```
