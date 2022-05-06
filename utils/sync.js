@@ -16,7 +16,6 @@ async function synchronizeAll() {
     if (!rootIsClean) {
         console.log("Committing Changes...");
         const res = await git.push("root", branch, commitMessage);
-        console.log(res);
     }
 
     var subRepos = fs.readdirSync("./src");
