@@ -50,7 +50,7 @@ BC_KEY=YOUR_OWN # decrypt the double encrypted hash stored on chain
 
 
 # Web3 @ https://moralis.io/ & https://dashboard.alchemyapi.io/apps
-MORALIS_KEY=YOUR_OWN
+MORALIS_KEY=YOUR_OWN 
 ALCHEMY_OPTM_KEY=YOUR_OWN # Optimism Mainnet
 ALCHEMY_OPTT_KEY=YOUR_OWN # Optimism Testnet
 
@@ -58,3 +58,4 @@ ALCHEMY_OPTT_KEY=YOUR_OWN # Optimism Testnet
 # Wallet
 MAINNET_KEY=YOUR_OWN
 ```
+ 
