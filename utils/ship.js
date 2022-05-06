@@ -98,8 +98,8 @@ async function pushApiWin32() {
     });
     const pushNeeded = (stat.split("\n")[3] !== 'nothing to commit, working tree clean');
     console.log(pushNeeded);
-    // if (pushNeeded) await executePs1('ship');
-    // else console.log("Deployment not necessary! Exiting...");
+    if (pushNeeded) await executePs1('ship');
+    else console.log("Deployment not necessary! Exiting...");
 }
 
 function ship() {
