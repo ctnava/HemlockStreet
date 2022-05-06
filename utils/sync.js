@@ -11,8 +11,8 @@ const heroku = require('./heroku.js');
     if (process.argv[4] !== undefined) 
         throw "did you forget to use quotation marks on your message?";
     console.log("\nScanning repos for changes...");
-    if (commitMessage.includes("'"))
-        throw "don't use single quotes";
+    if (commitMessage.includes("'") || commitMessage.includes('"'))
+        throw "don't use quotes inside of quotes";
 
     const rootIsClean = await git.status();
     console.log("\nrootIsClean:", rootIsClean);
