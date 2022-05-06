@@ -75,3 +75,7 @@ to remove useless artifacts (heroku predeploy)
 ```
 yarn clean
 ```
+to push changes and deploy to heroku if necessary
+```
+yarn sync branchName "commit message"
+```
