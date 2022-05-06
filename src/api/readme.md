@@ -25,10 +25,10 @@ to
 API_URL=https://deaddrop-api-alpha.herokuapp.com/
 
 # Client
-# - https://deaddrop-dapp-alpha.herokuapp.com/      # Devel
-# - https://deaddrop-dapp-beta.herokuapp.com/       # Public Testing
-# - https://deaddrop-dapp.herokuapp.com/            # Production
-CLIENT_URL=http://localhost:3000
+# - https://deaddrop-dapp-alpha.herokuapp.com       # Devel
+# - https://deaddrop-dapp-beta.herokuapp.com        # Public Testing
+# - https://deaddrop-dapp.herokuapp.com             # Production
+CLIENT_URL=https://deaddrop-dapp-alpha.herokuapp.com
 
 
 # IPFS @ https://infura.io/
