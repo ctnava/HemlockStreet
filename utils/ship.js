@@ -8,10 +8,12 @@ function stageApi() {
         console.log("Previous build detected! Wiping...");
         const allFiles = fs.readdirSync(sink);
         allFiles.forEach(file => { 
-            const pathTo = sink + "/" + file;
-            const isDir = (fs.lstatSync(pathTo)).isDirectory();
-            if (isDir) fs.rmSync(pathTo, {recursive:true});
-            else fs.rmSync(pathTo);
+            if (file !== ".git") {
+                const pathTo = sink + "/" + file;
+                const isDir = (fs.lstatSync(pathTo)).isDirectory();
+                if (isDir) fs.rmSync(pathTo, {recursive:true});
+                else fs.rmSync(pathTo);
+            }
         });
     } else fs.mkdirSync(sink);
 
