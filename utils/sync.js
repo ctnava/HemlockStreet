@@ -35,7 +35,7 @@ const heroku = require('./heroku.js');
                 const staged = await heroku.stage(repo);
                 if (!staged) throw `staging failure @${repo}`;
                 else {
-                    const deployed = await heroku.deploy(repo);
+                    const deployed = await heroku.deploy(repo, commitMessage);
                     if (!deployed) throw `deployment failure @${repo}`;
                     else console.log(deployed);
                 }

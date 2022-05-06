@@ -74,13 +74,6 @@ async function stage(repo) {
 }
 
 
-async function deployApi() {
-    
-    
-    return;
-}
-
-
 async function deploy(repo) {
     const opts = {args:[repo, commitMessage]};
     const result = await powershell('ship', opts);
