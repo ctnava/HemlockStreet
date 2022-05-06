@@ -36,7 +36,7 @@ function Upload(props) {
 
 	const [pinTimer, setPinTimer] = useState(undefined);
 	useEffect(() => {
-		if (contractInput.hash.length !== 0 && pinTimer === undefined) setPinTimer(60);
+		if (contractInput.hash.length !== 0 && pinTimer === undefined && !request.transaction && !request.unpin && !request.pin) setPinTimer(60);
 	}, [contractInput, pinTimer]);
 
 	useEffect(() => {
@@ -53,7 +53,7 @@ function Upload(props) {
 
 	const [delTimer, setDelTimer] = useState(undefined);
 	useEffect(() => {
-		if (fileData !== null && delTimer === undefined && uploaded === true) setDelTimer(300);
+		if (fileData !== null && delTimer === undefined && uploaded === true && !request.transaction && !request.unpin && !request.pin) setDelTimer(300);
 	}, [fileData, delTimer, uploaded]);
 
 	useEffect(() => {
@@ -323,10 +323,10 @@ function Upload(props) {
 	<Row>
 		<Button 
 		onClick={contractInput.description.length !== 0 && contractInput.recipient.length === 42 && 
-		contractInput.recipient.slice(0,2) === "0x" && busy === false && 
-		(contractInput.hash.length === 0 ? handlePin : handleTx)} 
+		contractInput.recipient.slice(0,2) === "0x" && busy === false && !request.unpin && !request.pin && !request.transaction ? 
+		(contractInput.hash.length === 0 ? handlePin : handleTx):(console.log())} 
 		variant={contractInput.hash.length === 0 ? "warning" : "danger"}
-		>{contractInput.hash.length === 0 ? (pinning + timeLeft)  : "Transact || Time Left(" + pinTimer+ "s)"}</Button>
+		>{request.unpin ? "Unpinning..." : (contractInput.hash.length === 0 ? (pinning + timeLeft)  : "Transact || Time Left(" + pinTimer+ "s)")}</Button>
 	</Row>
 	</div>) }
 
