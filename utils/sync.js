@@ -12,7 +12,12 @@ async function synchronizeAll() {
     
     const rootIsClean = await git.status();
     console.log("rootIsClean:", rootIsClean);
-    if (!rootIsClean) await git.push("root", branch, commitMessage);
+
+    if (!rootIsClean) {
+        console.log("Committing Changes...");
+        const res = await git.push("root", branch, commitMessage);
+        console.log(res);
+    }
 
     var subRepos = fs.readdirSync("./src");
     subRepos = subRepos.filter(repo => !repo.includes("."));
@@ -20,8 +25,12 @@ async function synchronizeAll() {
         const pathTo = `src/${repo}`;
         const isClean = await git.status(pathTo);
         console.log(`${repo}IsClean:`, isClean);
-        repoStates.push(isClean);
-        if (!isClean) await git.push(pathTo, branch, commitMessage);
+
+        if (!isClean) {
+            console.log("Committing Changes...");
+            const res = await git.push(pathTo, branch, commitMessage);
+            console.log(res);
+        }
     }
 }
 

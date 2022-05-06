@@ -8,7 +8,7 @@ async function status(repo) {
 }
 
 async function push(repo, branch, commitMessage) {
-    const opts = {args:[repo, branch, commitMessage], v:true};
+    const opts = {args:[repo, branch, commitMessage]};
     await powershell('gitPush', opts);
     return;
 }
