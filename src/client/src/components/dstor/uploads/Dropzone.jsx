@@ -175,6 +175,7 @@ function Dropzone(props) {
             <div className="file">
                 <p>{props.pinningRate}</p>
                 <hr/>
+                <p>Prices refresh in {props.quoteTimer}s</p>
                 <p>First Month (to start) || ${(props.quote.bench / (10 ** 8))} USD as ~{(props.quote.gasBench) / (10 ** 18)} Tokens</p>
                 <p>Every Day After || ${(props.quote.perDiem / (10 ** 8))} USD as ~{(props.quote.gasPerDiem / (10 ** 18))} Tokens</p>
             </div>

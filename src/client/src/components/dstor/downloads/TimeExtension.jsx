@@ -19,7 +19,7 @@ function TimeExtension(props) {
         const fiatQuote = fiatPdFloat * props.request.days;
         const fqString = fiatQuote.toString();
         const ffqString = fqString.slice(0, fqString.indexOf(".") + 9);
-        return `Fee Total: $${ffqString} USD/ ${fgqString} Tokens (@ $${ffpdString} USD/ ${fgpdString} Tokens per day)`;
+        return `Fee Total: $${ffqString} USD/ ${fgqString} Tokens (@ $${ffpdString} USD/ ${fgpdString} Tokens per day) THIS FEATURE WILL BE CUT`;
     }
 
     return(<div>

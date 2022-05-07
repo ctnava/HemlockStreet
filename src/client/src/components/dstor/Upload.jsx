@@ -71,6 +71,20 @@ function Upload(props) {
 
 	const defaultQuote = { perDiem: 0, bench: 0, gasPerDiem: 0, gasBench: 0 };
 	const [quote, setQuote] = useState(defaultQuote);
+	const [quoteTimer, setQuoteTimer] = useState(undefined);
+	useEffect(() => {
+		if (quoteTimer !== undefined) {
+			if (quoteTimer === 0) {
+				console.log(quoteTimer);
+				setQuoteTimer(15);
+				if (fileData !== null) getQuote(fileData.size);
+			} else if (quoteTimer !== 0) {
+				const intervalId = setInterval(() => {setQuoteTimer(quoteTimer-1)}, 1000);
+				console.log(quoteTimer);
+				return () => clearInterval(intervalId);
+			}
+		} else if (quoteTimer === undefined && fileData !== null) setQuoteTimer(15);
+	}, [quoteTimer, fileData]);
 
 	function getQuote(numBytes) {
 		props.getQuotes(numBytes).then((quotes) => {
@@ -249,6 +263,7 @@ function Upload(props) {
 		setPinTimer={setPinTimer}
 
 		quote={quote}
+		quoteTimer={quoteTimer}
 		getQuote={getQuote}
 
 		contractInput={contractInput}
