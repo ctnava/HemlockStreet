@@ -55,18 +55,37 @@ async function getAllPinsOfType(thisType) {
 
 
 async function getAllPins() {
-    const ipfs = await createIpfsClient();
-    var remotePins = [];
-    for await (const pin of ipfs.pin.ls()) remotePins.push(pin.cid.toString());
-    console.log("remotePins:", remotePins.length);
-    return remotePins;
+    try {
+        const ipfs = await createIpfsClient();
+        var remotePins = [];
+        for await (const pin of ipfs.pin.ls()) remotePins.push(pin.cid.toString());
+        console.log("remotePins:", remotePins.length);
+        return remotePins;
+    } catch {getAllPins()}
 }
 
 
 async function addThenPin(buffer) {
-    const ipfs = await createIpfsClient();
-    const content = await ipfs.add({content: buffer});
-    const pinnedCid = await ipfs.pin.add(content.path.toString());
+    async function addToIPFS() {
+        try {
+            const ipfs = await createIpfsClient();
+            const content = await ipfs.add({content: buffer});
+            return content;
+        } catch {addToIPFS()}
+    }
+    const content = await addToIPFS();
+
+
+    async function pinToIPFS() {
+        try {
+            const ipfs = await createIpfsClient();
+            const pinnedCid = await ipfs.pin.add(content.path.toString());
+            return pinnedCid;
+        } catch {pinToIPFS()}
+    }
+    const pinnedCid = await pinToIPFS();
+
+    
     return (pinnedCid.toString());
 }
 
