@@ -19,13 +19,14 @@ function Home(props) {
 		<br/>
 		<br/>
 		<br/>
-		<ol>
+		<h1>Network Details || Metamask Config</h1>
+		<ul>
 			<li>Network Name: Not Important (I go with Mumbai)</li>
 			<li>New RPC URL: https://matic-mumbai.chainstacklabs.com</li>
 			<li>Chain ID: 80001</li>
 			<li>Currency Symbol: Not Important (I go with MATIC)</li>
 			<li>Block Explorer URL: https://mumbai.polygonscan.com/</li>
-		</ol>
+		</ul>
 	</div>);
 }
 
