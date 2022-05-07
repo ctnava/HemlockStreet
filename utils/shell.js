@@ -6,9 +6,11 @@ const ps = (require("os").platform() === "win32") ? "powershell.exe" : "pwsh";
 
 async function powershell(script, {args, v}) {
     var command = `${projectDir}/bin/${script}.ps1`
-    if (args.length > 0) args.forEach(arg=>{command=command.concat(` ${arg}`)});
-
-
+    if (args.length > 0) {
+        if (ps === "powershell.exe") args.forEach(arg=>{command=command.concat(` ${arg}`)});
+        if (ps === "pwsh") args.forEach(arg=>{command=command.concat(` ${arg}`)});
+    }
+    
     var output = "";
     await new Promise((resolve) => {
         const shell = require('child_process').spawn(ps, [command]);
