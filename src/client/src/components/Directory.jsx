@@ -33,7 +33,7 @@ function Directory(props) {
                   <Nav.Link as={Link} to="/">Home</Nav.Link>
 
                   { hasWeb3 && (
-                    <Nav.Link as={Link} to={hasWeb3 ? "/dstor" : "/"}>DStor</Nav.Link>
+                    <Nav.Link as={Link} to={hasWeb3 ? "/DeadDrop" : "/"}>DeadDrop</Nav.Link>
                   )/*Contains Dapps*/}
 
                   {/*!hasWeb3 && (

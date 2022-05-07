@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ethers } from "ethers";
 import Home from "./Home";
-import DStor from "./dstor/DStor";
+import DStor from "./dapps/dstor/DStor";
 
 
 function Routing(props) {
@@ -30,7 +30,7 @@ function Routing(props) {
             <Route path="/" element={<Home />} />
 
             { props.client.account && (
-                <Route path="/dstor" element={ <DStor loadContract={loadContract} client={props.client} /> } />
+                <Route path="/DeadDrop" element={ <DStor loadContract={loadContract} client={props.client} /> } />
             )}
 
             {/* !props.client.account && (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ethers } from "ethers";
 import Admin from "./Admin";
-import Locating from "../Locating";
+import Locating from "../../Locating";
 import ShowButton from "./ShowButton";
 import Upload from "./Upload";
 import Downloads from "./Downloads";
