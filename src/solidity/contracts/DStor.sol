@@ -124,13 +124,15 @@ contract DStor is Ownable {
 		uint count;
 		for (uint i = 0; i<= fileCount; i++) {
 			address toValidate = isSender ? files[i].uploader : files[i].recipient;
-			if (toValidate == msg.sender) { count++; }
+			bool isExpired = (block.timestamp > expirationDates[files[i].fileHash]);
+			if (toValidate == msg.sender && !isExpired) { count++; }
 		}
 		uint[] memory result = new uint[](count);
 		count = 0;
 		for (uint i = 0; i<= fileCount; i++) {
 			address toValidate = isSender ? files[i].uploader : files[i].recipient;
-			if (toValidate == msg.sender) {
+			bool isExpired = (block.timestamp > expirationDates[files[i].fileHash]);
+			if (toValidate == msg.sender && !isExpired) {
 				result[count] = i;
 				count++;
 			}
