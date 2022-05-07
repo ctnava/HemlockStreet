@@ -16,6 +16,16 @@ function Home(props) {
 		</p>
 		<a href="https://medium.com/stakingbits/how-to-connect-polygon-mumbai-testnet-to-metamask-fc3487a3871f">How to add Mumbai to your wallet</a><br/>
 		<a href="https://faucet.polygon.technology/">How to get MATIC for transactions</a>
+		<br/>
+		<br/>
+		<br/>
+		<ol>
+			<li>Network Name: Not Important (I go with Mumbai)</li>
+			<li>New RPC URL: https://matic-mumbai.chainstacklabs.com</li>
+			<li>Chain ID: 80001</li>
+			<li>Currency Symbol: Not Important (I go with MATIC)</li>
+			<li>Block Explorer URL: https://mumbai.polygonscan.com/</li>
+		</ol>
 	</div>);
 }
 
