@@ -7,7 +7,7 @@ for more details, refer to readme files in the individual project "root" folders
 ## Mandatory .env values
 ```
 # Utils
-PS_SUBDIR=/utils # for "./utils/bash.js"
+PS_SUBDIR=/utils # for "./utils/bash.js" NOT REQUIRED IF IN ROOT
 
 
 # Client

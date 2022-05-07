@@ -1,6 +1,7 @@
 require("dotenv").config();
 const subdir = (process.env.PS_SUBDIR) ? process.env.PS_SUBDIR : "";
 const projectDir = __dirname.slice(0, __dirname.length - (subdir.length));
+const ps = (require("os").platform() === "win32") ? "powershell.exe" : "pwsh";
 
 
 async function powershell(script, {args, v}) {
@@ -10,7 +11,7 @@ async function powershell(script, {args, v}) {
 
     var output = "";
     await new Promise((resolve) => {
-        shell = require('child_process').spawn("powershell.exe",[command]);
+        const shell = require('child_process').spawn(ps, [command]);
         shell.stdout.on("data", (data)=>{
             if (v) console.log(`${data}`);
             output = output.concat(data);
