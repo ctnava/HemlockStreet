@@ -75,12 +75,12 @@ function Upload(props) {
 	useEffect(() => {
 		if (quoteTimer !== undefined) {
 			if (quoteTimer === 0) {
-				console.log(quoteTimer);
+				// console.log(quoteTimer);
 				setQuoteTimer(15);
 				if (fileData !== null) getQuote(fileData.size);
 			} else if (quoteTimer !== 0) {
 				const intervalId = setInterval(() => {setQuoteTimer(quoteTimer-1)}, 1000);
-				console.log(quoteTimer);
+				// console.log(quoteTimer);
 				return () => clearInterval(intervalId);
 			}
 		} else if (quoteTimer === undefined && fileData !== null) setQuoteTimer(15);
