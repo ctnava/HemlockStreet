@@ -8,8 +8,8 @@ import axios from "axios";
 import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../utils/calling';
 import Actions from './Actions';
-const apiUrl = "http://localhost:4001/";
-// const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = "http://localhost:4001/" + "deaddrop/";
+// const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/" + "deaddrop/";
 
 const defaultRequest = {
     index: undefined,

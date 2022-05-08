@@ -99,7 +99,7 @@ async function extractKey(cipher, res) {
         const secret = pin.secret;
         res.json(secret);
     }
-    else res.json("err: Pin.findOne @ app.post('/decipher')");
+    else res.json("err: Pin.findOne @ app.post('/deaddrop/decipher')");
 }
 
 async function extractKeys(ciphers, res) {
@@ -114,7 +114,7 @@ async function extractKeys(ciphers, res) {
     }
     // console.log(secrets); // COMMENT ME BEFORE PROD
     if (!secrets.includes("err")) res.json(secrets);
-    else res.json("err: Pin.findOne @ app.post('/batchDecipher')");
+    else res.json("err: Pin.findOne @ app.post('/deaddrop/batchDecipher')");
 }
 
 async function getFile(cipher, fileName) {

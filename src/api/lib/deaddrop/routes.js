@@ -23,7 +23,7 @@ const { findPin } = require("./pins.js");
 
 
 function serviceRoutes(app) {
-    app.route('/upload')
+    app.route('/deaddrop/upload')
     .post((req, res) => {
         const { ext, chunk, chunkIndex, totalChunks } = JSON.parse(req.body.toString());
         // idx, num, tot, isFirst, isLast, percent, contents
@@ -45,7 +45,7 @@ function serviceRoutes(app) {
     }).delete((req, res) => { deleteFiles(req.body.fileName, "upload", res) });
 
 
-    app.route('/pin')
+    app.route('/deaddrop/pin')
     .post((req, res) => {
         const { fileName, contractMetadata, contractInput } = req.body;
         // console.log(contractInput);
@@ -71,7 +71,7 @@ function serviceRoutes(app) {
             const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
             const contract = Contract(address, abi, chainId);
             const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
-            if (failure === true) res.json("err: bad addr/chainId @ app.patch('/pin')");
+            if (failure === true) res.json("err: bad addr/chainId @ app.patch('/deaddrop/pin')");
             else {
                 contract.expirationDates(cipher)
                 .then(rawExpDate => {
@@ -84,26 +84,26 @@ function serviceRoutes(app) {
                                 updatePin(cipher, (pin.expDate + 900))
                                 .then(success => {
                                     if (success === true) res.json("success");
-                                    else res.json("err: updatePin @ app.patch('/pin')");
+                                    else res.json("err: updatePin @ app.patch('/deaddrop/pin')");
                                 });
-                            } else res.json("err: already extended @ app.patch('/pin')");
+                            } else res.json("err: already extended @ app.patch('/deaddrop/pin')");
                         });
-                    } else res.json("err: cannot extend existing pin @ app.patch('/pin')");
+                    } else res.json("err: cannot extend existing pin @ app.patch('/deaddrop/pin')");
                 });
             } 
-        } else res.json("err: empty cipher @ app.patch('/pin')");
+        } else res.json("err: empty cipher @ app.patch('/deaddrop/pin')");
     })
     .delete((req, res) => {
         const { hash, cipher } = req.body;
         // console.log(req.body);
         unpin(hash, cipher).then(success => {
         if (success === true) res.json("success");
-        else res.json("err: unpin @ app.delete('/pin')");
+        else res.json("err: unpin @ app.delete('/deaddrop/pin')");
         });
     });
 
 
-    app.route('/transaction')
+    app.route('/deaddrop/transaction')
     .post((req, res) => {
         const { contractMetadata, hash, cipher } = req.body;
         // console.log(contractMetadata);
@@ -112,19 +112,19 @@ function serviceRoutes(app) {
         const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
         const contract = Contract(address, abi, chainId);
         const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
-        if (failure === true) res.json("err: bad addr/chainId @ app.post('/transaction')");
+        if (failure === true) res.json("err: bad addr/chainId @ app.post('/deaddrop/transaction')");
         else {
             contract.expirationDates(cipher).then(rawExpDate => {
                 const expDate = parseInt(rawExpDate.toString());
                 if (expDate === 0) { 
                 unpin(hash, cipher).then(success => {
                     if (success === true) res.json("err: failure to pay");
-                    else res.json("err: unpin @ app.post('/transaction')");
+                    else res.json("err: unpin @ app.post('/deaddrop/transaction')");
                 });
                 } else {
                 updatePin(cipher, expDate).then(success => {
                     if (success === true) res.json("success");
-                    else res.json("err: updatePin @ app.post('/transaction')");
+                    else res.json("err: updatePin @ app.post('/deaddrop/transaction')");
                 });
                 }
             });
@@ -136,7 +136,7 @@ function serviceRoutes(app) {
         const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
         const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
         const contract = getContract(address, abi, chainId);
-        if (contract === "unsupported/address") res.json("err: bad addr @ app.patch('/transaction')");
+        if (contract === "unsupported/address") res.json("err: bad addr @ app.patch('/deaddrop/transaction')");
         else {
             contract.expirationDates(cipher).then(rawExpDate => {
                 const expDate = parseInt(rawExpDate.toString());
@@ -144,7 +144,7 @@ function serviceRoutes(app) {
                 // console.log(expDate);
                 updatePin(cipher, expDate).then(success => {
                     if (success === true) res.json("success");
-                    else res.json("err: updatePin @ app.patch('/transaction')");
+                    else res.json("err: updatePin @ app.patch('/deaddrop/transaction')");
                 });
                 }
             });
@@ -152,7 +152,7 @@ function serviceRoutes(app) {
     });
 
 
-    app.post('/decipher', (req, res) => {
+    app.post('/deaddrop/decipher', (req, res) => {
         const { cipher, signature } = req.body;
         // console.log(req.body);
         if (cipher !== undefined && cipher !== null
@@ -160,13 +160,13 @@ function serviceRoutes(app) {
             verifyMessage(cipher, signature).then((verdict) => {
             if (verdict === true) {
                 extractKey(cipher, res);
-            } else res.json("err: signature failure @ app.post('/decipher')");
+            } else res.json("err: signature failure @ app.post('/deaddrop/decipher')");
             });
-        } else res.json("err: empty cipher @ app.post('/decipher')");
+        } else res.json("err: empty cipher @ app.post('/deaddrop/decipher')");
     });
 
 
-    app.post('/batchDecipher', (req, res) => {
+    app.post('/deaddrop/batchDecipher', (req, res) => {
         const { ciphers, signature } = req.body;
         // console.log(req.body);
         if (ciphers !== undefined && ciphers !== null
@@ -174,27 +174,27 @@ function serviceRoutes(app) {
             verifyMessages(ciphers, signature).then((verdict) => {
             if (verdict === true) {
                 extractKeys(ciphers, res);
-            } else res.json("err: signature failure @ app.post('/batchDecipher')");
+            } else res.json("err: signature failure @ app.post('/deaddrop/batchDecipher')");
             });
-        } else res.json("err: empty cipher @ app.post('/batchDecipher')");
+        } else res.json("err: empty cipher @ app.post('/deaddrop/batchDecipher')");
     });
 
 
-    app.route('/download')
+    app.route('/deaddrop/download')
     .post((req, res) => {
         const { cipher, signature, fileName } = req.body;
         // console.log(req.body);
         const emptyInputs = (cipher === undefined || cipher === null) ||
         (signature === undefined || signature === null) ||
         (fileName === 'undefined.undefined' || fileName === undefined || fileName === null);
-        if (emptyInputs) res.json("err: empty cipher @ app.post('/download')");
+        if (emptyInputs) res.json("err: empty cipher @ app.post('/deaddrop/download')");
         else {
             verifyMessage(cipher, signature).then((verdict) => {
-                if (verdict !== true) res.json("err: signature failure @ app.post('/download')");
+                if (verdict !== true) res.json("err: signature failure @ app.post('/deaddrop/download')");
                 else {
                 getFile(cipher, fileName).then(cid => {
                     if (cid !== false) res.status(200).json(`${cid}`);
-                    else res.json("err: Pin.findOne @ app.post('/download')");
+                    else res.json("err: Pin.findOne @ app.post('/deaddrop/download')");
                 });
                 }
             });
@@ -203,7 +203,7 @@ function serviceRoutes(app) {
     .delete((req, res) => {
         const { cid } = req.body;
         try {
-            fs.rmSync(`./downloads/decrypted/${cid}`, { recursive: true });
+            fs.rmSync(`./temp/deaddrop/downloads/decrypted/${cid}`, { recursive: true });
             res.json("success");
         } catch (err) { res.json(err) }
     });
@@ -212,7 +212,7 @@ function serviceRoutes(app) {
 
 function maintainenceRoutes(app) {
     var activeSweep = false; 
-    app.post("/sweep", (req, res) => {
+    app.post("/deaddrop/sweep", (req, res) => {
         if (activeSweep === true) res.json('err: already active');
         else {
             activeSweep = true;
@@ -220,7 +220,7 @@ function maintainenceRoutes(app) {
             .then((success) => {
                 activeSweep = false;
                 if (success === true) res.json("success");
-                else res.json("err: searchDB @ app.post('/sweep')"); 
+                else res.json("err: searchDB @ app.post('/deaddrop/sweep')"); 
             });
         }
     });
