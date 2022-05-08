@@ -9,12 +9,12 @@ const git = require('./shell/git.js');
         (from.includes("hotfix") && to === "main") ||
 
         (from === "main"  && to === from.includes("hotfix")) ||
-        (from === "devel" && to === from.includes("release")) || 
+        (from.includes("devel") && to === from.includes("release")) || 
         
-        (from === "main" && to === "devel") || 
-        (from.includes("release") && to === "devel") || 
-        (from.includes("hotfix") && to === "devel") || 
-        (from.includes("feature") && to === "devel") || 
+        (from === "main" && to.includes("devel")) || 
+        (from.includes("release") && to.includes("devel")) || 
+        (from.includes("hotfix") && to.includes("devel")) || 
+        (from.includes("feature") && to.includes("devel")) || 
 
         (to.includes("feature"))
     );
