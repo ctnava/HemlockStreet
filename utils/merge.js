@@ -16,8 +16,7 @@ const fs = require('fs');
         (from.includes("hotfix") && to.includes("devel")) || 
         (from.includes("feature") && to.includes("devel")) || 
 
-        (from === "main")
-        (to.includes("feature"))
+        (from === "main") || (to.includes("feature"))
     );
 
     if (acceptableMerge) {
