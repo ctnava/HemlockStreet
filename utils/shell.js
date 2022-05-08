@@ -1,6 +1,4 @@
-require("dotenv").config();
-const subdir = (process.env.PS_SUBDIR) ? process.env.PS_SUBDIR : "";
-const projectDir = __dirname.slice(0, __dirname.length - (subdir.length));
+const projectDir = __dirname.slice(0, __dirname.length - ("/utils".length));
 const ps = (require("os").platform() === "win32") ? "powershell.exe" : "pwsh";
 
 

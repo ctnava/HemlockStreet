@@ -62,7 +62,7 @@ function getProvider(chainId) {
 }
 
 const mainnetAccount = [process.env.MAINNET_KEY];
-const bank = fs.readFileSync("./utils/testnetBank.json");
+const bank = fs.readFileSync("./data/testnetBank.json");
 const testnetAccounts = (JSON.parse(bank)).privateKeys;
 
 
