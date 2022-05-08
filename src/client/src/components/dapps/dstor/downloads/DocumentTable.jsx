@@ -8,8 +8,9 @@ import axios from "axios";
 import TimeExtension from './TimeExtension';
 import { formatMsgVal } from '../../utils/calling';
 import Actions from './Actions';
-const apiUrl = "http://localhost:4001/" + "deaddrop/";
-// const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/" + "deaddrop/";
+const baseUrl = "http://localhost:4001/";
+// const baseUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = baseUrl + "deaddrop/";
 
 const defaultRequest = {
     index: undefined,
@@ -203,9 +204,9 @@ function DocumentTable(props) {
             axios.post(apiUrl + "decipher", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 const errors = [
-                    "err: Pin.findOne @ app.post('/decipher')",
-                    "err: signature failure @ app.post('/decipher')",
-                    "err: empty cipher @ app.post('/decipher')"
+                    "err: Pin.findOne @ app.post('/deaddrop/decipher')",
+                    "err: signature failure @ app.post('/deaddrop/decipher')",
+                    "err: empty cipher @ app.post('/deaddrop/decipher')"
                 ];
                 if (!errors.includes(res.data)) setSecrets(prev => [...prev, {id:id, key:res.data}]);
                 else console.log(res);
@@ -282,12 +283,12 @@ function DocumentTable(props) {
             axios.post(apiUrl + "download", data, {'Content-Type': 'application/json'})
             .then((res) => {
                 const errors = [
-                    "err: Pin.findOne @ app.post('/download')",
-                    "err: signature failure @ app.post('/download')",
-                    "err: empty cipher @ app.post('/download')"
+                    "err: Pin.findOne @ app.post('/deaddrop/download')",
+                    "err: signature failure @ app.post('/deaddrop/download')",
+                    "err: empty cipher @ app.post('/deaddrop/download')"
                 ];
                 if (!errors.includes(res.data)) {
-                    setLinks(prev => [...prev, {id:id, link:`${apiUrl}downloads/decrypted/${res.data}/${fileName}`}]);
+                    setLinks(prev => [...prev, {id:id, link:`${baseUrl}temp/deaddrop/downloads/decrypted/${res.data}/${fileName}`}]);
                 }
                 else console.log(res);
             });
