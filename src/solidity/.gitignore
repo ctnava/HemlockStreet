@@ -20,7 +20,7 @@
 /typechain
 
 /artifacts
-/cache
+/cache 
 /coverage
 /coverage.json
 

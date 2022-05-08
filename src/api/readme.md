@@ -4,7 +4,7 @@ Documentation for the Web2 backend for the deadDrop Dapp
 ## HEROKU DEPLOYMENT
 Required changes for successful deployment
 ### New App?
-Change package.json
+Change package.json 
 ```
 rename
 "@chilkat/ck-node16-win64" to "@chilkat/ck-node16-linux64"
