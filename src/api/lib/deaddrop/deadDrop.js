@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const { promises } = require('fs');
 const { rmPin, addThenPin, createAndFetch } = require("../utils/ipfs.js");
-const { encryptInputs, encryptFile, quickEncrypt, quickDecrypt, unlockZip } = require("../utils/encryption.js");
+const { encryptInputs, encryptFile, quickEncrypt, quickDecrypt, unlockZip } = require("./encryption.js");
 const { saveNewPin, findPin, updatePinExp, deletePin } = require("./pins.js");
 const messageKey = process.env.BC_KEY;
 
@@ -126,8 +126,8 @@ async function getFile(cipher, fileName) {
     const cid = pin.plain;
     const secret = pin.secret;
 
-    const pathToZip = `./downloads/${cid}.zip`;
-    const exportDir = `./downloads/decrypted/${cid}`;
+    const pathToZip = `./temp/deaddrop/downloads/${cid}.zip`;
+    const exportDir = `./temp/deaddrop/downloads/decrypted/${cid}`;
 
     const pathToFile = `${exportDir}/${fileName}`;
     if (fs.existsSync(pathToFile)) return cid;

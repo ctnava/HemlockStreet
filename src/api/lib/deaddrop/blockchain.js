@@ -2,7 +2,7 @@ require('dotenv').config();
 const messageKey = process.env.BC_KEY;
 const { quickDecrypt } = require("../utils/encryption.js");
 const { findPin } = require("./pins.js");
-const { loadContract, verifySignature, signerAddress } = require("../utils/blockchain.js");
+const { Contract, loadContract, verifySignature, signerAddress } = require("../utils/blockchain.js");
 
 
 async function getCachedContract(cipher) {
@@ -18,8 +18,8 @@ async function verifyMessage(cipher, signature) {
   if (contract === "unsupported/chainId") return false;
 
   const [from, to] = await contract.getAddresses(cipher);
-  const isSender = verifySignature(message, signature, from);
-  const isReceiver = verifySignature(message, signature, to);
+  const isSender = verifySignature(cipher, signature, from);
+  const isReceiver = verifySignature(cipher, signature, to);
 
   return (isSender || isReceiver);
 }
@@ -48,4 +48,4 @@ async function verifyMessages(ciphers, signature) {
 }
 
 
-module.exports = { getCachedContract, verifyMessage, verifyMessages }
+module.exports = { getCachedContract, verifyMessage, verifyMessages, Contract, loadContract, verifySignature, signerAddress }

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const archiver = require('archiver');
-const { quickEncrypt, garble } = require("../utils/encryption.js");
+const { garble, quickEncrypt, quickDecrypt, unlockZip } = require("../utils/encryption.js");
 
 function encryptInputs(cid, contractInput, key) {
     const encryptedInputs = {
@@ -60,4 +60,4 @@ async function encryptFile(fileName, key) {
 }
 
 
-module.exports = { encryptInputs, encryptFile }
+module.exports = { encryptInputs, encryptFile, quickEncrypt, quickDecrypt, unlockZip }

@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const { uploadPaths, uploadedPaths } = require("./dirs.js");
 const { uploadLabels, uploadedLabels } = require("./labels.js");
-const { verifyMessage, verifyMessages } = require("./blockchain.js");
+const { verifyMessage, verifyMessages, Contract } = require("./blockchain.js");
 
 const { deleteFiles } = require("./cleanup.js");
 const { garble, quickDecrypt } = require("../utils/encryption");
@@ -69,7 +69,7 @@ function serviceRoutes(app) {
             const chainId = contractMetadata.chainId;
             const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
             const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
-            const contract = getContract(address, abi, chainId);
+            const contract = Contract(address, abi, chainId);
             const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
             if (failure === true) res.json("err: bad addr/chainId @ app.patch('/pin')");
             else {
@@ -110,7 +110,7 @@ function serviceRoutes(app) {
         const chainId = contractMetadata.chainId;
         const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
         const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
-        const contract = getContract(address, abi, chainId);
+        const contract = Contract(address, abi, chainId);
         const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
         if (failure === true) res.json("err: bad addr/chainId @ app.post('/transaction')");
         else {
