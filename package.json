@@ -74,10 +74,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "merge": "node utils/merge.js",
-    "checkout": "node utils/checkout.js",
+    "delete": "node utils/git/delete.js",
+    "merge": "node utils/git/merge.js",
+    "checkout": "node utils/git/checkout.js",
     "installAll": "node utils/install.js",
-    "sync": "node utils/sync.js",
+    "sync": "node utils/git/sync.js",
     "clean": "node utils/cleanup.js",
     "sim": "npx hardhat node",
     "deploy": "npx hardhat run src/solidity/scripts/deploy.js --network localhost",

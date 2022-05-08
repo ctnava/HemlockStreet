@@ -42,11 +42,29 @@ async function merge(repo, branch) {
 }
 
 
+async function deleteLocal(repo, branch) {
+    const opts = {args:[repo, branch]};
+    await powershell('git/branch/delete/local', opts);
+    return;
+}
+
+
+async function deleteRemote(repo, branch) {
+    if (branch !== "main" && branch !== "devel") {
+        const opts = {args:[repo, branch]};
+        await powershell('git/branch/delete/remote', opts);
+        return;
+    } else throw "What the fuck dude?";
+}
+
+
 module.exports = {
     status,
     push,
     listBranches,
     createBranch,
     checkout,
-    merge
+    merge,
+    deleteLocal,
+    deleteRemote
 }

@@ -1,4 +1,4 @@
-const git = require('./shell/git.js');
+const git = require('../shell/git.js');
 const fs = require('fs');
 
 (async () => {
