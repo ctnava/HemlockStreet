@@ -1,4 +1,4 @@
-const {powershell} = require('./shell.js');
+const {powershell} = require('../shell.js');
 
 
 async function status(repo) {

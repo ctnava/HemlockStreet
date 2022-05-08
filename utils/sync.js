@@ -1,6 +1,6 @@
 const fs = require('fs');
-const git = require('./git.js');
-const heroku = require('./heroku.js');
+const git = require('./sync/git.js');
+const heroku = require('./sync/heroku.js');
 
 
 (async () => {

@@ -128,7 +128,7 @@ async function stage(repo) {
 
 async function deploy(repo, commitMessage) {
     const opts = {args:[`heroku/${repo}`, commitMessage]};
-    const result = await require('./shell.js').powershell('ship', opts);
+    const result = await require('../shell.js').powershell('ship', opts);
     return result;
 }
 
