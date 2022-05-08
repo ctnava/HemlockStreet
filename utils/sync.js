@@ -45,4 +45,8 @@ const heroku = require('./sync/heroku.js');
     }
 
     console.log("\nAll Repositories Synced!");
+    if (fs.existsSync("./heroku")) {
+        fs.rmSync("./heroku", {recursive:true});
+        console.log("\nHeroku Build Removed!\n");
+    }
 })();
