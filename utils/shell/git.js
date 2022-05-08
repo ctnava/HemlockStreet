@@ -35,10 +35,18 @@ async function checkout(repo, branch) {
 }
 
 
+async function merge(repo, branch) {
+    const opts = {args:[repo, branch]};
+    await powershell('git/branch/merge', opts);
+    return;
+}
+
+
 module.exports = {
     status,
     push,
     listBranches,
     createBranch,
-    checkout
+    checkout,
+    merge
 }

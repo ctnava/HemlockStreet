@@ -1,4 +1,5 @@
 const git = require('./shell/git.js');
+const fs = require('fs');
 
 
 (async () => {
@@ -20,13 +21,13 @@ const git = require('./shell/git.js');
     );
 
     if (acceptableMerge) {
-        await git.checkout("root", from);
-        await git.merge("root", to);
+        await git.checkout("root", to);
+        await git.merge("root", from);
 
         const subRepos = (fs.readdirSync("./src")).filter(repo => !repo.includes("."));
         for await (const repo of subRepos) {
-            await git.checkout(`src/${repo}`, from);
-            await git.merge(`src/${repo}`, to);
+            await git.checkout(`src/${repo}`, to);
+            await git.merge(`src/${repo}`, from);
         }
 
         return;
