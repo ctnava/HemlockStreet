@@ -22,6 +22,7 @@ async function listBranches(repo) {
 
 
 async function createBranch(repo, branch) {
+    console.log(repo, branch)
     const opts = {args:[repo, branch]};
     await powershell('git/branch/create', opts);
     return;

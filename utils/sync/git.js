@@ -8,16 +8,19 @@ async function status(pathTo, repo) {
 }
 
 async function createBranch(pathTo, repo, branch) {
-    console.log(`\nScanning ${repo} for ${branch} branch`);
+    console.log(`\nScanning '${repo}' for ${branch} branch...`);
     const branches = await git.listBranches(pathTo);
 
     const branchNotPresent = !branches.includes(`* ${branch}`) && !branches.includes(branch);
     console.log(branchNotPresent ? "Not found! Branching..." : "Branch Found!");
 
     const isCurrentBranch = branches.includes(`* ${branch}`);
-    if (branchNotPresent) await git.createBranch("root", branch);
+    if (branchNotPresent) {
+        await git.createBranch("root", branch);
+        console.log("Branch Created!");
+    }
     else {
-        if (!isCurrentBranch) throw "branch exists, but is not current branch";
+        if (!isCurrentBranch) throw `fatal: '${branch}' exists and is not current branch`;
     } 
 }
 
