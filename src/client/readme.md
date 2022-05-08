@@ -6,7 +6,7 @@ removed "eslintConfig": { "extends": [ "react-app", "react-app/jest" ] }, from p
 you need to set the chainId for the localhost network on metamask to 31337 instead of 1337
 
 ## Possible .env values
-``` 
+```  
 # API
 # - https://deaddrop-api-alpha.herokuapp.com/       # Devel
 # - https://deaddrop-api-beta.herokuapp.com/        # Public Testing
