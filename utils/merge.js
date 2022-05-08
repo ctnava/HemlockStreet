@@ -9,14 +9,14 @@ const fs = require('fs');
         (from.includes("release") && to === "main") || 
         (from.includes("hotfix") && to === "main") ||
 
-        (from === "main"  && to === from.includes("hotfix")) ||
-        (from.includes("devel") && to === from.includes("release")) || 
+        (from.includes("devel") && from.includes("release")) || 
         
         (from === "main" && to.includes("devel")) || 
         (from.includes("release") && to.includes("devel")) || 
         (from.includes("hotfix") && to.includes("devel")) || 
         (from.includes("feature") && to.includes("devel")) || 
 
+        (from === "main")
         (to.includes("feature"))
     );
 
