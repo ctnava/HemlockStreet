@@ -28,9 +28,17 @@ async function createBranch(repo, branch) {
 }
 
 
+async function checkout(repo, branch) {
+    const opts = {args:[repo, branch]};
+    await powershell('git/branch/checkout', opts);
+    return;
+}
+
+
 module.exports = {
     status,
     push,
     listBranches,
-    createBranch
+    createBranch,
+    checkout
 }

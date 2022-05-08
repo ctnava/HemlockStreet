@@ -74,6 +74,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "checkout": "node utils/checkout.js",
     "instAll": "node utils/install.js",
     "sync": "node utils/sync.js",
     "clean": "node utils/cleanup.js",
