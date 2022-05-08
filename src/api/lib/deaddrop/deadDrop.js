@@ -44,7 +44,7 @@ function saveAndValidate(entry, res) {
     const encryptedInputs = encryptInputs(plain, inputs, secret);
     const rehashed = quickEncrypt(encryptedInputs.hash, messageKey);
     // console.log(encryptedInputs); // COMMENT ME BEFORE PROD
-    console.log("plain", plain); // COMMENT ME BEFORE PROD
+    // console.log("plain", plain); // COMMENT ME BEFORE PROD
     // console.log("cipher", encryptedInputs.hash); // COMMENT ME BEFORE PROD
     // console.log("rehashed", rehashed); // COMMENT ME BEFORE PROD
     

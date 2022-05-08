@@ -48,4 +48,8 @@ async function verifyMessages(ciphers, signature) {
 }
 
 
-module.exports = { getCachedContract, verifyMessage, verifyMessages, Contract, loadContract, verifySignature, signerAddress }
+module.exports = { 
+  getCachedContract, verifyMessage, verifyMessages, 
+
+  Contract, loadContract, verifySignature, signerAddress 
+};

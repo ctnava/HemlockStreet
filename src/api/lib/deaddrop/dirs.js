@@ -1,5 +1,5 @@
-function uploadPath(fileName) { return `./temp/deaddrop/uploads/${fileName}` }
-function encryptedPath(fileName) { return `./temp/deaddrop/uploads/encrypted/${fileName}` }
+const uploadPath = (fileName) => { return `./temp/deaddrop/uploads/${fileName}` }
+const encryptedPath = (fileName) => { return `./temp/deaddrop/uploads/encrypted/${fileName}` }
 
 function uploadPaths(fileNames) {
     const temp = uploadPath(fileNames.tmp);

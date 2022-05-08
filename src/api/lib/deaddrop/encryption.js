@@ -60,4 +60,8 @@ async function encryptFile(fileName, key) {
 }
 
 
-module.exports = { encryptInputs, encryptFile, quickEncrypt, quickDecrypt, unlockZip }
+module.exports = { 
+  encryptInputs, encryptFile, 
+  
+  garble, quickEncrypt, quickDecrypt, unlockZip 
+}

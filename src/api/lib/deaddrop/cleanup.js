@@ -6,7 +6,7 @@ const { findAllPins, deleteExpiredPins } = require('./pins.js');
 
 function deleteFiles(fileName, route, res) {
   console.log("Deletion requested...");
-  if (fileName === undefined) res.json(`err: fileName undefined @ app.delete('/${route}')`);
+  if (fileName === undefined) res.json(`err: fileName undefined @ app.delete('/deaddrop/${route}')`);
   // file, trash, zip
   const pathTo = uploadedPaths(uploadedLabels(fileName));
 
@@ -28,55 +28,61 @@ function deleteFiles(fileName, route, res) {
 }
 
 
+const pathToUploads = "./temp/deaddrop/uploads";
+const pathToDownloads = "./temp/deaddrop/downloads";
 function sweepFiles() {
-    const withEnc = fs.readdirSync('./temp/deaddrop/uploads');
+    const withEnc = fs.readdirSync(pathToUploads);
     const uploads = withEnc.filter(e => {return (e != 'encrypted')});
     // console.log(uploads);
     uploads.forEach(file => {
         try {
-            const stats = fs.statSync('./temp/deaddrop/uploads/' + file);
+            const pathToFile = `${pathToUploads}/${file}`;
+            const stats = fs.statSync(pathToFile);
             // console.log(stats.mtime);
             let seconds = (new Date().getTime() - stats.mtime) / 1000;
             const isExpired = (file.slice(0,4) === 'tmp_' && seconds > 5) || 
             (file.slice(file.indexOf("."), file.length - 1) === 'trash' && seconds > 60) || 
             (seconds > 300);
-            if (isExpired) fs.unlinkSync('./temp/deaddrop/uploads/' + file);
+            if (isExpired) fs.unlinkSync(pathToFile);
         } catch(err) {console.log(err)}
     });
 
-    const withActive = fs.readdirSync('./temp/deaddrop/uploads/encrypted');
+    const withActive = fs.readdirSync(`${pathToUploads}/encrypted`);
     const encrypted = withActive.filter(e => {return (e != 'active')});
     // console.log(encrypted);
     encrypted.forEach(file => {
         try {
-            const stats = fs.statSync('./temp/deaddrop/uploads/encrypted/' + file);
+            const pathToFile = `${pathToUploads}/encrypted/${file}`;
+            const stats = fs.statSync(pathToFile);
             // console.log(stats.mtime);
             let seconds = (new Date().getTime() - stats.mtime) / 1000;
-            if (seconds > 60) fs.unlinkSync('./temp/deaddrop/uploads/encrypted/' + file);
+            if (seconds > 60) fs.unlinkSync(pathToFile);
         } catch(err) {console.log(err)}
     });
 
-    const withDec = fs.readdirSync('./temp/deaddrop/downloads');
+    const withDec = fs.readdirSync(pathToDownloads);
     const downloads = withDec.filter(e => {return e != 'decrypted'});
     // console.log(uploads);
     downloads.forEach(file => {
         try {
-            const stats = fs.statSync('./temp/deaddrop/downloads/' + file);
+            const pathToFile = `${pathToDownloads}/${file}`;
+            const stats = fs.statSync(pathToFile);
             // console.log(stats.mtime);
             let seconds = (new Date().getTime() - stats.mtime) / 1000;
             const isExpired = (seconds > 5);
-            if (isExpired) fs.unlinkSync('./temp/deaddrop/downloads/' + file);
+            if (isExpired) fs.unlinkSync(pathToFile);
         } catch(err) {console.log(err)}
     });
 
-    const decrypted = fs.readdirSync('./temp/deaddrop/downloads/decrypted');
+    const decrypted = fs.readdirSync(`${pathToDownloads}/decrypted`);
     // console.log(decrypted);
     decrypted.forEach(file => {
         try {
-            const stats = fs.statSync('./temp/deaddrop/downloads/decrypted/' + file);
+            const pathToFile = `${pathToDownloads}/decrypted/${file}`;
+            const stats = fs.statSync(pathToFile);
             // console.log(stats.mtime);
             let seconds = (new Date().getTime() - stats.mtime) / 1000;
-            if (seconds > 900) fs.rmSync('./temp/deaddrop/downloads/decrypted/' + file, {recursive: true});
+            if (seconds > 900) fs.rmSync(pathToFile, {recursive: true});
         } catch(err) {console.log(err)}
     });
 }

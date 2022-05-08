@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const { uploadPaths, uploadedPaths } = require("./dirs.js");
 const { uploadLabels, uploadedLabels } = require("./labels.js");
-const { verifyMessage, verifyMessages, Contract } = require("./blockchain.js");
+const { verifyMessage, verifyMessages, getCachedContract } = require("./blockchain.js");
 
 const { deleteFiles } = require("./cleanup.js");
 const { garble, quickDecrypt } = require("../utils/encryption");
@@ -48,7 +48,6 @@ function serviceRoutes(app) {
     app.route('/deaddrop/pin')
     .post((req, res) => {
         const { fileName, contractMetadata, contractInput } = req.body;
-        // console.log(contractInput);
         const nameOf = uploadedLabels(fileName);
         const pathTo = uploadedPaths(nameOf);
         const secret = garble(127);
@@ -66,31 +65,29 @@ function serviceRoutes(app) {
         if (contractMetadata !== null && contractMetadata !== undefined &&
             hash !== null && hash !== undefined &&
             cipher !== null && cipher !== undefined) {
-            const chainId = contractMetadata.chainId;
-            const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
-            const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
-            const contract = Contract(address, abi, chainId);
-            const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
-            if (failure === true) res.json("err: bad addr/chainId @ app.patch('/deaddrop/pin')");
-            else {
-                contract.expirationDates(cipher)
-                .then(rawExpDate => {
-                    if (parseInt(rawExpDate.toString()) === 0) {
-                        findPin(quickDecrypt(cipher, messageKey))
-                        .then(pin => {
-                            const now = Math.floor(Date.now() / 1000);
-                            const remainder = pin.expDate - now;
-                            if (remainder < 60 && remainder > 0) {
-                                updatePin(cipher, (pin.expDate + 900))
-                                .then(success => {
-                                    if (success === true) res.json("success");
-                                    else res.json("err: updatePin @ app.patch('/deaddrop/pin')");
-                                });
-                            } else res.json("err: already extended @ app.patch('/deaddrop/pin')");
-                        });
-                    } else res.json("err: cannot extend existing pin @ app.patch('/deaddrop/pin')");
-                });
-            } 
+            getCachedContract(cipher)
+            .then(contract => {
+                if (contract === "unsupported/chainId") res.json("err: bad addr/chainId @ app.patch('/deaddrop/pin')");
+                else {
+                    contract.expirationDates(cipher)
+                    .then(rawExpDate => {
+                        if (parseInt(rawExpDate.toString()) === 0) {
+                            findPin(quickDecrypt(cipher, messageKey))
+                            .then(pin => {
+                                const now = Math.floor(Date.now() / 1000);
+                                const remainder = pin.expDate - now;
+                                if (remainder < 60 && remainder > 0) {
+                                    updatePin(cipher, (pin.expDate + 900))
+                                    .then(success => {
+                                        if (success === true) res.json("success");
+                                        else res.json("err: updatePin @ app.patch('/deaddrop/pin')");
+                                    });
+                                } else res.json("err: already extended @ app.patch('/deaddrop/pin')");
+                            });
+                        } else res.json("err: cannot extend existing pin @ app.patch('/deaddrop/pin')");
+                    });
+                } 
+            });
         } else res.json("err: empty cipher @ app.patch('/deaddrop/pin')");
     })
     .delete((req, res) => {
@@ -105,50 +102,47 @@ function serviceRoutes(app) {
 
     app.route('/deaddrop/transaction')
     .post((req, res) => {
-        const { contractMetadata, hash, cipher } = req.body;
-        // console.log(contractMetadata);
-        const chainId = contractMetadata.chainId;
-        const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
-        const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
-        const contract = Contract(address, abi, chainId);
-        const failure = (contract === "unsupported/address" || contract === "unsupported/chainId");
-        if (failure === true) res.json("err: bad addr/chainId @ app.post('/deaddrop/transaction')");
-        else {
-            contract.expirationDates(cipher).then(rawExpDate => {
-                const expDate = parseInt(rawExpDate.toString());
-                if (expDate === 0) { 
-                unpin(hash, cipher).then(success => {
-                    if (success === true) res.json("err: failure to pay");
-                    else res.json("err: unpin @ app.post('/deaddrop/transaction')");
+        const { hash, cipher } = req.body;
+        getCachedContract(cipher)
+        .then(contract => {
+            if (contract === "unsupported/chainId") res.json("err: bad addr/chainId @ app.post('/deaddrop/transaction')");
+            else {
+                contract.expirationDates(cipher).then(rawExpDate => {
+                    const expDate = parseInt(rawExpDate.toString());
+                    if (expDate === 0) { 
+                    unpin(hash, cipher).then(success => {
+                        if (success === true) res.json("err: failure to pay");
+                        else res.json("err: unpin @ app.post('/deaddrop/transaction')");
+                    });
+                    } else {
+                    updatePin(cipher, expDate).then(success => {
+                        if (success === true) res.json("success");
+                        else res.json("err: updatePin @ app.post('/deaddrop/transaction')");
+                    });
+                    }
                 });
-                } else {
-                updatePin(cipher, expDate).then(success => {
-                    if (success === true) res.json("success");
-                    else res.json("err: updatePin @ app.post('/deaddrop/transaction')");
-                });
-                }
-            });
-        }
+            }
+        });
     })
     .patch((req, res) => {
-        const { contractMetadata, cipher } = req.body;
-        const chainId = contractMetadata.chainId;
-        const abi = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor.json`))).abi;
-        const address = (JSON.parse(fs.readFileSync(`./data/${chainId}/DStor-address.json`))).address;
-        const contract = getContract(address, abi, chainId);
-        if (contract === "unsupported/address") res.json("err: bad addr @ app.patch('/deaddrop/transaction')");
-        else {
-            contract.expirationDates(cipher).then(rawExpDate => {
-                const expDate = parseInt(rawExpDate.toString());
-                if (expDate !== 0) {
-                // console.log(expDate);
-                updatePin(cipher, expDate).then(success => {
-                    if (success === true) res.json("success");
-                    else res.json("err: updatePin @ app.patch('/deaddrop/transaction')");
+        const { cipher } = req.body;
+        getCachedContract(cipher)
+        .then(contract => {
+            if (contract === "unsupported/chainId") res.json("err: bad addr @ app.patch('/deaddrop/transaction')");
+            else {
+                contract.expirationDates(cipher)
+                .then(rawExpDate => {
+                    const expDate = parseInt(rawExpDate.toString());
+                    if (expDate !== 0) {
+                    // console.log(expDate);
+                    updatePin(cipher, expDate).then(success => {
+                        if (success === true) res.json("success");
+                        else res.json("err: updatePin @ app.patch('/deaddrop/transaction')");
+                    });
+                    }
                 });
-                }
-            });
-        }
+            }
+        });
     });
 
 
