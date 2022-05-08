@@ -8,9 +8,9 @@ async function status(pathTo, repo) {
 }
 
 async function createBranch(pathTo, repo, branch) {
-    console.log(`Scanning ${repo} for ${branch} branch`);
+    console.log(`\nScanning ${repo} for ${branch} branch`);
     const branches = await git.listBranches(pathTo);
-    
+
     const branchNotPresent = !branches.includes(`* ${branch}`) && !branches.includes(branch);
     console.log(branchNotPresent ? "Not found! Branching..." : "Branch Found!");
 
