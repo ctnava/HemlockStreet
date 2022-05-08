@@ -26,11 +26,8 @@ async function createBranch(pathTo, repo, branch) {
 
 async function synchronize(pathTo, repo, branch, message) {
     await createBranch(pathTo, repo, branch);
-    const isClean = await git.status(pathTo, repo);
-    if (!isClean) {
-        console.log("Committing Changes...");
-        await git.push(pathTo, branch, message);
-    }
+    const isClean = await status(pathTo, repo);
+    if (!isClean) {await git.push(pathTo, branch, message)}
     return isClean;
 }
 
