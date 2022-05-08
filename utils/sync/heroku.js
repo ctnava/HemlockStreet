@@ -1,4 +1,7 @@
 const fs = require('fs');
+const {powershell} = require('../shell.js');
+
+
 function stageApi() {
     console.log("\nPreparing API for Heroku Deployment...\n");
     const sink = "./heroku/api";
@@ -108,8 +111,17 @@ function stageClient() {
 }
 
 
+const apps = ["api", "client"];
+const herokuRepos = ["deaddrop-api-alpha", "deaddrop-dapp-alpha"];
 async function stage(repo) {
-    if (!fs.existsSync("./hi")) fs.mkdirSync("./hi");
+    if (!fs.existsSync("./heroku")) {
+        fs.mkdirSync("./heroku");
+        for await (const analog of apps) {
+            const toClone = herokuRepos[apps.indexOf(analog)];
+            const opts = {args: [toClone, analog]};
+            await powershell("heroku/clone", opts);
+        }
+    }
     switch (repo) {
         case "api":
             try {
@@ -134,4 +146,4 @@ async function deploy(repo, commitMessage) {
 }
 
 
-module.exports = { stage, deploy }
+module.exports = { stage, deploy, apps }

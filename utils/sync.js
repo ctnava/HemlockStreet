@@ -32,9 +32,7 @@ const heroku = require('./sync/heroku.js');
         if (!isClean) {
             console.log("Committing Changes...");
             await git.push(pathTo, branch, commitMessage);
-
-            const herokuApps = ["api", "client"];
-            if (fs.existsSync("heroku") && branch === "main" && herokuApps.includes(repo)) {
+            if (branch === "main" && heroku.apps.includes(repo)) {
                 const staged = await heroku.stage(repo);
                 if (!staged) throw `staging failure @${repo}`;
                 else {
