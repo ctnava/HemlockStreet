@@ -8,7 +8,8 @@ const git = require('./shell/git.js');
         (from.includes("release") && to === "main") || 
         (from.includes("hotfix") && to === "main") ||
 
-        (from === "devel" && to === "release") || 
+        (from === "main"  && to === from.includes("hotfix")) ||
+        (from === "devel" && to === from.includes("release")) || 
         
         (from === "main" && to === "devel") || 
         (from.includes("release") && to === "devel") || 
@@ -23,10 +24,10 @@ const git = require('./shell/git.js');
         await git.merge("root", to);
 
         const subRepos = (fs.readdirSync("./src")).filter(repo => !repo.includes("."));
-        subRepos.forEach(repo => {
+        for await (const repo of subRepos) {
             await git.checkout(`src/${repo}`, from);
             await git.merge(`src/${repo}`, to);
-        });
+        }
 
         return;
     } else { 
