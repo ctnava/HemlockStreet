@@ -1,12 +1,5 @@
 const git = require('../shell/git.js');
 
-
-async function status(pathTo, repo) {
-    const isClean = await git.status(pathTo);
-    console.log(`${repo}IsClean:`, isClean);
-    return isClean;
-}
-
 async function createBranch(pathTo, repo, branch) {
     console.log(`\nScanning '${repo}' for ${branch} branch...`);
     const branches = await git.listBranches(pathTo);
@@ -26,10 +19,10 @@ async function createBranch(pathTo, repo, branch) {
 
 async function synchronize(pathTo, repo, branch, message) {
     await createBranch(pathTo, repo, branch);
-    const isClean = await status(pathTo, repo);
+    const isClean = await git.status(pathTo, repo);
     if (!isClean) {await git.push(pathTo, branch, message)}
     return isClean;
 }
 
 
-module.exports = { status, createBranch, synchronize }
+module.exports = { createBranch, synchronize }
