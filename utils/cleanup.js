@@ -21,8 +21,7 @@ const commonTrash = [
 const semiExclusiveTrash = [
     ...sharedPaths("build", "client"),
     ...sharedPaths("typechain", "solidity"),
-    ...sharedPaths("uploads", "api"),
-    ...sharedPaths("downloads", "api")
+    ...sharedPaths("temp", "api")
 ];
 
 const exclusiveTrash = [
