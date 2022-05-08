@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 import axios from "axios";
 import './Dropzone.css';
-const apiUrl = "http://localhost:4001/" + "deaddrop/";
-// const apiUrl = "https://deaddrop-api-alpha.herokuapp.com/" + "deaddrop/";
+const baseUrl = "http://localhost:4001/"
+// const baseUrl = "https://deaddrop-api-alpha.herokuapp.com/";
+const apiUrl = baseUrl + "deaddrop/";
 
 const chunkSize = 10 * 1024;
 function Dropzone(props) {
@@ -185,7 +186,7 @@ function Dropzone(props) {
                 {props.hash.length !== 0 && (<div>IPFS CID: {props.hash}</div>)}
                     
                 <p>
-                    <a className="name" target="_blank" href={getProgress() === 100 ? (apiUrl + 'uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
+                    <a className="name" target="_blank" href={getProgress() === 100 ? (baseUrl + 'temp/deaddrop/uploads/' + props.fileData.finalName) : ""}>{props.fileData.name}</a>
                     {!props.requestsActive.pin && !props.requestsActive.unpin && (<span> || </span>)}
                     
                     { props.contractInput.hash.length !== 0 ? (!props.requestsActive.unpin && (!props.busy ? (<span onClick={unpinFile}>[Unpin]</span>) : <span>Unpinning...</span>)) : 
