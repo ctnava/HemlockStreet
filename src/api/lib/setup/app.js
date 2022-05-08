@@ -12,7 +12,6 @@ function configureApp() {
     app.use(bodyParser.json());
     app.use(cors({origin: url}));
     app.use('/temp', express.static('temp'));
-    app.get('/', (req, res) => { res.json("Hello, welcome to my back end! Now git out.") });
     app.listen(port, () => { console.log("Server Started on Port:" + port) });
     return app;
 }
