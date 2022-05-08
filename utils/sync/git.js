@@ -16,7 +16,7 @@ async function createBranch(pathTo, repo, branch) {
 
     const isCurrentBranch = branches.includes(`* ${branch}`);
     if (branchNotPresent) {
-        await git.createBranch("root", branch);
+        await git.createBranch(pathTo, branch);
         console.log("Branch Created!");
     }
     else {
