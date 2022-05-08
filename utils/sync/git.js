@@ -7,11 +7,13 @@ async function status(pathTo, repo) {
     return isClean;
 }
 
-async function createBranch(pathTo, branch) {
-    console.log(pathTo);
+async function createBranch(pathTo, repo, branch) {
+    console.log(`Scanning ${repo} for ${branch} branch`);
     const branches = await git.listBranches(pathTo);
+    
     const branchNotPresent = !branches.includes(`* ${branch}`) && !branches.includes(branch);
-    if (!branchNotPresent) console.log(`Branching ${pathTo}...`);
+    console.log(branchNotPresent ? "Not found! Branching..." : "Branch Found!");
+
     const isCurrentBranch = branches.includes(`* ${branch}`);
     if (branchNotPresent) await git.createBranch("root", branch);
     else {
@@ -20,7 +22,7 @@ async function createBranch(pathTo, branch) {
 }
 
 async function synchronize(pathTo, repo, branch, message) {
-    await createBranch(pathTo, branch);
+    await createBranch(pathTo, repo, branch);
     const isClean = await git.status(pathTo, repo);
     if (!isClean) {
         console.log("Committing Changes...");
