@@ -20,18 +20,14 @@ if (os.platform() == 'win32') {
 }
 
 
-function fail(zip) {
-    console.log(zip.LastErrorText);
-    return false;
-}
-
 function unlockZip(pathToArchive, secret, exportDir) {
     var zip = new chilkat.Zip();
     var success = zip.OpenZip(pathToArchive);
     // console.log("open zip");
     if (success !== true) { 
         zip.CloseZip();
-        return fail(zip);
+        console.log(zip.LastErrorText);
+        return false;
     }
 
     zip.DecryptPassword = secret;
@@ -41,9 +37,12 @@ function unlockZip(pathToArchive, secret, exportDir) {
     zip.CloseZip();
     fs.unlinkSync(pathToArchive);
     fs.unlinkSync(exportDir + "/garbage.trash");
-    if (unzipCount < 0) return fail(zip);
+    if (unzipCount < 0) {
+        console.log(zip.LastErrorText);
+        return false;
+    }
     else return true;
 }
 
 
-module.exports = { unlockZip }
+module.exports = unlockZip;

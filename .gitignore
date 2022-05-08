@@ -72,10 +72,8 @@ src/solidity/typechain
 
 
 # api
-downloads
-uploads
-src/api/uploads
-src/api/downloads
+temp
+src/api/temp
 
 
 # solidity only

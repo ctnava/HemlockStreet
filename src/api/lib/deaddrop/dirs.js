@@ -1,5 +1,5 @@
-function uploadPath(fileName) { return `./uploads/${fileName}` }
-function encryptedPath(fileName) { return `./uploads/encrypted/${fileName}` }
+function uploadPath(fileName) { return `./temp/deaddrop/uploads/${fileName}` }
+function encryptedPath(fileName) { return `./temp/deaddrop/uploads/encrypted/${fileName}` }
 
 function uploadPaths(fileNames) {
     const temp = uploadPath(fileNames.tmp);
@@ -33,7 +33,5 @@ function uploadedPaths(fileNames) {
     return allPaths;
 }
 
-function downloadPath(fileName) { return `./downloads/${fileName}` }
-function decryptedPath(fileName) { return `./downloads/decrypted/${fileName}` }
 
 module.exports = { uploadPaths, uploadedPaths }

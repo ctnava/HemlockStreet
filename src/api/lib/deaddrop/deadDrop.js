@@ -1,11 +1,10 @@
 require('dotenv').config();
 const fs = require('fs');
 const { promises } = require('fs');
-const { rmPin, addThenPin, createAndFetch } = require("./ipfs.js");
-const { encryptInputs, encryptFile, quickEncrypt, quickDecrypt } = require("./encryption.js");
+const { rmPin, addThenPin, createAndFetch } = require("../utils/ipfs.js");
+const { encryptInputs, encryptFile, quickEncrypt, quickDecrypt, unlockZip } = require("../utils/encryption.js");
 const { saveNewPin, findPin, updatePinExp, deletePin } = require("./pins.js");
 const messageKey = process.env.BC_KEY;
-const { unlockZip } = require('./chilkat.js');
 
 function decomposeFile(chunk, chunkIndex, totalChunks) {
     const chunkIdx = parseInt(chunkIndex);
