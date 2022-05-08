@@ -18,6 +18,7 @@ to
 ```
 ## Mandatory .env values
 ```
+PORT=4001
 # API
 # - https://deaddrop-api-alpha.herokuapp.com/       # Devel
 # - https://deaddrop-api-beta.herokuapp.com/        # Public Testing
@@ -32,7 +33,6 @@ CLIENT_URL=https://deaddrop-dapp-alpha.herokuapp.com
 
 
 # IPFS @ https://infura.io/
-PORT=4001
 IPFS_HOST=ipfs.infura.io
 IPFS_PORT=5001
 IPFS_PROTOCOL=https 
