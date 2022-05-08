@@ -15,7 +15,7 @@ async function push(repo, branch, commitMessage) {
 
 
 async function listBranches(repo) {
-    const opts = (!repo) ? {args:["root"]} : {args:[repo]};
+    const opts = {args:[repo]};
     const branches = (await powershell('git/branch/list', opts)).split("\n");
     return branches;
 }
