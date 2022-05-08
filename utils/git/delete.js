@@ -13,7 +13,7 @@ async function localDeletion(branch) {
     return;
 }
 
-async function localDeletion(branch) {
+async function remoteDeletion(branch) {
     console.log("\nroot");
     await git.deleteRemote("root", branch);
     const subRepos = (fs.readdirSync("./src")).filter(repo => !repo.includes("."));
@@ -27,12 +27,14 @@ async function localDeletion(branch) {
 (async () => {
     const branch = process.argv[2];
     const location = process.argv[3];
+    if (location !== "local" && location !== "remote") throw "fatal: invalid location, please select 'local' or 'remote'";
     switch (location) {
         case "local":
             await localDeletion(branch);
         case "remote":
             await remoteDeletion(branch);
+            await localDeletion(branch);
         default:
-            throw "fatal: invalid location, please select 'local' or 'remote'";
+            return;
     }
 })();
