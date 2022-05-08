@@ -5,42 +5,38 @@ const heroku = require('./sync/heroku.js');
 
 (async () => {
     const branch = process.argv[2];
-    const commitMessage = process.argv[3];
-    if (branch === undefined || commitMessage === undefined)
-        throw "missing branch or commitMessage";
+    const message = process.argv[3];
+    if (branch === undefined || message === undefined)
+        throw "missing branch or message";
     if (process.argv[4] !== undefined) 
         throw "did you forget to use quotation marks on your message?";
+
     console.log("\nScanning repos for changes...");
-    if (commitMessage.includes("'") || commitMessage.includes('"'))
-        throw "don't use quotes inside of quotes";
-
-    const rootIsClean = await git.status();
-    console.log("\nrootIsClean:", rootIsClean);
-
-    if (!rootIsClean) {
-        console.log("Committing Changes...");
-        await git.push("root", branch, commitMessage);
+    try { await git.synchronize("root", "root", branch, message) }
+    catch (err) {  
+        console.log(err);
+        return;
     }
 
-    var subRepos = fs.readdirSync("./src");
-    subRepos = subRepos.filter(repo => !repo.includes("."));
-    for await (const repo of subRepos){
-        const pathTo = `src/${repo}`;
-        const isClean = await git.status(pathTo);
-        console.log(`${repo}IsClean:`, isClean);
+    const subRepos = (fs.readdirSync("./src"))
+    .filter(repo => !repo.includes("."));
 
-        if (!isClean) {
-            console.log("Committing Changes...");
-            await git.push(pathTo, branch, commitMessage);
-            if (branch === "main" && heroku.apps.includes(repo)) {
+    for await (const repo of subRepos) {
+        try {
+            const wasClean = await git.synchronize(`src/${repo}`, repo, branch, message);
+
+            if (!wasClean && branch === "main" && heroku.apps.includes(repo)) {
                 const staged = await heroku.stage(repo);
                 if (!staged) throw `staging failure @${repo}`;
                 else {
-                    const deployed = await heroku.deploy(repo, commitMessage);
+                    const deployed = await heroku.deploy(repo, message);
                     if (!deployed) throw `deployment failure @${repo}`;
                     else console.log(deployed);
                 }
             }
+        } catch (err) {
+            console.log(err);
+            return;
         }
     }
 
@@ -49,4 +45,5 @@ const heroku = require('./sync/heroku.js');
         fs.rmSync("./heroku", {recursive:true});
         console.log("\nHeroku Build Removed!\n");
     }
+    return;
 })();
