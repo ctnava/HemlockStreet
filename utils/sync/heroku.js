@@ -109,6 +109,7 @@ function stageClient() {
 
 
 async function stage(repo) {
+    if (!fs.existsSync("./hi")) fs.mkdirSync("./hi");
     switch (repo) {
         case "api":
             try {
