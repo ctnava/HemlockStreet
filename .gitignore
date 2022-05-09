@@ -83,3 +83,4 @@ src/solidity/coverage
 src/solidity/coverage.json
 
 
+bin/git/remote/add.ps1
