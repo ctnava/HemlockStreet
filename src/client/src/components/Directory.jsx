@@ -8,11 +8,10 @@ import {
 import scannerUrl from "./dapps/utils/scanner";
 
 
-const homeUrl = "http://localhost:4002/";
-// const homeUrl = "https://deaddrop-dapp-alpha.herokuapp.com";
+// const homeUrl = "http://localhost:4002/";
+const homeUrl = "https://deaddrop-dapp-alpha.herokuapp.com";
 function Directory(props) {
-	let account = props.account;
-  let chainId = props.chainId;
+	let account = props.client.account;
 	let web3Handler = props.web3Handler;
   let hasWeb3 = props.hasWeb3;
 	return(
@@ -48,7 +47,7 @@ function Directory(props) {
                   {
                     account ? (
                       <Nav.Link
-                        href={scannerUrl(chainId, account)}
+                        href={scannerUrl(props.client.chainId, props.client.account)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="button nav-button btn-sm mx-4">

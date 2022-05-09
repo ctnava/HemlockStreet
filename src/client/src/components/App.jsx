@@ -50,8 +50,7 @@ function App(props) {
     <BrowserRouter>
       <div className="App">
         <Directory
-          account={client.account}
-          chainId={client.chainId}
+          client={client}
           web3Handler={web3Handler}
           hasWeb3={hasWeb3}
         />
