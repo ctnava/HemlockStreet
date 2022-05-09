@@ -50,7 +50,7 @@ async function deleteLocal(repo, branch) {
 
 
 async function deleteRemote(repo, branch) {
-    if (branch !== "main" && branch !== "devel") {
+    if (branch !== "main") {
         const opts = {args:[repo, branch]};
         await powershell('git/branch/delete/remote', opts);
         return;

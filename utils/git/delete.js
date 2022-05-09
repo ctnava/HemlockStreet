@@ -31,9 +31,11 @@ async function remoteDeletion(branch) {
     switch (location) {
         case "local":
             await localDeletion(branch);
+            return;
         case "remote":
             await remoteDeletion(branch);
             await localDeletion(branch);
+            return;
         default:
             return;
     }
