@@ -65,6 +65,13 @@ async function addRemote(repo, remote) {
 }
 
 
+async function commit(repo, message) {
+    const opts = {args:[repo, message]};
+    await powershell('git/commit', opts);
+    return;
+}
+
+
 module.exports = {
     status,
     push,
@@ -74,5 +81,6 @@ module.exports = {
     merge,
     deleteLocal,
     deleteRemote,
-    addRemote
+    addRemote,
+    commit
 }

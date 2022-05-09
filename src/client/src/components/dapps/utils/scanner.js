@@ -1,89 +1,88 @@
 function scannerUrl(chainId, address) {
-    var baseUrl;
-    // console.log("@scanner", chainId, typeof chainId);
+    // console.log("@scanner: address", address, typeof address);
+    // console.log("@scanner: chainId", chainId, typeof chainId);
     switch (chainId) {
         case 1:
-            baseUrl = "https://etherscan.io/address/";
+            return `https://etherscan.io/address/${address}`;
         case 10:
-            baseUrl = "https://optimistic.etherscan.io/address/";
+            return `https://optimistic.etherscan.io/address/${address}`;
         case 3:
-            baseUrl = "https://ropsten.etherscan.io/address/";
+            return `https://ropsten.etherscan.io/address/${address}`;
         case 4:
-            baseUrl = "https://rinkeby.etherscan.io/address/";
+            return `https://rinkeby.etherscan.io/address/${address}`;
         case 42:
-            baseUrl = "https://kovan.etherscan.io/address/";
+            return `https://kovan.etherscan.io/address/${address}`;
         case 420:
-            baseUrl = "https://goerli.etherscan.io/address/";
+            return `https://goerli.etherscan.io/address/${address}`;
         case 69:
-            baseUrl = "https://kovan-optimistic.etherscan.io/address/";
+            return `https://kovan-optimistic.etherscan.io/address/${address}`;
 
 
         case 56:
-            baseUrl = "https://bscscan.com/address/";
+            return `https://bscscan.com/address/${address}`;
         case 97:
-            baseUrl = "https://testnet.bscscan.com/address/";
+            return `https://testnet.bscscan.com/address/${address}`;
 
 
         case 137:
-            baseUrl = "https://polygonscan.com/address/";
-        case 8001:
-            baseUrl = "https://mumbai.polygonscan.com/";
+            return `https://polygonscan.com/address/${address}`;
+        case 80001:
+            return `https://mumbai.polygonscan.com/address/${address}`;
 
 
         case 42161:
-            baseUrl = "https://arbiscan.io/address/";
+            return `https://arbiscan.io/address/${address}`;
         case 421611:
-            baseUrl = "https://testnet.arbiscan.io/address/";
+            return `https://testnet.arbiscan.io/address/${address}`;
 
 
         case 43114:
-            baseUrl = "https://snowtrace.io/address/";
+            return `https://snowtrace.io/address/${address}`;
         case 43113:
-            baseUrl = "https://testnet.snowtrace.io/address/";
+            return `https://testnet.snowtrace.io/address/${address}`;
 
 
         case 250:
-            baseUrl = "https://ftmscan.com/address/";
+            return `https://ftmscan.com/address/${address}`;
         case 4002: // unsupported
-            baseUrl = "https://testnet.ftmscan.com/address/";
+            return `https://testnet.ftmscan.com/address/${address}`;
 
 
         case 128: // unsupported
-            baseUrl = "https://hecoinfo.com/address/";
+            return `https://hecoinfo.com/address/${address}`;
         case 256: // unsupported
-            baseUrl = "https://testnet.hecoinfo.com/address/";
+            return `https://testnet.hecoinfo.com/address/${address}`;
 
 
         case 1284: // unsupported
-            baseUrl = "https://moonscan.io/address/";
+            return `https://moonscan.io/address/${address}`;
         case 1285: // unsupported
-            baseUrl = "https://moonriver.moonscan.io/address/";
+            return `https://moonriver.moonscan.io/address/${address}`;
         case 1287: // unsupported
-            baseUrl = "https://moonbase.moonscan.io/address/";
+            return `https://moonbase.moonscan.io/address/${address}`;
 
             
         case 199: // unsupported
-            baseUrl = "https://bttcscan.com/address/";
+            return `https://bttcscan.com/address/${address}`;
         case 1029: // unsupported
-            baseUrl = "https://testnet.bttcscan.com/address/";
+            return `https://testnet.bttcscan.com/address/${address}`;
         
 
         case 25: // unsupported
-            baseUrl = "https://cronoscan.com/address/";
+            return `https://cronoscan.com/address/${address}`;
         // case 26: // unsupported on blockscan
-            // baseUrl = "https://testnet.cronoscan.com/address/";
+            // return `https://testnet.cronoscan.com/address/${address}`;
 
 
         case 70: // unsupported
-            baseUrl = "https://hooscan.com/address/";
+            return `https://hooscan.com/address/${address}`;
         // case 71: // unsupported on blockscan
-            // baseUrl = "https://testnet.hooscan.com/address/";
+            // return `https://testnet.hooscan.com/address/${address}`;
 
 
         default:
-            baseUrl = "https://blockscan.com/address/";
+            return `https://blockscan.com/address/${address}`;
     }
-    return baseUrl + address;
 }
 
 
