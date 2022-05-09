@@ -183,6 +183,7 @@ function Upload(props) {
 		// console.log(contractInput);
 		const input = cipherInput;
 		// console.log(input);
+		getQuote(fileData.size);
 		const messageValue = (quote.gasBench + (quote.gasPerDiem * additionalTime));
 		props.uploadFile(input, messageValue).then((tx) => {
 			const data = { 

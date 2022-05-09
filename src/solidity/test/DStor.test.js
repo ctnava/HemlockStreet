@@ -175,9 +175,9 @@ describe("DStor", () => {
 
 		it("Should prevent unauthorized access", async () => {
 			await setUp();
-			await expect(DStor.connect(client1).get(1)).to.be.revertedWith('ACCESS DENIED');
-			await expect(DStor.connect(deployer).get(2)).to.be.revertedWith('ACCESS DENIED');
-			await expect(DStor.connect(client3).get(3)).to.be.revertedWith('ACCESS DENIED');
+			await expect(DStor.connect(client2).get(1)).to.be.reverted;
+			await expect(DStor.connect(deployer).get(2)).to.be.reverted;
+			await expect(DStor.connect(client3).get(3)).to.be.reverted;
 		});
 	});
 
@@ -249,8 +249,7 @@ describe("DStor", () => {
 	describe("Administrative Functions", () => {
 		it("Disallow anybody but the owner to modify the states", async () => {
 			await setUp();
-			await expect(DStor.connect(client1).setRules(false, 1)).to.be.revertedWith("Ownable: caller is not the owner");
-			await expect(DStor.connect(client1).setRules(true, 1)).to.be.revertedWith("Ownable: caller is not the owner");
+			await expect(DStor.connect(client1).setMinFileSize(1)).to.be.revertedWith("Ownable: caller is not the owner");
 			await expect(DStor.connect(client1).setPinningRate(1)).to.be.revertedWith("Ownable: caller is not the owner");
 			await expect(DStor.connect(client1).setFission(client1.address)).to.be.revertedWith("Ownable: caller is not the owner");
 		});
@@ -263,8 +262,6 @@ describe("DStor", () => {
 			val = await DStor.pinningRate();
 			expect (val.toString()).to.equal("1");
 			val = await DStor.minimumFileSize();
-			expect (val.toString()).to.equal("1");
-			val = await DStor.minimumPin();
 			expect (val.toString()).to.equal("1");
 			expect (await DStor.fissionEngine()).to.equal(client1.address);
 		});
