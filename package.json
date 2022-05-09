@@ -74,6 +74,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "initialize": "node utils/git/remote.js",
     "delete": "node utils/git/delete.js",
     "merge": "node utils/git/merge.js",
     "checkout": "node utils/git/checkout.js",

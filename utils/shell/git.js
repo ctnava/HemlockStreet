@@ -58,6 +58,13 @@ async function deleteRemote(repo, branch) {
 }
 
 
+async function addRemote(repo, remote) {
+    const opts = {args:[repo, remote]};
+    await powershell('git/remote/add', opts);
+    return;
+}
+
+
 module.exports = {
     status,
     push,
@@ -66,5 +73,6 @@ module.exports = {
     checkout,
     merge,
     deleteLocal,
-    deleteRemote
+    deleteRemote,
+    addRemote
 }
